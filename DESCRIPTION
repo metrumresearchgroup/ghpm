@@ -1,0 +1,18 @@
+Package: ghpm
+Type: Package
+Title: What the Package Does (Title Case)
+Version: 0.0.1
+Authors@R: 
+	person( given = "Harsh",
+			family = "Baid",
+			role = c("aut", "cre"),
+			email = "harshb@metrumrg.com")
+License: file LICENSE
+Encoding: UTF-8
+LazyData: true
+Imports: 
+    gh,
+    purrr
+Suggests: 
+    testthat
+RoxygenNote: 6.1.1
