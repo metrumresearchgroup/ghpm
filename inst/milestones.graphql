@@ -1,24 +1,14 @@
-query milestones($org:String!, $repo: String!){
+query milestones($org: String!, $repo: String!) {
   repository(owner: $org, name: $repo) {
     milestones(first: 100) {
       nodes {
         title
-        issues(first: 100) {
-          nodes {
-            title
-            closed
-            timeline(first: 15) {
-              nodes {
-                __typename
-                ... on ReferencedEvent {
-                  commit {
-                    message
-                  }
-                }
-              }
-            }
-          }
+        description
+        creator {
+          login
         }
+        state
+        url
       }
     }
   }

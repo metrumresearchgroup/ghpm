@@ -4,8 +4,7 @@
 \alias{graphql_query}
 \title{Parses a specified GraphQL Query from the project directory.}
 \usage{
-graphql_query(file, ...,
-  .api_endpoint = "https://api.github.com/graphql")
+graphql_query(file, ..., .api_url = "https://api.github.com/graphql")
 }
 \arguments{
 \item{file}{Query file to execute}

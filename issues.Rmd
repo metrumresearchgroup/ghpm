@@ -1,0 +1,23 @@
+```{r}
+        issues(first: 100) {
+          nodes {
+            title
+            closed
+            createdAt
+            closedAt
+            author {
+              login
+            }
+            timeline(first: 15) {
+              nodes {
+                ... on ReferencedEvent {
+                  commit {
+                    message
+                  }
+                }
+              }
+            }
+          }
+        }
+```
+

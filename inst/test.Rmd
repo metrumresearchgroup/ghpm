@@ -1,0 +1,30 @@
+```{r}
+library(ghpm)
+library(tidyverse)
+library(purrr)
+```
+
+```{r}
+
+data <- graphql_query("milestones.graphql", org = "metrumresearchgroup", repo = "pkgr")$repository$milestones$nodes
+data %>% as_tibble(.name_repair = "unique")
+output <- reduce()
+
+get_milestones <- function(org, repo, .api_url = "https://api.github.com/graphql"){
+	data <- graphql_query("milestones.graphql", org = org, repo = repo, .api_url = .api_url)$repository$milestones$nodes
+	output <- reduce(data, function(.acc, .cv){
+		return(.acc %>% add_row("Title" = .cv$title,
+								"Description" = .cv$description,
+								"State" = .cv$state,
+								"Author" = .cv$creator$login,
+								"Url" = .cv$url))
+	}, .init = tibble("Title" = NA, "Description" = NA, "State" = NA, "Author" = NA, "Url" = NA))
+
+	return(output)
+}
+```
+
+```{r}
+aa[map_lgl(aa, ~length(.x) > 0)]
+```
+
