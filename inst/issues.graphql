@@ -1,0 +1,23 @@
+query issues($org: String!, $repo: String!) {
+  repository(owner: $org, name: $repo) {
+    issues(first: 100){
+      nodes{
+        title
+        bodyText
+        author {
+          login
+        }
+        number
+        labels(first: 100){
+          nodes {
+            name
+          }
+        }
+        milestone {
+          title
+        }
+        state
+      }
+    }
+  }
+}

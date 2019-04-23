@@ -12,7 +12,8 @@ Encoding: UTF-8
 LazyData: true
 Imports: 
     gh,
-    purrr
+    purrr,
+    magrittr
 Suggests: 
     testthat
 RoxygenNote: 6.1.1
