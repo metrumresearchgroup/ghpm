@@ -1,0 +1,24 @@
+query projects($org: String!, $repo: String!) {
+  repository(owner: $org, name: $repo) {
+    projects(first: 10) {
+      nodes {
+        name
+        columns(first: 15) {
+          nodes {
+            name
+            cards(first: 30) {
+              nodes {
+                content {
+                  ... on Issue {
+                    title
+                    number
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
