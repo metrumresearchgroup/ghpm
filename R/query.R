@@ -55,7 +55,7 @@ get_issues <- function(org, repo, .api_url = "https://api.github.com/graphql"){
 #' @importFrom tibble tibble add_row
 #' @importFrom dplyr mutate
 get_issue_comments <- function(org, repo, .api_url = "https://api.github.com/graphql"){
-	data <- graphql_query("issue_comments.graphql", org = "metrumresearchgroup", repo = "pkgr")$repository$issues$nodes
+	data <- graphql_query("issue_comments.graphql", org = org, repo = repo)$repository$issues$nodes
 	data <- keep(data, ~length(.x$comments$nodes) > 0)
 
 	comments <- map_df(data, function(x){
