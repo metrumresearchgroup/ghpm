@@ -47,3 +47,22 @@ get_issues <- function(org, repo, .api_url = "https://api.github.com/graphql"){
 
 	return(issues)
 }
+
+#' Gets a data frame of the comments of each issue
+#' @inheritParams get_milestones
+#' @return A data frame containing the Issue | Date | Author | Comment of each issue
+#' @importFrom purrr reduce map_df keep
+#' @importFrom tibble tibble add_row
+#' @importFrom dplyr mutate
+get_issue_comments <- function(org, repo, .api_url = "https://api.github.com/graphql"){
+	data <- graphql_query("issue_comments.graphql", org = "metrumresearchgroup", repo = "pkgr")$repository$issues$nodes
+	data <- keep(data, ~length(.x$comments$nodes) > 0)
+
+	comments <- map_df(data, function(x){
+		comment_data <- reduce(x$comments$nodes, function(.acc, .cv){
+			return(.acc %>% add_row("Comment" = .cv$bodyText, "Author" = .cv$author$login, "Date" = .cv$createdAt))
+		}, .init = tibble("Comment" = character(), "Author" = character(), "Date" = character(), .rows = 0))
+
+		return(comment_data %>% mutate("Issue" = x$number))
+	})
+}
