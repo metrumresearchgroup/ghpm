@@ -41,7 +41,13 @@ get_milestones <- function(org, repo, .api_url = "https://api.github.com/graphql
 get_issues <- function(org, repo, .api_url = "https://api.github.com/graphql"){
 	data <- graphql_query("issues.graphql", org = "metrumresearchgroup", repo = "pkgr", .api_url = .api_url)$repository$issues$nodes
 	issues <- reduce(data, function(.acc, .cv){
-		.acc <- .acc %>% add_row("Title" = .cv$title, "Body" = .cv$bodyText, "Author" = .cv$author$login, "Number" = .cv$number, "Labels" = ifelse(!is_empty(.cv$labels$nodes), .cv$labels$nodes[[1]]$name, NA), "Milestone" = ifelse(is.null(.cv$milestone), "None", .cv$milestone), "State" = .cv$state)
+		.acc <- .acc %>% add_row("Title" = .cv$title,
+								 "Body" = .cv$bodyText,
+								 "Author" = .cv$author$login,
+								 "Number" = .cv$number,
+								 "Labels" = ifelse(!is_empty(.cv$labels$nodes), .cv$labels$nodes[[1]]$name, NA),
+								 "Milestone" = ifelse(is.null(.cv$milestone), NA, .cv$milestone),
+								 "State" = .cv$state)
 
 		return(.acc)
 	}, .init = tibble("Title" = NA, "Body" = NA, "Author" = NA, "Number" = NA, "Labels" = NA, "Milestone" = NA, "State" = NA))
