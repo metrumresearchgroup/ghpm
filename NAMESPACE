@@ -3,6 +3,7 @@
 export("%>%")
 export(get_milestones)
 export(graphql_query)
+importFrom(dplyr,arrange)
 importFrom(dplyr,mutate)
 importFrom(gh,gh)
 importFrom(magrittr,"%>%")

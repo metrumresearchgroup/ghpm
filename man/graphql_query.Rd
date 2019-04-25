@@ -4,7 +4,8 @@
 \alias{graphql_query}
 \title{Parses a specified GraphQL Query from the project directory.}
 \usage{
-graphql_query(file, ..., .api_url = "https://api.github.com/graphql")
+graphql_query(file, ..., .api_url = "https://api.github.com/graphql",
+  .header = NULL)
 }
 \arguments{
 \item{file}{Query file to execute}
@@ -12,6 +13,8 @@ graphql_query(file, ..., .api_url = "https://api.github.com/graphql")
 \item{...}{Additional variables to pass on to the query}
 
 \item{.api_url}{Optional API url to query. Defaults to "https://api.github.com/graphql"}
+
+\item{.header}{Optional vector of headers to send to query}
 }
 \value{
 The list containing the query result
