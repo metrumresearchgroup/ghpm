@@ -1,0 +1,18 @@
+query issue_comments($org: String!, $repo: String!) {
+  repository(owner: $org, name: $repo) {
+    issues(first: 100){
+      nodes{
+        number
+        comments(first: 100){
+          nodes{
+            author {
+              login
+            }
+            createdAt
+            bodyText
+          }
+        }
+      }
+    }
+  }
+}
