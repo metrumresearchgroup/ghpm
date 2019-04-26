@@ -12,7 +12,7 @@ get_projectboard_issues(.acc, .cv)
 \item{.cv}{Current Value}
 }
 \value{
-A data frame containing number | title of an issue
+A data frame containing issue | title of an issue
 }
 \description{
 Helper function for get_projectboard that returns a data frame of numbers and issues

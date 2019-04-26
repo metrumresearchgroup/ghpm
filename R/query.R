@@ -43,15 +43,15 @@ get_milestones <- function(org, repo, .api_url = "https://api.github.com/graphql
 get_issues <- function(org, repo, .api_url = "https://api.github.com/graphql"){
 	data <- graphql_query("issues.graphql", org = org, repo = repo, .api_url = .api_url)$repository$issues$nodes
 	issues <- reduce(data, function(.acc, .cv){
-		.acc <- .acc %>% add_row("title" = .cv$title,
+		.acc <- .acc %>% add_row("number" = .cv$number,
+								 "title" = .cv$title,
 								 "body" = .cv$bodyText,
 								 "creator" = .cv$author$login,
-								 "number" = .cv$number,
 								 "milestone" = ifelse(is.null(.cv$milestone), NA, .cv$milestone),
 								 "state" = .cv$state)
 
 		return(.acc)
-	}, .init = tibble("title" = character(), "body" = character(), "creator" = character(), "number" = integer(), "milestones" = character(), "state" = character(), .rows = 0))
+	}, .init = tibble("number" = integer(), "title" = character(), "body" = character(), "creator" = character(), "milestones" = character(), "state" = character(), .rows = 0))
 
 	return(issues)
 }
@@ -61,7 +61,7 @@ get_issues <- function(org, repo, .api_url = "https://api.github.com/graphql"){
 #' @return A data frame containing issue | label of each issue
 #' @importFrom purrr reduce map_df keep
 #' @importFrom tibble tibble add_row
-#' @importFrom dplyr mutate
+#' @importFrom dplyr mutate select
 #' @export
 get_issue_labels <- function(org, repo, .api_url = "https://api.github.com/graphql"){
 	data <- graphql_query("issue_labels.graphql", org = org, repo = repo, .api_url = .api_url)$repository$issues$nodes
@@ -74,7 +74,7 @@ get_issue_labels <- function(org, repo, .api_url = "https://api.github.com/graph
 
 		return(label_data %>% mutate("issue" = x$number))
 	})
-	return(labels)
+	return(labels %>% select(issue, label))
 }
 
 #' Gets a data frame of the assignees of each issue
@@ -82,7 +82,7 @@ get_issue_labels <- function(org, repo, .api_url = "https://api.github.com/graph
 #' @return A data frame containing issue | assignedTo of each issue
 #' @importFrom purrr reduce map_df keep
 #' @importFrom tibble tibble add_row
-#' @importFrom dplyr mutate
+#' @importFrom dplyr mutate select
 #' @export
 get_issue_assignees <- function(org, repo, .api_url = "https://api.github.com/graphql"){
 	data <- graphql_query("issue_assignees.graphql", org = org, repo = repo, .api_url = .api_url)$repository$issues$nodes
@@ -95,7 +95,7 @@ get_issue_assignees <- function(org, repo, .api_url = "https://api.github.com/gr
 
 		return(assignee_data %>% mutate("issue" = x$number))
 	})
-	return(assignees)
+	return(assignees %>% select(issue, assignedTo))
 }
 
 #' Gets a data frame of the project board events of each issue
@@ -152,7 +152,7 @@ get_issue_comments <- function(org, repo, .api_url = "https://api.github.com/gra
 #' @return A data frame containing the issue | title | column | board of the project boards
 #' @importFrom purrr map_df reduce
 #' @importFrom tibble tibble
-#' @importFrom dplyr mutate
+#' @importFrom dplyr mutate select
 #' @export
 get_projectboard <- function(org, repo, .api_url = "https://api.github.com/graphql"){
 	data <- graphql_query("projects.graphql", org = org, repo = repo, .api_url = .api_url)$repository$projects$nodes
@@ -163,19 +163,19 @@ get_projectboard <- function(org, repo, .api_url = "https://api.github.com/graph
 		return(result %>% mutate("board" = x$name))
 	})
 
-	return(projects)
+	return(projects %>% select(board, issue, title, column))
 }
 
 #' Helper function for get_projectboard that returns a data frame of containing column information for each issue
 #' @param .acc Accumlator Value
 #' @param .cv Current Value
-#' @return A data frame containing column | number | title information about an issue
+#' @return A data frame containing issue | title | column information about an issue
 #' @importFrom purrr reduce
 #' @importFrom tibble tibble
 #' @importFrom dplyr bind_rows mutate
 get_projectboard_columns <- function(.acc, .cv){
 	if(length(.cv$cards$nodes)){
-		rows <- reduce(.cv$cards$nodes, get_projectboard_issues, .init = tibble("number" = numeric(), "title" = character(), .rows = 0))
+		rows <- reduce(.cv$cards$nodes, get_projectboard_issues, .init = tibble("issue" = numeric(), "title" = character(), .rows = 0))
 		if (nrow(rows)) {
 			.acc <- .acc %>% bind_rows(rows %>% mutate("column" = .cv$name))
 		}
@@ -185,11 +185,11 @@ get_projectboard_columns <- function(.acc, .cv){
 
 #' Helper function for get_projectboard that returns a data frame of numbers and issues
 #' @inheritParams get_projectboard_columns
-#' @return A data frame containing number | title of an issue
+#' @return A data frame containing issue | title of an issue
 #' @importFrom tibble tibble add_row
 get_projectboard_issues <- function(.acc, .cv){
 	if(!is.null(.cv$content) && length(.cv$content) > 0){
-		.acc <- .acc %>% add_row("number" = .cv$content$number, "title" = .cv$content$title)
+		.acc <- .acc %>% add_row("issue" = .cv$content$number, "title" = .cv$content$title)
 	}
 	return(.acc)
 }
