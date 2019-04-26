@@ -14,7 +14,7 @@ get_issue_events(org, repo, .api_url = "https://api.github.com/graphql")
 \item{.api_url}{Optional API url to query. Defaults to "https://api.github.com/graphql"}
 }
 \value{
-A data frame containing Issue | Project | Type | Column | Author | Date of each issue
+A data frame containing issue | project | type | column | author | date of each issue
 }
 \description{
 Gets a data frame of the project board events of each issue

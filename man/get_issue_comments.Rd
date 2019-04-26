@@ -15,7 +15,7 @@ get_issue_comments(org, repo,
 \item{.api_url}{Optional API url to query. Defaults to "https://api.github.com/graphql"}
 }
 \value{
-A data frame containing the Issue | Date | Author | Comment of each issue
+A data frame containing the issue | date | author | comment of each issue
 }
 \description{
 Gets a data frame of the comments of each issue

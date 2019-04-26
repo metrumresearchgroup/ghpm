@@ -17,48 +17,48 @@ graphql_query <- function(file, ..., .api_url = "https://api.github.com/graphql"
 #' @param org Name of organization to query
 #' @param repo Name of repository to query
 #' @param .api_url Optional API url to query. Defaults to "https://api.github.com/graphql"
-#' @return A data frame containing the Title | Description | State | Author | Url of each milestone
+#' @return A data frame containing the title | description | state | author | url of each milestone
 #' @importFrom purrr reduce
 #' @importFrom tibble tibble add_row
 #' @export
 get_milestones <- function(org, repo, .api_url = "https://api.github.com/graphql"){
 	data <- graphql_query("milestones.graphql", org = org, repo = repo, .api_url = .api_url)$repository$milestones$nodes
 	milestones <- reduce(data, function(.acc, .cv){
-		return(.acc %>% add_row("Title" = .cv$title,
-								"Description" = .cv$description,
-								"State" = .cv$state,
-								"Author" = .cv$creator$login,
-								"Url" = .cv$url))
-	}, .init = tibble("Title" = character(), "Description" = character(), "State" = character(), "Author" = character(), "Url" = character(), .rows = 0))
+		return(.acc %>% add_row("title" = .cv$title,
+								"description" = .cv$description,
+								"state" = .cv$state,
+								"author" = .cv$creator$login,
+								"url" = .cv$url))
+	}, .init = tibble("title" = character(), "description" = character(), "state" = character(), "author" = character(), "url" = character(), .rows = 0))
 	return(milestones)
 }
 
 #' Gets a data frame of the issues associated with a given repo
 #' @inheritParams get_milestones
-#' @return A data frame containing the Title | Body | Author | Number | Labels | Milestone | State of each issue
+#' @return A data frame containing the title | body | creator | number | labels | milestone | state of each issue
 #' @importFrom purrr reduce
 #' @importFrom tibble tibble add_row
 #' @export
 get_issues <- function(org, repo, .api_url = "https://api.github.com/graphql"){
 	data <- graphql_query("issues.graphql", org = org, repo = repo, .api_url = .api_url)$repository$issues$nodes
 	issues <- reduce(data, function(.acc, .cv){
-		.acc <- .acc %>% add_row("Title" = .cv$title,
-								 "Body" = .cv$bodyText,
-								 "Author" = .cv$author$login,
-								 "Number" = .cv$number,
-								 "Labels" = ifelse(!is_empty(.cv$labels$nodes), .cv$labels$nodes[[1]]$name, NA),
-								 "Milestone" = ifelse(is.null(.cv$milestone), NA, .cv$milestone),
-								 "State" = .cv$state)
+		.acc <- .acc %>% add_row("title" = .cv$title,
+								 "body" = .cv$bodyText,
+								 "creator" = .cv$author$login,
+								 "number" = .cv$number,
+								 "labels" = ifelse(!is_empty(.cv$labels$nodes), .cv$labels$nodes[[1]]$name, NA),
+								 "milestone" = ifelse(is.null(.cv$milestone), NA, .cv$milestone),
+								 "state" = .cv$state)
 
 		return(.acc)
-	}, .init = tibble("Title" = character(), "Body" = character(), "Author" = character(), "Number" = integer(), "Labels" = character(), "Milestone" = character(), "State" = character(), .rows = 0))
+	}, .init = tibble("title" = character(), "body" = character(), "creator" = character(), "number" = integer(), "labels" = character(), "milestones" = character(), "state" = character(), .rows = 0))
 
 	return(issues)
 }
 
 #' Gets a data frame of the project board events of each issue
 #' @inheritParams get_milestones
-#' @return A data frame containing Issue | Project | Type | Column | Author | Date of each issue
+#' @return A data frame containing issue | project | type | column | author | date of each issue
 #' @importFrom purrr reduce map_df keep
 #' @importFrom tibble tibble add_row
 #' @importFrom dplyr mutate arrange
@@ -68,8 +68,13 @@ get_issue_events <- function(org, repo, .api_url = "https://api.github.com/graph
 
 	timeline <- map_df(data, function(x){
 		event_data <- reduce(x$timelineItems$nodes, function(.acc, .cv){
-			return(.acc %>% add_row("Project" = .cv$project$name, "Type" = ifelse(.cv$`__typename` == "AddedToProjectEvent", "Added", "Moved"), "Column" = .cv$projectColumnName, "Author" = .cv$actor$login, "Date" = .cv$createdAt))
-		}, .init = tibble("Project" = character(), "Type" = character(), "Column" = character(), "Author" = character(), "Date" = character(), .rows = 0))
+			return(.acc %>% add_row("project" = .cv$project$name,
+									"type" = ifelse(.cv$`__typename` == "AddedToProjectEvent", "Added", "Moved"),
+									"column" = .cv$projectColumnName,
+									"author" = .cv$actor$login,
+									"date" = .cv$createdAt))
+
+		}, .init = tibble("project" = character(), "type" = character(), "column" = character(), "author" = character(), "date" = character(), .rows = 0))
 
 		return(event_data %>% mutate("Issue" = x$number))
 	})
@@ -79,7 +84,7 @@ get_issue_events <- function(org, repo, .api_url = "https://api.github.com/graph
 
 #' Gets a data frame of the comments of each issue
 #' @inheritParams get_milestones
-#' @return A data frame containing the Issue | Date | Author | Comment of each issue
+#' @return A data frame containing the issue | date | author | comment of each issue
 #' @importFrom purrr reduce map_df keep
 #' @importFrom tibble tibble add_row
 #' @importFrom dplyr mutate
@@ -89,10 +94,10 @@ get_issue_comments <- function(org, repo, .api_url = "https://api.github.com/gra
 
 	comments <- map_df(data, function(x){
 		comment_data <- reduce(x$comments$nodes, function(.acc, .cv){
-			return(.acc %>% add_row("Comment" = .cv$bodyText, "Author" = .cv$author$login, "Date" = .cv$createdAt))
-		}, .init = tibble("Comment" = character(), "Author" = character(), "Date" = character(), .rows = 0))
+			return(.acc %>% add_row("comment" = .cv$bodyText, "author" = .cv$author$login, "date" = .cv$createdAt))
+		}, .init = tibble("comment" = character(), "author" = character(), "date" = character(), .rows = 0))
 
-		return(comment_data %>% mutate("Issue" = x$number))
+		return(comment_data %>% mutate("issue" = x$number))
 	})
 
 	return(comments)
@@ -100,7 +105,7 @@ get_issue_comments <- function(org, repo, .api_url = "https://api.github.com/gra
 
 #' Gets a data frame of the issues and their columns on the project board
 #' @inheritParams get_milestones
-#' @return A data frame containing the Issue | Title | Column | Board of the project boards
+#' @return A data frame containing the issue | title | column | board of the project boards
 #' @importFrom purrr map_df reduce
 #' @importFrom tibble tibble
 #' @importFrom dplyr mutate
@@ -110,8 +115,8 @@ get_projectboard <- function(org, repo, .api_url = "https://api.github.com/graph
 
 	projects <- map_df(data, function(x){
 		result <- reduce(x$columns$nodes, get_projectboard_columns,
-						 .init = tibble("Issue" = numeric(), "Title" = character(), "Column" = character(), .rows = 0))
-		return(result %>% mutate("Board" = x$name))
+						 .init = tibble("issue" = numeric(), "title" = character(), "column" = character(), .rows = 0))
+		return(result %>% mutate("board" = x$name))
 	})
 
 	return(projects)
@@ -120,15 +125,15 @@ get_projectboard <- function(org, repo, .api_url = "https://api.github.com/graph
 #' Helper function for get_projectboard that returns a data frame of containing column information for each issue
 #' @param .acc Accumlator Value
 #' @param .cv Current Value
-#' @return A data frame containing Column | Number | Title information about an issue
+#' @return A data frame containing column | number | title information about an issue
 #' @importFrom purrr reduce
 #' @importFrom tibble tibble
 #' @importFrom dplyr bind_rows mutate
 get_projectboard_columns <- function(.acc, .cv){
 	if(length(.cv$cards$nodes)){
-		rows <- reduce(.cv$cards$nodes, get_projectboard_issues, .init = tibble(Number = numeric(), Title = character(), .rows = 0))
+		rows <- reduce(.cv$cards$nodes, get_projectboard_issues, .init = tibble("number" = numeric(), "title" = character(), .rows = 0))
 		if (nrow(rows)) {
-			.acc <- .acc %>% bind_rows(rows %>% mutate("Column" = .cv$name))
+			.acc <- .acc %>% bind_rows(rows %>% mutate("column" = .cv$name))
 		}
 	}
 	return(.acc)
@@ -136,11 +141,11 @@ get_projectboard_columns <- function(.acc, .cv){
 
 #' Helper function for get_projectboard that returns a data frame of numbers and issues
 #' @inheritParams get_projectboard_columns
-#' @return A data frame containing Number | Title of an issue
+#' @return A data frame containing number | title of an issue
 #' @importFrom tibble tibble add_row
 get_projectboard_issues <- function(.acc, .cv){
 	if(!is.null(.cv$content) && length(.cv$content) > 0){
-		.acc <- .acc %>% add_row("Number" = .cv$content$number, "Title" = .cv$content$title)
+		.acc <- .acc %>% add_row("number" = .cv$content$number, "title" = .cv$content$title)
 	}
 	return(.acc)
 }

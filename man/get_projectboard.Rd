@@ -14,7 +14,7 @@ get_projectboard(org, repo, .api_url = "https://api.github.com/graphql")
 \item{.api_url}{Optional API url to query. Defaults to "https://api.github.com/graphql"}
 }
 \value{
-A data frame containing the Issue | Title | Column | Board of the project boards
+A data frame containing the issue | title | column | board of the project boards
 }
 \description{
 Gets a data frame of the issues and their columns on the project board

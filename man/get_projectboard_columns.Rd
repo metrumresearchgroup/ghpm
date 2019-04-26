@@ -12,7 +12,7 @@ get_projectboard_columns(.acc, .cv)
 \item{.cv}{Current Value}
 }
 \value{
-A data frame containing Column | Number | Title information about an issue
+A data frame containing column | number | title information about an issue
 }
 \description{
 Helper function for get_projectboard that returns a data frame of containing column information for each issue
