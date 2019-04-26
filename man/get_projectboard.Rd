@@ -6,6 +6,13 @@
 \usage{
 get_projectboard(org, repo, .api_url = "https://api.github.com/graphql")
 }
+\arguments{
+\item{org}{Name of organization to query}
+
+\item{repo}{Name of repository to query}
+
+\item{.api_url}{Optional API url to query. Defaults to "https://api.github.com/graphql"}
+}
 \value{
 A data frame
 }
