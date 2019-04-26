@@ -46,14 +46,33 @@ get_issues <- function(org, repo, .api_url = "https://api.github.com/graphql"){
 								 "body" = .cv$bodyText,
 								 "creator" = .cv$author$login,
 								 "number" = .cv$number,
-								 "labels" = ifelse(!is_empty(.cv$labels$nodes), .cv$labels$nodes[[1]]$name, NA),
 								 "milestone" = ifelse(is.null(.cv$milestone), NA, .cv$milestone),
 								 "state" = .cv$state)
 
 		return(.acc)
-	}, .init = tibble("title" = character(), "body" = character(), "creator" = character(), "number" = integer(), "labels" = character(), "milestones" = character(), "state" = character(), .rows = 0))
+	}, .init = tibble("title" = character(), "body" = character(), "creator" = character(), "number" = integer(), "milestones" = character(), "state" = character(), .rows = 0))
 
 	return(issues)
+}
+
+#' Gets a data frame of the labels of each issue
+#' @inheritParams get_milestones
+#' @return A data frame containing issue | label of each issue
+#' @importFrom purrr reduce map_df keep
+#' @importFrom tibble tibble add_row
+#' @importFrom dplyr mutate
+get_issue_labels <- function(org, repo, .api_url = "https://api.github.com/graphql"){
+	data <- graphql_query("issue_labels.graphql", org = org, repo = repo, .api_url = .api_url)$repository$issues$nodes
+	data <- keep(data, ~length(.x$labels$nodes) > 0)
+
+	labels <- map_df(data, function(x){
+		label_data <- reduce(x$labels$nodes, function(.acc, .cv){
+			return(.acc %>% add_row("label" = .cv$name))
+		}, .init = tibble("label" = character(), .rows = 0))
+
+		return(label_data %>% mutate("issue" = x$number))
+	})
+	return(labels)
 }
 
 #' Gets a data frame of the project board events of each issue
