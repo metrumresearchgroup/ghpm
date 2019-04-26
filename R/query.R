@@ -75,6 +75,26 @@ get_issue_labels <- function(org, repo, .api_url = "https://api.github.com/graph
 	return(labels)
 }
 
+#' Gets a data frame of the assignees of each issue
+#' @inheritParams get_milestones
+#' @return A data frame containing issue | assignedTo of each issue
+#' @importFrom purrr reduce map_df keep
+#' @importFrom tibble tibble add_row
+#' @importFrom dplyr mutate
+get_issue_assignees <- function(org, repo, .api_url = "https://api.github.com/graphql"){
+	data <- graphql_query("issue_assignees.graphql", org = org, repo = repo, .api_url = .api_url)$repository$issues$nodes
+	data <- keep(data, ~length(.x$assignees$nodes) > 0)
+
+	assignees <- map_df(data, function(x){
+		assignee_data <- reduce(x$assignees$nodes, function(.acc, .cv){
+			return(.acc %>% add_row("assignedTo" = .cv$login))
+		}, .init = tibble("assignedTo" = character(), .rows = 0))
+
+		return(assignee_data %>% mutate("issue" = x$number))
+	})
+	return(assignees)
+}
+
 #' Gets a data frame of the project board events of each issue
 #' @inheritParams get_milestones
 #' @return A data frame containing issue | project | type | column | author | date of each issue
