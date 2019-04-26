@@ -39,7 +39,7 @@ get_milestones <- function(org, repo, .api_url = "https://api.github.com/graphql
 #' @importFrom tibble tibble add_row
 #' @export
 get_issues <- function(org, repo, .api_url = "https://api.github.com/graphql"){
-	data <- graphql_query("issues.graphql", org = "metrumresearchgroup", repo = "pkgr", .api_url = .api_url)$repository$issues$nodes
+	data <- graphql_query("issues.graphql", org = org, repo = repo, .api_url = .api_url)$repository$issues$nodes
 	issues <- reduce(data, function(.acc, .cv){
 		.acc <- .acc %>% add_row("Title" = .cv$title,
 								 "Body" = .cv$bodyText,
