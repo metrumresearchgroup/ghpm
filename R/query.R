@@ -61,6 +61,7 @@ get_issues <- function(org, repo, .api_url = "https://api.github.com/graphql"){
 #' @importFrom purrr reduce map_df keep
 #' @importFrom tibble tibble add_row
 #' @importFrom dplyr mutate
+#' @export
 get_issue_labels <- function(org, repo, .api_url = "https://api.github.com/graphql"){
 	data <- graphql_query("issue_labels.graphql", org = org, repo = repo, .api_url = .api_url)$repository$issues$nodes
 	data <- keep(data, ~length(.x$labels$nodes) > 0)
@@ -81,6 +82,7 @@ get_issue_labels <- function(org, repo, .api_url = "https://api.github.com/graph
 #' @importFrom purrr reduce map_df keep
 #' @importFrom tibble tibble add_row
 #' @importFrom dplyr mutate
+#' @export
 get_issue_assignees <- function(org, repo, .api_url = "https://api.github.com/graphql"){
 	data <- graphql_query("issue_assignees.graphql", org = org, repo = repo, .api_url = .api_url)$repository$issues$nodes
 	data <- keep(data, ~length(.x$assignees$nodes) > 0)
@@ -101,6 +103,7 @@ get_issue_assignees <- function(org, repo, .api_url = "https://api.github.com/gr
 #' @importFrom purrr reduce map_df keep
 #' @importFrom tibble tibble add_row
 #' @importFrom dplyr mutate arrange
+#' @export
 get_issue_events <- function(org, repo, .api_url = "https://api.github.com/graphql"){
 	data <- graphql_query("issue_events.graphql", org = org, repo = repo, .header = c("Accept" = "application/vnd.github.starfox-preview+json"))$repository$issues$nodes
 	data <- keep(data, ~length(.x$timelineItems$nodes) > 0)
@@ -127,6 +130,7 @@ get_issue_events <- function(org, repo, .api_url = "https://api.github.com/graph
 #' @importFrom purrr reduce map_df keep
 #' @importFrom tibble tibble add_row
 #' @importFrom dplyr mutate
+#' @export
 get_issue_comments <- function(org, repo, .api_url = "https://api.github.com/graphql"){
 	data <- graphql_query("issue_comments.graphql", org = org, repo = repo)$repository$issues$nodes
 	data <- keep(data, ~length(.x$comments$nodes) > 0)
