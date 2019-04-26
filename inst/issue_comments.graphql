@@ -3,7 +3,7 @@ query issue_comments($org: String!, $repo: String!) {
     issues(first: 100){
       nodes{
         number
-        comments(first: 100){
+        comments(first: 20){
           nodes{
             author {
               login

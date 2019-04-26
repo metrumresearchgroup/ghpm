@@ -29,7 +29,7 @@ get_milestones <- function(org, repo, .api_url = "https://api.github.com/graphql
 								"State" = .cv$state,
 								"Author" = .cv$creator$login,
 								"Url" = .cv$url))
-	}, .init = tibble("Title" = NA, "Description" = NA, "State" = NA, "Author" = NA, "Url" = NA))
+	}, .init = tibble("Title" = character(), "Description" = character(), "State" = character(), "Author" = character(), "Url" = character(), .rows = 0))
 	return(milestones)
 }
 
@@ -51,7 +51,7 @@ get_issues <- function(org, repo, .api_url = "https://api.github.com/graphql"){
 								 "State" = .cv$state)
 
 		return(.acc)
-	}, .init = tibble("Title" = NA, "Body" = NA, "Author" = NA, "Number" = NA, "Labels" = NA, "Milestone" = NA, "State" = NA))
+	}, .init = tibble("Title" = character(), "Body" = character(), "Author" = character(), "Number" = integer(), "Labels" = character(), "Milestone" = character(), "State" = character(), .rows = 0))
 
 	return(issues)
 }
@@ -94,12 +94,13 @@ get_issue_comments <- function(org, repo, .api_url = "https://api.github.com/gra
 
 		return(comment_data %>% mutate("Issue" = x$number))
 	})
+
 	return(comments)
 }
 
 #' Gets a data frame of the issues and their columns on the project board
 #' @inheritParams get_milestones
-#' @return A data frame
+#' @return A data frame containing the Issue | Title | Column | Board of the project boards
 #' @importFrom purrr map_df reduce
 #' @importFrom tibble tibble
 #' @importFrom dplyr mutate
@@ -109,8 +110,8 @@ get_projectboard <- function(org, repo, .api_url = "https://api.github.com/graph
 
 	projects <- map_df(data, function(x){
 		result <- reduce(x$columns$nodes, get_projectboard_columns,
-						 .init = tibble(Number = numeric(), Title = character(), Column = character(), .rows = 0))
-		return(result %>% mutate(board = x$name))
+						 .init = tibble("Issue" = numeric(), "Title" = character(), "Column" = character(), .rows = 0))
+		return(result %>% mutate("Board" = x$name))
 	})
 
 	return(projects)
