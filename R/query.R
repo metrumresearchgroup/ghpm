@@ -39,7 +39,7 @@ get_milestones <- function(org, repo, .api_url = "https://api.github.com/graphql
 #' @importFrom purrr reduce
 #' @importFrom tibble tibble add_row
 get_issues <- function(org, repo, .api_url = "https://api.github.com/graphql"){
-	data <- graphql_query("issues.graphql", org = "metrumresearchgroup", repo = "pkgr")$repository$issues$nodes
+	data <- graphql_query("issues.graphql", org = org, repo = repo)$repository$issues$nodes
 	issues <- reduce(data, function(.acc, .cv){
 		.acc <- .acc %>% add_row("Title" = .cv$title, "Body" = .cv$bodyText, "Author" = .cv$author$login, "Number" = .cv$number, "Labels" = ifelse(!is_empty(.cv$labels$nodes), .cv$labels$nodes[[1]]$name, NA), "Milestone" = ifelse(is.null(.cv$milestone), "None", .cv$milestone), "State" = .cv$state)
 
@@ -56,7 +56,7 @@ get_issues <- function(org, repo, .api_url = "https://api.github.com/graphql"){
 #' @importFrom tibble tibble add_row
 #' @importFrom dplyr mutate arrange
 get_issue_events <- function(org, repo, .api_url = "https://api.github.com/graphql"){
-	data <- graphql_query("issue_events.graphql", org = "metrumresearchgroup", repo = "pkgr", .header = c("Accept" = "application/vnd.github.starfox-preview+json"))$repository$issues$nodes
+	data <- graphql_query("issue_events.graphql", org = org, repo = repo, .header = c("Accept" = "application/vnd.github.starfox-preview+json"))$repository$issues$nodes
 	data <- keep(data, ~length(.x$timelineItems$nodes) > 0)
 
 	timeline <- map_df(data, function(x){
