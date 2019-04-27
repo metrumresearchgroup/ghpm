@@ -1,0 +1,18 @@
+query pullrequest_reviewers($org: String!, $repo: String!) {
+  repository(owner: $org, name: $repo) {
+    pullRequests(first: 100) {
+      nodes {
+        number
+        reviewRequests(first:100){
+          nodes {
+            requestedReviewer{
+              ... on User {
+                login
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

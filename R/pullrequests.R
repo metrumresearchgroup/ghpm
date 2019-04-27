@@ -48,3 +48,26 @@ get_pullrequest_comments <- function(org, repo, .api_url = "https://api.github.c
 
 	return(comments %>% select("pullrequest", "author", "body", "createdAt"))
 }
+
+#' Gets a data frame of the reviewers of all the pull requests of a given repo
+#' @inheritParams get_milestones
+#' @return A data frame containing the pullrequest | reviewer
+#' @importFrom purrr keep map_df reduce
+#' @importFrom tibble tibble add_row
+#' @importFrom dplyr mutate select
+#' @export
+get_pullrequest_reviewers <- function(org, repo, .api_url = "https://api.github.com/graphql"){
+	data <- graphql_query("pullrequests/pullrequest_reviewers.graphql", org = org, repo = repo, .api_url = .api_url)$repository$pullRequests$nodes
+	data <- keep(data, ~length(.x$reviewRequests$nodes) > 0)
+
+	reviewers <- map_df(data, function(x){
+		review_data <- reduce(x$reviewRequests$nodes, function(.acc, .cv){
+			return(.acc %>% add_row("reviewer" = .cv$requestedReviewer$login))
+		}, .init = tibble("reviewer" = character(), .rows = 0))
+
+		return(review_data %>% mutate("pullrequest" = x$number))
+	})
+
+	return(reviewers %>% select("pullrequest", "reviewer"))
+}
+
