@@ -71,3 +71,23 @@ get_pullrequest_reviewers <- function(org, repo, .api_url = "https://api.github.
 	return(reviewers %>% select("pullrequest", "reviewer"))
 }
 
+#' Gets a data frame of the commits of all the pull requests of a given repo
+#' @inheritParams get_milestones
+#' @return A data frame containing the pullrequest | message | author | date of each commit of a pull request
+#' @importFrom purrr keep map_df reduce
+#' @importFrom tibble tibble add_row
+#' @importFrom dplyr mutate select
+#' @export
+get_pullrequest_commits <- function(org, repo, .api_url = "https://api.github.com/graphql"){
+	data <- graphql_query("pullrequests/pullrequest_commits.graphql", org = org, repo = repo, .api_url = .api_url)$repository$pullRequests$nodes
+
+	commits <- map_df(data, function(x){
+		commit_data <- reduce(x$commits$nodes, function(.acc, .cv){
+			return(.acc %>% add_row("message" = .cv$commit$message, "author" = .cv$commit$author$name, "date" = .cv$commit$authoredDate))
+		}, .init = tibble("message" = character(), "author" = character(), "date" = character(), .rows = 0))
+
+		return(commit_data %>% mutate("pullrequest" = x$number))
+	})
+
+	return(commits %>% select("pullrequest", "message", "author", "date"))
+}
