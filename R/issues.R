@@ -1,13 +1,13 @@
 #' Gets a data frame of the issues associated with a given repo
 #' @inheritParams get_milestones
-#' @return A data frame containing the title | body | creator | number | labels | milestone | state of each issue
+#' @return A data frame containing the issue | title | body | creator | milestone | state of each issue
 #' @importFrom purrr reduce
 #' @importFrom tibble tibble add_row
 #' @export
 get_issues <- function(org, repo, .api_url = "https://api.github.com/graphql"){
 	data <- graphql_query("issues/issues.graphql", org = org, repo = repo, .api_url = .api_url)$repository$issues$nodes
 	issues <- reduce(data, function(.acc, .cv){
-		.acc <- .acc %>% add_row("number" = .cv$number,
+		.acc <- .acc %>% add_row("issue" = .cv$number,
 								 "title" = .cv$title,
 								 "body" = .cv$bodyText,
 								 "creator" = .cv$author$login,
@@ -15,7 +15,7 @@ get_issues <- function(org, repo, .api_url = "https://api.github.com/graphql"){
 								 "state" = .cv$state)
 
 		return(.acc)
-	}, .init = tibble("number" = integer(), "title" = character(), "body" = character(), "creator" = character(), "milestone" = character(), "state" = character(), .rows = 0))
+	}, .init = tibble("issue" = integer(), "title" = character(), "body" = character(), "creator" = character(), "milestone" = character(), "state" = character(), .rows = 0))
 
 	return(issues)
 }
