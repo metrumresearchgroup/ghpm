@@ -15,7 +15,7 @@ get_issue_assignees(org, repo,
 \item{.api_url}{Optional API url to query. Defaults to "https://api.github.com/graphql"}
 }
 \value{
-A data frame containing issue | assignedTo of each issue
+A data frame containing issue | assignedTo of each issue. Returns an empty dataframe if none are found.
 }
 \description{
 Gets a data frame of the assignees of each issue

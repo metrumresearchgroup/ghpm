@@ -14,7 +14,7 @@ get_issue_labels(org, repo, .api_url = "https://api.github.com/graphql")
 \item{.api_url}{Optional API url to query. Defaults to "https://api.github.com/graphql"}
 }
 \value{
-A data frame containing issue | label of each issue
+A data frame containing issue | label of each issue. Returns an empty dataframe if none are found.
 }
 \description{
 Gets a data frame of the labels of each issue
