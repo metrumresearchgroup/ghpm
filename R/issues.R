@@ -11,11 +11,11 @@ get_issues <- function(org, repo, .api_url = "https://api.github.com/graphql"){
 								 "title" = .cv$title,
 								 "body" = .cv$bodyText,
 								 "creator" = .cv$author$login,
-								 "milestone" = ifelse(is.null(.cv$milestone), NA, .cv$milestone),
+								 "milestone" = ifelse(is.null(.cv$milestone), NA, .cv$milestone$title),
 								 "state" = .cv$state)
 
 		return(.acc)
-	}, .init = tibble("number" = integer(), "title" = character(), "body" = character(), "creator" = character(), "milestones" = character(), "state" = character(), .rows = 0))
+	}, .init = tibble("number" = integer(), "title" = character(), "body" = character(), "creator" = character(), "milestone" = character(), "state" = character(), .rows = 0))
 
 	return(issues)
 }
@@ -83,10 +83,10 @@ get_issue_events <- function(org, repo, .api_url = "https://api.github.com/graph
 
 		}, .init = tibble("project" = character(), "type" = character(), "column" = character(), "author" = character(), "date" = character(), .rows = 0))
 
-		return(event_data %>% mutate("Issue" = x$number))
+		return(event_data %>% mutate("issue" = x$number))
 	})
 
-	return(timeline %>% arrange(Project))
+	return(timeline %>% arrange(project))
 }
 
 #' Gets a data frame of the comments of each issue
@@ -94,7 +94,7 @@ get_issue_events <- function(org, repo, .api_url = "https://api.github.com/graph
 #' @return A data frame containing the issue | date | author | comment of each issue
 #' @importFrom purrr reduce map_df keep
 #' @importFrom tibble tibble add_row
-#' @importFrom dplyr mutate
+#' @importFrom dplyr mutate select
 #' @export
 get_issue_comments <- function(org, repo, .api_url = "https://api.github.com/graphql"){
 	data <- graphql_query("issues/issue_comments.graphql", org = org, repo = repo)$repository$issues$nodes
@@ -108,5 +108,5 @@ get_issue_comments <- function(org, repo, .api_url = "https://api.github.com/gra
 		return(comment_data %>% mutate("issue" = x$number))
 	})
 
-	return(comments)
+	return(comments %>% select("issue", "comment", "author", "date"))
 }

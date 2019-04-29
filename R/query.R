@@ -10,8 +10,8 @@
 graphql_query <- function(file, ..., .api_url = "https://api.github.com/graphql", .header = NULL) {
 	file <- system.file(file, package = "ghpm")
 	query <- readChar(file, file.info(file)$size)
-	return(gh("POST ", query = query, variables = compact(list(...)), .send_headers = .header)$data, .api_url = .api_url,
-		   .token = ifelse(.api_url == "https://api.github.com/graphql", Sys.getenv("GITHUB_PAT"), Sys.getenv("GHE_PAT")))
+	return(gh("POST ", query = query, variables = compact(list(...)), .send_headers = .header, .api_url = .api_url,
+		   .token = ifelse(.api_url == "https://api.github.com/graphql", Sys.getenv("GITHUB_PAT"), Sys.getenv("GHE_PAT")))$data)
 }
 
 #' Gets a data frame of the milestones associated with a given repo.
