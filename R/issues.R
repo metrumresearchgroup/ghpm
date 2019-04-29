@@ -1,6 +1,6 @@
 #' Gets a data frame of the issues associated with a given repo
 #' @inheritParams get_milestones
-#' @return A data frame containing the issue | title | body | creator | labels | milestone | state of each issue
+#' @return A data frame containing the issue | title | body | creator | milestone | state of each issue
 #' @importFrom purrr reduce
 #' @importFrom tibble tibble add_row
 #' @export
