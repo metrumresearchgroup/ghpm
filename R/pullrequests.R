@@ -12,17 +12,17 @@ get_pullrequests <- function(org, repo, .api_url = "https://api.github.com/graph
 								 "title" = .cv$title,
 								 "author" = .cv$author$login,
 								 "body" = .cv$bodyText,
-								 "milestone" = ifelse(is.null(.cv$milestone), NA, .cv$milestone$title),
-								 "createdAt" = .cv$createdAt,
-								 "mergedBy" = ifelse(is.null(.cv$mergedBy), NA, .cv$mergedBy$login),
-								 "mergedAt" = ifelse(is.null(.cv$mergedAt), NA, .cv$mergedAt),
-								 "mergedTo" = .cv$baseRefName,
+								 "milestone" = ifelse(is.null(.cv$milestone), NA_character_, .cv$milestone$title),
+								 "created_at" = .cv$createdAt,
+								 "merged_by" = ifelse(is.null(.cv$mergedBy), NA_character_, .cv$mergedBy$login),
+								 "merged_at" = ifelse(is.null(.cv$mergedAt), NA_character_, .cv$mergedAt),
+								 "merged_to" = .cv$baseRefName,
 								 "state" = .cv$state)
 
 		return(.acc)
 	}, .init = tibble("number" = integer(), "title" = character(), "author" = character(), "body" = character(),
-					  "milestone" = character(), "createdAt" = character(), "mergedBy" = character(),
-					  "mergedAt" = character(), "mergedTo" = character(), "state" = character(), .rows = 0))
+					  "milestone" = character(), "created_at" = character(), "merged_by" = character(),
+					  "merged_at" = character(), "merged_to" = character(), "state" = character(), .rows = 0))
 
 	return(prs)
 }
@@ -32,7 +32,7 @@ get_pullrequests <- function(org, repo, .api_url = "https://api.github.com/graph
 #' @return A data frame containing the pullrequest | author | body | createdAt of each pull request comment
 #' @importFrom purrr keep map_df reduce
 #' @importFrom tibble tibble add_row
-#' @importFrom dplyr mutate select
+#' @importFrom dplyr mutate select everything
 #' @export
 get_pullrequest_comments <- function(org, repo, .api_url = "https://api.github.com/graphql"){
 	data <- graphql_query("pullrequests/pullrequest_comments.graphql", org = org, repo = repo, .api_url = .api_url)$repository$pullRequests$nodes
@@ -40,13 +40,13 @@ get_pullrequest_comments <- function(org, repo, .api_url = "https://api.github.c
 
 	comments <- map_df(data, function(x){
 		comment_data <- reduce(x$comments$nodes, function(.acc, .cv){
-			return(.acc %>% add_row("author" = .cv$author$login, "body" = .cv$bodyText, "createdAt" = .cv$createdAt))
-		}, .init = tibble("author" = character(), "body" = character(), "createdAt" = character(), .rows = 0))
+			return(.acc %>% add_row("author" = .cv$author$login, "body" = .cv$bodyText, "created_at" = .cv$createdAt))
+		}, .init = tibble("author" = character(), "body" = character(), "created_at" = character(), .rows = 0))
 
 		return(comment_data %>% mutate("pullrequest" = x$number))
 	})
 
-	return(comments %>% select("pullrequest", "author", "body", "createdAt"))
+	return(comments %>% select("pullrequest", everything()))
 }
 
 #' Gets a data frame of the reviewers of all the pull requests of a given repo
@@ -54,7 +54,7 @@ get_pullrequest_comments <- function(org, repo, .api_url = "https://api.github.c
 #' @return A data frame containing the pullrequest | reviewer
 #' @importFrom purrr keep map_df reduce
 #' @importFrom tibble tibble add_row
-#' @importFrom dplyr mutate select
+#' @importFrom dplyr mutate select everything
 #' @export
 get_pullrequest_reviewers <- function(org, repo, .api_url = "https://api.github.com/graphql"){
 	data <- graphql_query("pullrequests/pullrequest_reviewers.graphql", org = org, repo = repo, .api_url = .api_url)$repository$pullRequests$nodes
@@ -68,26 +68,26 @@ get_pullrequest_reviewers <- function(org, repo, .api_url = "https://api.github.
 		return(review_data %>% mutate("pullrequest" = x$number))
 	})
 
-	return(reviewers %>% select("pullrequest", "reviewer"))
+	return(reviewers %>% select("pullrequest", everything()))
 }
 
 #' Gets a data frame of the commits of all the pull requests of a given repo
 #' @inheritParams get_milestones
-#' @return A data frame containing the pullrequest | message | author | date of each commit of a pull request
+#' @return A data frame containing the pullrequest | oid | message | author | date of each commit of a pull request
 #' @importFrom purrr keep map_df reduce
 #' @importFrom tibble tibble add_row
-#' @importFrom dplyr mutate select
+#' @importFrom dplyr mutate select everything
 #' @export
 get_pullrequest_commits <- function(org, repo, .api_url = "https://api.github.com/graphql"){
 	data <- graphql_query("pullrequests/pullrequest_commits.graphql", org = org, repo = repo, .api_url = .api_url)$repository$pullRequests$nodes
 
 	commits <- map_df(data, function(x){
 		commit_data <- reduce(x$commits$nodes, function(.acc, .cv){
-			return(.acc %>% add_row("message" = .cv$commit$message, "author" = .cv$commit$author$name, "date" = .cv$commit$authoredDate))
-		}, .init = tibble("message" = character(), "author" = character(), "date" = character(), .rows = 0))
+			return(.acc %>% add_row("oid" = .cv$commit$oid, "message" = .cv$commit$message, "author" = .cv$commit$author$name, "date" = .cv$commit$authoredDate))
+		}, .init = tibble("oid" = character(), "message" = character(), "author" = character(), "date" = character(), .rows = 0))
 
 		return(commit_data %>% mutate("pullrequest" = x$number))
 	})
 
-	return(commits %>% select("pullrequest", "message", "author", "date"))
+	return(commits %>% select("pullrequest", everything()))
 }

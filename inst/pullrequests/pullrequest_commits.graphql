@@ -6,6 +6,7 @@ query pullrequest_commits($org: String!, $repo: String!) {
         commits(first: 100) {
           nodes {
             commit {
+              oid
               author {
                 name
               }

@@ -15,7 +15,7 @@ get_pullrequest_commits(org, repo,
 \item{.api_url}{Optional API url to query. Defaults to "https://api.github.com/graphql"}
 }
 \value{
-A data frame containing the pullrequest | message | author | date of each commit of a pull request
+A data frame containing the pullrequest | oid | message | author | date of each commit of a pull request
 }
 \description{
 Gets a data frame of the commits of all the pull requests of a given repo
