@@ -27,7 +27,7 @@ test_that("Default behavior of get_pullrequest_reviewers()", {
 	expect_equal(get_pullrequest_reviewers("some", "value"), readRDS("pullrequests/validated_pullrequest_reviewers.rds"))
 })
 
-test_that("Default behavior of get_pullrequest_commits()", {
+test_that("Default behavior of get_pullrequest_commits() with conventional commits DISABLED", {
 	mockery::stub(
 		get_pullrequest_commits,
 		"graphql_query",

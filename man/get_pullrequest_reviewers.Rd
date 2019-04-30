@@ -15,7 +15,7 @@ get_pullrequest_reviewers(org, repo,
 \item{.api_url}{Optional API url to query. Defaults to "https://api.github.com/graphql"}
 }
 \value{
-A data frame containing the pullrequest | reviewer
+A data frame containing the pullrequest | reviewer. Returns an empty dataframe if none are found.
 }
 \description{
 Gets a data frame of the reviewers of all the pull requests of a given repo

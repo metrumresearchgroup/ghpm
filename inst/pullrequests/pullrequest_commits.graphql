@@ -10,6 +10,7 @@ query pullrequest_commits($org: String!, $repo: String!) {
               author {
                 name
               }
+              messageHeadline
               message
               authoredDate
             }
