@@ -1,13 +1,20 @@
 #' Gets a data frame of the commits of all the pull requests of a given repo
 #' @inheritParams get_milestones
+#' @param branch The head branch whose pull request to grab commits from. (ie: a pullrequest from dev to master, dev would be the branch)
 #' @param .cc Parse the commits as conventional commits. Defaults to FALSE.
 #' @return A data frame containing the pullrequest | oid | message | author | date of each commit of a pull request.
+#' If .cc = TRUE, the data frame will contain pullrequest | oid | type | description | body | footer | author | date
 #' @importFrom purrr keep map_df reduce
 #' @importFrom tibble tibble add_row
-#' @importFrom dplyr mutate select everything
+#' @importFrom dplyr mutate select
+#' @importFrom glue glue
 #' @export
-get_pullrequest_commits <- function(org, repo, .cc = FALSE, .api_url = "https://api.github.com/graphql"){
-	data <- graphql_query("pullrequests/pullrequest_commits.graphql", org = org, repo = repo, .api_url = .api_url)$repository$pullRequests$nodes
+get_pullrequest_commits <- function(org, repo, branch, .cc = FALSE, .api_url = "https://api.github.com/graphql"){
+	data <- graphql_query("pullrequests/pullrequest_commits.graphql", org = org, repo = repo, branch = branch, .api_url = .api_url)$repository$pullRequests$nodes
+
+	if(!length(data)){
+		stop(glue("No branch with the name {branch} was found in this repo."))
+	}
 
 	commits <- map_df(data, function(x){
 		commit_data <- reduce(x$commits$nodes, function(.acc, .cv){
@@ -15,7 +22,7 @@ get_pullrequest_commits <- function(org, repo, .cc = FALSE, .api_url = "https://
 		}, .init = tibble("oid" = character(), "summary" = character(), "message" = character(), "author" = character(), "date" = character(), .rows = 0))
 
 		return(commit_data %>% mutate("pullrequest" = x$number))
-	})
+	}) %>% mutate("date" = as.Date(date))
 
 	if(!.cc) return(commits %>% select("pullrequest", "oid", "message", "author", "date"))
 
@@ -23,7 +30,7 @@ get_pullrequest_commits <- function(org, repo, .cc = FALSE, .api_url = "https://
 		commits %>% select("summary", "message") %>% slice(i) %>% as.list()
 	}), process_commit)
 
-	return(commits %>% bind_cols(cc_commits) %>% select("oid", "type", "description", "body", "footer", "author", "date"))
+	return(commits %>% bind_cols(cc_commits) %>% select("pullrequest", "oid", "type", "description", "body", "footer", "author", "date"))
 
 }
 

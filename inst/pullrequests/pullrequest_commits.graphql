@@ -1,6 +1,6 @@
-query pullrequest_commits($org: String!, $repo: String!) {
+query pullrequest_commits($org: String!, $repo: String!, $branch: String!) {
   repository(owner: $org, name: $repo) {
-    pullRequests(first: 100) {
+    pullRequests(first: 100, headRefName: $branch) {
       nodes {
         number
         commits(first: 100) {
