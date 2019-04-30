@@ -14,7 +14,7 @@ get_issues(org, repo, .api_url = "https://api.github.com/graphql")
 \item{.api_url}{Optional API url to query. Defaults to "https://api.github.com/graphql"}
 }
 \value{
-A data frame containing the number | title | body | creator | milestone | state of each issue
+A data frame containing the issue | title | body | creator | milestone | state of each issue
 }
 \description{
 Gets a data frame of the issues associated with a given repo

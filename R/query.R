@@ -6,12 +6,19 @@
 #' @return The list containing the query result
 #' @importFrom gh gh
 #' @importFrom purrr compact
+#' @importFrom glue glue
 #' @export
 graphql_query <- function(file, ..., .api_url = "https://api.github.com/graphql", .header = NULL) {
 	file <- system.file(file, package = "ghpm")
 	query <- readChar(file, file.info(file)$size)
-	return(gh("POST ", query = query, variables = compact(list(...)), .send_headers = .header, .api_url = .api_url,
-		   .token = ifelse(.api_url == "https://api.github.com/graphql", Sys.getenv("GITHUB_PAT"), Sys.getenv("GHE_PAT")))$data)
+
+	token <- ifelse(.api_url == "https://api.github.com/graphql", "GITHUB_PAT", "GHE_PAT")
+	if(Sys.getenv(token) == ""){
+		stop(glue::glue("please set the environment variable {token} to authorize"))
+	}
+
+	return(gh("POST ", query = query, variables = compact(list(...)), .send_headers = .header,
+			  .api_url = .api_url, .token = Sys.getenv(token))$data)
 }
 
 #' Gets a data frame of the milestones associated with a given repo.

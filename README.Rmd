@@ -16,15 +16,12 @@ library(ghpm)
 library(dplyr)
 
 # Returns a dataframe displaying the general information of each issue
-issues <- get_issues("groupname", "packagename") 
+issues <- get_issues("<groupname>", "<packagename>") 
 
-# Filter for a specific milestone
+# Returning a dataframe gives us access to all the dplyr functions.
 issues_v1 <- issues %>% filter(milestone == "v0.1.0")
 
-# Returns a dataframe of the labels of each issue and filter on "features"
-features <- get_issue_labels("groupname", "packagename") %>% filter(label == "feature")
-
-# Then all we need to do is join!
+features <- get_issue_labels("<groupname>", "<packagename>") %>% filter(label == "feature")
 
 issue_features <- issues_v1 %>% left_join(features, by = issue)
 ```
