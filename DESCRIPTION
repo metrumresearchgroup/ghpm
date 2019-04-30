@@ -15,5 +15,6 @@ Imports:
     purrr,
     magrittr
 Suggests: 
-    testthat
+    testthat,
+    mockery
 RoxygenNote: 6.1.1
