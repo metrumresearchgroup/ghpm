@@ -29,7 +29,7 @@ get_pullrequests <- function(org, repo, .api_url = "https://api.github.com/graph
 
 #' Gets a data frame of the comments of all the pull requests of a given repo
 #' @inheritParams get_milestones
-#' @return A data frame containing the pullrequest | author | body | createdAt of each pull request comment
+#' @return A data frame containing the pullrequest | author | body | createdAt of each pull request comment. Returns an empty dataframe if none are found.
 #' @importFrom purrr keep map_df reduce
 #' @importFrom tibble tibble add_row
 #' @importFrom dplyr mutate select everything
@@ -37,6 +37,10 @@ get_pullrequests <- function(org, repo, .api_url = "https://api.github.com/graph
 get_pullrequest_comments <- function(org, repo, .api_url = "https://api.github.com/graphql"){
 	data <- graphql_query("pullrequests/pullrequest_comments.graphql", org = org, repo = repo, .api_url = .api_url)$repository$pullRequests$nodes
 	data <- keep(data, ~length(.x$comments$nodes) > 0)
+
+	if(!length(data)){
+		return(tibble("pullrequest" = numeric(), "author" = character(), "body" = character(), "created_at" = character(), .rows = 0))
+	}
 
 	comments <- map_df(data, function(x){
 		comment_data <- reduce(x$comments$nodes, function(.acc, .cv){
@@ -51,7 +55,7 @@ get_pullrequest_comments <- function(org, repo, .api_url = "https://api.github.c
 
 #' Gets a data frame of the reviewers of all the pull requests of a given repo
 #' @inheritParams get_milestones
-#' @return A data frame containing the pullrequest | reviewer
+#' @return A data frame containing the pullrequest | reviewer. Returns an empty dataframe if none are found.
 #' @importFrom purrr keep map_df reduce
 #' @importFrom tibble tibble add_row
 #' @importFrom dplyr mutate select everything
@@ -59,6 +63,10 @@ get_pullrequest_comments <- function(org, repo, .api_url = "https://api.github.c
 get_pullrequest_reviewers <- function(org, repo, .api_url = "https://api.github.com/graphql"){
 	data <- graphql_query("pullrequests/pullrequest_reviewers.graphql", org = org, repo = repo, .api_url = .api_url)$repository$pullRequests$nodes
 	data <- keep(data, ~length(.x$reviewRequests$nodes) > 0)
+
+	if(!length(data)){
+		return(tibble("pullrequest" = numeric(), "reviewer" = character(), .rows = 0))
+	}
 
 	reviewers <- map_df(data, function(x){
 		review_data <- reduce(x$reviewRequests$nodes, function(.acc, .cv){
@@ -73,7 +81,7 @@ get_pullrequest_reviewers <- function(org, repo, .api_url = "https://api.github.
 
 #' Gets a data frame of the commits of all the pull requests of a given repo
 #' @inheritParams get_milestones
-#' @return A data frame containing the pullrequest | oid | message | author | date of each commit of a pull request
+#' @return A data frame containing the pullrequest | oid | message | author | date of each commit of a pull request.
 #' @importFrom purrr keep map_df reduce
 #' @importFrom tibble tibble add_row
 #' @importFrom dplyr mutate select everything
