@@ -1,0 +1,14 @@
+query issue_assignees($org: String!, $repo: String!) {
+  repository(owner: $org, name: $repo) {
+    issues(first: 100){
+      nodes{
+        number
+        assignees(first:10) {
+          nodes {
+            login
+          }
+        }
+      }
+    }
+  }
+}
