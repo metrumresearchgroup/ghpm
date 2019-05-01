@@ -14,7 +14,7 @@ get_pullrequests(org, repo, .api_url = "https://api.github.com/graphql")
 \item{.api_url}{Optional API url to query. Defaults to "https://api.github.com/graphql"}
 }
 \value{
-A data frame containing the number | title | author | body | milestone | createdAt | mergedBy | mergedAt | mergedTo | state of each issue
+A data frame containing the pullrequest | title | author | body | milestone | created_at | merged_by | merged_at | merged_to | state of each issue
 }
 \description{
 Gets a data frame of the pullrequests associated with a given repo

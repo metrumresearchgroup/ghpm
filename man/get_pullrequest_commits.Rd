@@ -4,7 +4,7 @@
 \alias{get_pullrequest_commits}
 \title{Gets a data frame of the commits of all the pull requests of a given repo}
 \usage{
-get_pullrequest_commits(org, repo, branch, .cc = FALSE,
+get_pullrequest_commits(org, repo, number, .cc = FALSE,
   .api_url = "https://api.github.com/graphql")
 }
 \arguments{
@@ -12,15 +12,15 @@ get_pullrequest_commits(org, repo, branch, .cc = FALSE,
 
 \item{repo}{Name of repository to query}
 
-\item{branch}{The head branch whose pull request to grab commits from. (ie: a pullrequest from dev to master, dev would be the branch)}
+\item{number}{The number of the pullrequest to grab commits from.}
 
 \item{.cc}{Parse the commits as conventional commits. Defaults to FALSE.}
 
 \item{.api_url}{Optional API url to query. Defaults to "https://api.github.com/graphql"}
 }
 \value{
-A data frame containing the pullrequest | oid | message | author | date of each commit of a pull request.
-If .cc = TRUE, the data frame will contain pullrequest | oid | type | description | body | footer | author | date
+A data frame containing the oid | message | author | date of each commit of a pull request.
+If .cc = TRUE, the data frame will contain oid | type | description | body | footer | author | date
 }
 \description{
 Gets a data frame of the commits of all the pull requests of a given repo

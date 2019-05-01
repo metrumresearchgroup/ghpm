@@ -1,19 +1,16 @@
-query pullrequest_commits($org: String!, $repo: String!, $branch: String!) {
+query pullrequest_commits($org: String!, $repo: String!, $number: Int!) {
   repository(owner: $org, name: $repo) {
-    pullRequests(first: 100, headRefName: $branch) {
-      nodes {
-        number
-        commits(first: 100) {
-          nodes {
-            commit {
-              oid
-              author {
-                name
-              }
-              messageHeadline
-              message
-              authoredDate
+    pullRequest(number: $number) {
+      commits(first: 100) {
+        nodes {
+          commit {
+            oid
+            author {
+              name
             }
+            messageHeadline
+            message
+            authoredDate
           }
         }
       }

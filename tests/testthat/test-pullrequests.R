@@ -35,3 +35,12 @@ test_that("Default behavior of get_pullrequest_commits() with conventional commi
 	)
 	expect_equal(get_pullrequest_commits("some", "value"), readRDS("pullrequests/validated_pullrequest_commits.rds"))
 })
+
+test_that("Default behavior of get_pullrequest_commits() with conventional commits ENABLED", {
+	mockery::stub(
+		get_pullrequest_commits,
+		"graphql_query",
+		readRDS("pullrequests/pullrequest_commits.rds")
+	)
+	expect_equal(get_pullrequest_commits("some", "value", .cc = TRUE), readRDS("pullrequests/validated_pullrequest_cc_commits.rds"))
+})

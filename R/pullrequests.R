@@ -1,14 +1,15 @@
 #' Gets a data frame of the pullrequests associated with a given repo
 #' @inheritParams get_milestones
-#' @return A data frame containing the number | title | author | body | milestone | createdAt | mergedBy | mergedAt | mergedTo | state of each issue
+#' @return A data frame containing the pullrequest | title | author | body | milestone | created_at | merged_by | merged_at | merged_to | state of each issue
 #' @importFrom purrr reduce
 #' @importFrom tibble tibble add_row
+#' @importFrom dplyr mutate
 #' @export
 get_pullrequests <- function(org, repo, .api_url = "https://api.github.com/graphql"){
 	data <- graphql_query("pullrequests/pullrequests.graphql", org = org, repo = repo, .api_url = .api_url)$repository$pullRequests$nodes
 
 	prs <- reduce(data, function(.acc, .cv){
-		.acc <- .acc %>% add_row("number" = .cv$number,
+		.acc <- .acc %>% add_row("pullrequest" = .cv$number,
 								 "title" = .cv$title,
 								 "author" = .cv$author$login,
 								 "body" = .cv$bodyText,
@@ -20,16 +21,18 @@ get_pullrequests <- function(org, repo, .api_url = "https://api.github.com/graph
 								 "state" = .cv$state)
 
 		return(.acc)
-	}, .init = tibble("number" = integer(), "title" = character(), "author" = character(), "body" = character(),
+	}, .init = tibble("pullrequest" = numeric(), "title" = character(), "author" = character(), "body" = character(),
 					  "milestone" = character(), "created_at" = character(), "merged_by" = character(),
-					  "merged_at" = character(), "merged_to" = character(), "state" = character(), .rows = 0))
+					  "merged_at" = character(), "merged_to" = character(), "state" = character(), .rows = 0)) %>%
+		mutate(created_at = as.Date(created_at),
+			   merged_at = as.Date(merged_at))
 
 	return(prs)
 }
 
 #' Gets a data frame of the comments of all the pull requests of a given repo
 #' @inheritParams get_milestones
-#' @return A data frame containing the pullrequest | author | body | createdAt of each pull request comment. Returns an empty dataframe if none are found.
+#' @return A data frame containing the pullrequest | author | body | created_at of each pull request comment. Returns an empty dataframe if none are found.
 #' @importFrom purrr keep map_df reduce
 #' @importFrom tibble tibble add_row
 #' @importFrom dplyr mutate select everything
@@ -48,7 +51,7 @@ get_pullrequest_comments <- function(org, repo, .api_url = "https://api.github.c
 		}, .init = tibble("author" = character(), "body" = character(), "created_at" = character(), .rows = 0))
 
 		return(comment_data %>% mutate("pullrequest" = x$number))
-	})
+	}) %>% mutate("created_at" = as.Date(created_at))
 
 	return(comments %>% select("pullrequest", everything()))
 }

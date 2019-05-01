@@ -1,37 +1,27 @@
 #' Gets a data frame of the commits of all the pull requests of a given repo
 #' @inheritParams get_milestones
-#' @param branch The head branch whose pull request to grab commits from. (ie: a pullrequest from dev to master, dev would be the branch)
+#' @param number The number of the pullrequest to grab commits from.
 #' @param .cc Parse the commits as conventional commits. Defaults to FALSE.
-#' @return A data frame containing the pullrequest | oid | message | author | date of each commit of a pull request.
-#' If .cc = TRUE, the data frame will contain pullrequest | oid | type | description | body | footer | author | date
-#' @importFrom purrr keep map_df reduce
+#' @return A data frame containing the oid | message | author | date of each commit of a pull request.
+#' If .cc = TRUE, the data frame will contain oid | type | description | body | footer | author | date
+#' @importFrom purrr reduce
 #' @importFrom tibble tibble add_row
-#' @importFrom dplyr mutate select
-#' @importFrom glue glue
+#' @importFrom dplyr mutate select slice bind_cols
 #' @export
-get_pullrequest_commits <- function(org, repo, branch, .cc = FALSE, .api_url = "https://api.github.com/graphql"){
-	data <- graphql_query("pullrequests/pullrequest_commits.graphql", org = org, repo = repo, branch = branch, .api_url = .api_url)$repository$pullRequests$nodes
+get_pullrequest_commits <- function(org, repo, number, .cc = FALSE, .api_url = "https://api.github.com/graphql"){
+	data <- graphql_query("pullrequests/pullrequest_commits.graphql", org = org, repo = repo, number = number, .api_url = .api_url)$repository$pullRequest$commits$nodes
 
-	if(!length(data)){
-		stop(glue("No branch with the name {branch} was found in this repo."))
-	}
+	commits <- reduce(data, function(.acc, .cv){
+		return(.acc %>% add_row("oid" = .cv$commit$oid, "summary" = .cv$commit$messageHeadline, "message" = .cv$commit$message, "author" = .cv$commit$author$name, "date" = .cv$commit$authoredDate))
+	}, .init = tibble("oid" = character(), "summary" = character(), "message" = character(), "author" = character(), "date" = character(), .rows = 0)) %>% mutate("date" = as.Date(date))
 
-	commits <- map_df(data, function(x){
-		commit_data <- reduce(x$commits$nodes, function(.acc, .cv){
-			return(.acc %>% add_row("oid" = .cv$commit$oid, "summary" = .cv$commit$messageHeadline, "message" = .cv$commit$message, "author" = .cv$commit$author$name, "date" = .cv$commit$authoredDate))
-		}, .init = tibble("oid" = character(), "summary" = character(), "message" = character(), "author" = character(), "date" = character(), .rows = 0))
-
-		return(commit_data %>% mutate("pullrequest" = x$number))
-	}) %>% mutate("date" = as.Date(date))
-
-	if(!.cc) return(commits %>% select("pullrequest", "oid", "message", "author", "date"))
+	if(!.cc) return(commits %>% select("oid", "message", "author", "date"))
 
 	cc_commits <- map_df(lapply(1:nrow(commits), function(i) {
 		commits %>% select("summary", "message") %>% slice(i) %>% as.list()
 	}), process_commit)
 
-	return(commits %>% bind_cols(cc_commits) %>% select("pullrequest", "oid", "type", "description", "body", "footer", "author", "date"))
-
+	return(commits %>% bind_cols(cc_commits) %>% select("oid", "type", "description", "body", "footer", "author", "date"))
 }
 
 #' Parses each commit list object and returns a single row data.frame
@@ -39,16 +29,8 @@ get_pullrequest_commits <- function(org, repo, branch, .cc = FALSE, .api_url = "
 #' @return 	A data.frame with the following structure type | description | body | footer
 #' @importFrom tibble tibble
 process_commit <- function(.x){
-
 	parsed_message <- parse_commit(.x$summary, .x$message)
-
-	core_df <- tibble(
-		type = parsed_message$type,
-		description = parsed_message$description,
-		body = parsed_message$body,
-		footer = parsed_message$footer
-	)
-	return(core_df)
+	return(tibble("type" = parsed_message$type, "description" = parsed_message$description, "body" = parsed_message$body, "footer" = parsed_message$footer))
 }
 
 #' Parses the commit summary and message
@@ -57,11 +39,9 @@ process_commit <- function(.x){
 #' @return A list according to spec: type | description | body | footer
 #' @importFrom stringr str_replace_all
 parse_commit <- function(commit_summary = NULL, commit_message = NULL){
-
 	if (is.null(commit_message) || commit_message == "") {
 		return(list("type" = NA_character_, "description" = NA_character_, "body" = NA_character_, "footer" = NA_character_))
 	}
-
 	return(append(parse_summary(commit_summary), parse_body(str_replace_all(commit_message, commit_summary, ""))))
 }
 
