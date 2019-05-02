@@ -1,8 +1,6 @@
-query pullrequest_comments($org: String!, $repo: String!) {
+query pull_request_comments($org: String!, $repo: String!, $number: Int!) {
   repository(owner: $org, name: $repo) {
-    pullRequests(first: 100) {
-      nodes {
-        number
+    pullRequest(number: $number) {
         comments(first: 100){
           nodes {
             author {
@@ -13,6 +11,5 @@ query pullrequest_comments($org: String!, $repo: String!) {
           }
         }
       }
-    }
   }
 }
