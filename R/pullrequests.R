@@ -7,7 +7,7 @@
 #' @importFrom readr parse_datetime
 #' @export
 get_all_pull_requests <- function(org, repo, .api_url = "https://api.github.com/graphql"){
-	data <- graphql_query("pullrequests/get_all_pull_requests.graphql", org = org, repo = repo, .api_url = .api_url)$repository$pullRequests$nodes
+	data <- graphql_query("pullrequests/all_pull_requests.graphql", org = org, repo = repo, .api_url = .api_url)$repository$pullRequests$nodes
 
 	prs <- reduce(data, function(.acc, .cv){
 		.acc <- .acc %>% add_row("pullrequest" = .cv$number,
@@ -31,33 +31,29 @@ get_all_pull_requests <- function(org, repo, .api_url = "https://api.github.com/
 	return(prs)
 }
 
-#' Gets a data frame of the comments of all the pull requests of a given repo
+#' Gets a data frame of the comments of all a pull request
 #' @inheritParams get_milestones
-#' @return A data frame containing the pullrequest | author | body | created_at of each pull request comment. Returns an empty dataframe if none are found.
-#' @importFrom purrr keep map_df reduce
+#' @param number The number of the pullrequest to grab data from.
+#' @return A data frame containing the author | body | created_at of each pull request comment. Returns an empty dataframe if none are found.
+#' @importFrom purrr reduce
 #' @importFrom tibble tibble add_row
-#' @importFrom dplyr mutate select everything
+#' @importFrom dplyr mutate
 #' @importFrom readr parse_datetime
 #' @export
-get_pullrequest_comments <- function(org, repo, .api_url = "https://api.github.com/graphql"){
-	data <- graphql_query("pullrequests/pullrequest_comments.graphql", org = org, repo = repo, .api_url = .api_url)$repository$pullRequests$nodes
-	data <- keep(data, ~length(.x$comments$nodes) > 0)
+get_pull_request_comments <- function(org, repo, number, .api_url = "https://api.github.com/graphql"){
+	data <- graphql_query("pullrequests/pull_request_comments.graphql", org = org, repo = repo, number = number, .api_url = .api_url)$repository$pullRequest$comments$nodes
 
 	if(!length(data)){
-		return(tibble("pullrequest" = numeric(), "author" = character(), "body" = character(), "created_at" = character(), .rows = 0))
+		return(tibble("author" = character(), "body" = character(), "created_at" = character(), .rows = 0))
 	}
 
-	comments <- map_df(data, function(x){
-		comment_data <- reduce(x$comments$nodes, function(.acc, .cv){
-			return(.acc %>% add_row("author" = ifelse(is.null(.cv$author), NA_character_, .cv$author$login),
-									"body" = .cv$bodyText,
-									"created_at" = .cv$createdAt))
-		}, .init = tibble("author" = character(), "body" = character(), "created_at" = character(), .rows = 0))
+	comments <- reduce(data, function(.acc, .cv){
+		return(.acc %>% add_row("author" = ifelse(is.null(.cv$author), NA_character_, .cv$author$login),
+								"body" = .cv$bodyText,
+								"created_at" = .cv$createdAt))
+		}, .init = tibble("author" = character(), "body" = character(), "created_at" = character(), .rows = 0)) %>% mutate("created_at" = parse_datetime(created_at))
 
-		return(comment_data %>% mutate("pullrequest" = x$number))
-	}) %>% mutate("created_at" = parse_datetime(created_at))
-
-	return(comments %>% select("pullrequest", everything()))
+	return(comments)
 }
 
 #' Gets a data frame of the reviewers of all the pull requests of a given repo
