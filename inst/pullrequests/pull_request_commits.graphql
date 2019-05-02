@@ -1,4 +1,4 @@
-query pullrequest_commits($org: String!, $repo: String!, $number: Int!) {
+query pull_request_commits($org: String!, $repo: String!, $number: Int!) {
   repository(owner: $org, name: $repo) {
     pullRequest(number: $number) {
       commits(first: 100) {
