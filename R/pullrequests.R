@@ -1,4 +1,4 @@
-#' Gets a data frame of the pullrequests associated with a given repo
+#' Gets a data frame of the pull requests associated with a given repo
 #' @inheritParams get_milestones
 #' @return A data frame containing the pullrequest | title | author | body | milestone | created_at | merged_by | merged_at | merged_to | state of each issue
 #' @importFrom purrr reduce
@@ -6,7 +6,7 @@
 #' @importFrom dplyr mutate
 #' @importFrom readr parse_datetime
 #' @export
-get_pullrequests <- function(org, repo, .api_url = "https://api.github.com/graphql"){
+get_all_pull_requests <- function(org, repo, .api_url = "https://api.github.com/graphql"){
 	data <- graphql_query("pullrequests/pullrequests.graphql", org = org, repo = repo, .api_url = .api_url)$repository$pullRequests$nodes
 
 	prs <- reduce(data, function(.acc, .cv){

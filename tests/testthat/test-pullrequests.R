@@ -1,12 +1,12 @@
 context("test-pullrequests")
 
-test_that("Default behavior of get_pullrequests()", {
+test_that("Default behavior of get_all_pull_requests()", {
 	mockery::stub(
-		get_pullrequests,
+		get_all_pull_requests,
 		"graphql_query",
-		readRDS("pullrequests/get_pullrequests.rds")
+		readRDS("pullrequests/get_all_pull_requests.rds")
 	)
-	expect_equal(get_pullrequests("some", "value"), readRDS("pullrequests/validated_get_pullrequests.rds"))
+	expect_equal(get_all_pull_requests("some", "value"), readRDS("pullrequests/validated_get_all_pull_requests.rds"))
 })
 
 test_that("Default behavior of get_pullrequest_comments()", {
