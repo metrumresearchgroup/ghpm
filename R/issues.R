@@ -10,7 +10,7 @@ get_issues <- function(org, repo, .api_url = "https://api.github.com/graphql"){
 		.acc <- .acc %>% add_row("issue" = .cv$number,
 								 "title" = .cv$title,
 								 "body" = .cv$bodyText,
-								 "creator" = .cv$author$login,
+								 "creator" = ifelse(is.null(.cv$author), NA_character_, .cv$author$login),
 								 "milestone" = ifelse(is.null(.cv$milestone), NA_character_, .cv$milestone$title),
 								 "state" = .cv$state)
 
@@ -57,7 +57,7 @@ get_issue_assignees <- function(org, repo, .api_url = "https://api.github.com/gr
 	data <- keep(data, ~length(.x$assignees$nodes) > 0)
 
 	if(!length(data)){
-		return(tibble("issue" = numeric(), "assignedTo" = character(), .rows = 0))
+		return(tibble("issue" = numeric(), "assigned_to" = character(), .rows = 0))
 	}
 
 	assignees <- map_df(data, function(x){
@@ -90,7 +90,7 @@ get_issue_events <- function(org, repo, .api_url = "https://api.github.com/graph
 			return(.acc %>% add_row("project" = .cv$project$name,
 									"type" = ifelse(.cv$`__typename` == "AddedToProjectEvent", "Added", "Moved"),
 									"column" = .cv$projectColumnName,
-									"author" = .cv$actor$login,
+									"author" = ifelse(is.null(.cv$author), NA_character_, .cv$author$login),
 									"date" = .cv$createdAt))
 
 		}, .init = tibble("project" = character(), "type" = character(), "column" = character(), "author" = character(), "date" = character(), .rows = 0))
@@ -118,7 +118,9 @@ get_issue_comments <- function(org, repo, .api_url = "https://api.github.com/gra
 
 	comments <- map_df(data, function(x){
 		comment_data <- reduce(x$comments$nodes, function(.acc, .cv){
-			return(.acc %>% add_row("comment" = .cv$bodyText, "author" = .cv$author$login, "date" = .cv$createdAt))
+			return(.acc %>% add_row("comment" = .cv$bodyText,
+									"author" = ifelse(is.null(.cv$author), NA_character_, .cv$author$login),
+									"date" = .cv$createdAt))
 		}, .init = tibble("comment" = character(), "author" = character(), "date" = character(), .rows = 0))
 
 		return(comment_data %>% mutate("issue" = x$number))
