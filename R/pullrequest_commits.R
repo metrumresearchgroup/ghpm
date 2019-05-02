@@ -12,7 +12,11 @@ get_pullrequest_commits <- function(org, repo, number, .cc = FALSE, .api_url = "
 	data <- graphql_query("pullrequests/pullrequest_commits.graphql", org = org, repo = repo, number = number, .api_url = .api_url)$repository$pullRequest$commits$nodes
 
 	commits <- reduce(data, function(.acc, .cv){
-		return(.acc %>% add_row("oid" = .cv$commit$oid, "summary" = .cv$commit$messageHeadline, "message" = .cv$commit$message, "author" = .cv$commit$author$name, "date" = .cv$commit$authoredDate))
+		return(.acc %>% add_row("oid" = .cv$commit$oid,
+								"summary" = .cv$commit$messageHeadline,
+								"message" = .cv$commit$message,
+								"author" = ifelse(is.null(.cv$commit$author), NA_character_, .cv$commit$author$name),
+								"date" = .cv$commit$authoredDate))
 	}, .init = tibble("oid" = character(), "summary" = character(), "message" = character(), "author" = character(), "date" = character(), .rows = 0)) %>% mutate("date" = as.Date(date))
 
 	if(!.cc) return(commits %>% select("oid", "message", "author", "date"))
@@ -30,7 +34,10 @@ get_pullrequest_commits <- function(org, repo, number, .cc = FALSE, .api_url = "
 #' @importFrom tibble tibble
 process_commit <- function(.x){
 	parsed_message <- parse_commit(.x$summary, .x$message)
-	return(tibble("type" = parsed_message$type, "description" = parsed_message$description, "body" = parsed_message$body, "footer" = parsed_message$footer))
+	return(tibble("type" = parsed_message$type,
+				  "description" = parsed_message$description,
+				  "body" = parsed_message$body,
+				  "footer" = parsed_message$footer))
 }
 
 #' Parses the commit summary and message

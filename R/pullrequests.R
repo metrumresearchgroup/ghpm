@@ -11,7 +11,7 @@ get_pullrequests <- function(org, repo, .api_url = "https://api.github.com/graph
 	prs <- reduce(data, function(.acc, .cv){
 		.acc <- .acc %>% add_row("pullrequest" = .cv$number,
 								 "title" = .cv$title,
-								 "author" = .cv$author$login,
+								 "author" = ifelse(is.null(.cv$author), NA_character_, .cv$author$login),
 								 "body" = .cv$bodyText,
 								 "milestone" = ifelse(is.null(.cv$milestone), NA_character_, .cv$milestone$title),
 								 "created_at" = .cv$createdAt,
@@ -47,7 +47,9 @@ get_pullrequest_comments <- function(org, repo, .api_url = "https://api.github.c
 
 	comments <- map_df(data, function(x){
 		comment_data <- reduce(x$comments$nodes, function(.acc, .cv){
-			return(.acc %>% add_row("author" = .cv$author$login, "body" = .cv$bodyText, "created_at" = .cv$createdAt))
+			return(.acc %>% add_row("author" = ifelse(is.null(.cv$author), NA_character_, .cv$author$login),
+									"body" = .cv$bodyText,
+									"created_at" = .cv$createdAt))
 		}, .init = tibble("author" = character(), "body" = character(), "created_at" = character(), .rows = 0))
 
 		return(comment_data %>% mutate("pullrequest" = x$number))
@@ -73,7 +75,7 @@ get_pullrequest_reviewers <- function(org, repo, .api_url = "https://api.github.
 
 	reviewers <- map_df(data, function(x){
 		review_data <- reduce(x$reviewRequests$nodes, function(.acc, .cv){
-			return(.acc %>% add_row("reviewer" = .cv$requestedReviewer$login))
+			return(.acc %>% add_row("reviewer" = ifelse(is.null(.cv$requestedReviewer), NA_character_, .cv$requestedReviewer$login)))
 		}, .init = tibble("reviewer" = character(), .rows = 0))
 
 		return(review_data %>% mutate("pullrequest" = x$number))
