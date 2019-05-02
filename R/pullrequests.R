@@ -4,6 +4,7 @@
 #' @importFrom purrr reduce
 #' @importFrom tibble tibble add_row
 #' @importFrom dplyr mutate
+#' @importFrom readr parse_datetime
 #' @export
 get_pullrequests <- function(org, repo, .api_url = "https://api.github.com/graphql"){
 	data <- graphql_query("pullrequests/pullrequests.graphql", org = org, repo = repo, .api_url = .api_url)$repository$pullRequests$nodes
@@ -24,8 +25,8 @@ get_pullrequests <- function(org, repo, .api_url = "https://api.github.com/graph
 	}, .init = tibble("pullrequest" = numeric(), "title" = character(), "author" = character(), "body" = character(),
 					  "milestone" = character(), "created_at" = character(), "merged_by" = character(),
 					  "merged_at" = character(), "merged_to" = character(), "state" = character(), .rows = 0)) %>%
-		mutate(created_at = as.Date(created_at),
-			   merged_at = as.Date(merged_at))
+		mutate(created_at = parse_datetime(created_at),
+			   merged_at = parse_datetime(merged_at))
 
 	return(prs)
 }
@@ -36,6 +37,7 @@ get_pullrequests <- function(org, repo, .api_url = "https://api.github.com/graph
 #' @importFrom purrr keep map_df reduce
 #' @importFrom tibble tibble add_row
 #' @importFrom dplyr mutate select everything
+#' @importFrom readr parse_datetime
 #' @export
 get_pullrequest_comments <- function(org, repo, .api_url = "https://api.github.com/graphql"){
 	data <- graphql_query("pullrequests/pullrequest_comments.graphql", org = org, repo = repo, .api_url = .api_url)$repository$pullRequests$nodes
@@ -53,7 +55,7 @@ get_pullrequest_comments <- function(org, repo, .api_url = "https://api.github.c
 		}, .init = tibble("author" = character(), "body" = character(), "created_at" = character(), .rows = 0))
 
 		return(comment_data %>% mutate("pullrequest" = x$number))
-	}) %>% mutate("created_at" = as.Date(created_at))
+	}) %>% mutate("created_at" = parse_datetime(created_at))
 
 	return(comments %>% select("pullrequest", everything()))
 }

@@ -7,6 +7,7 @@
 #' @importFrom purrr reduce
 #' @importFrom tibble tibble add_row
 #' @importFrom dplyr mutate select slice bind_cols
+#' @importFrom readr parse_datetime
 #' @export
 get_pullrequest_commits <- function(org, repo, number, .cc = FALSE, .api_url = "https://api.github.com/graphql"){
 	data <- graphql_query("pullrequests/pullrequest_commits.graphql", org = org, repo = repo, number = number, .api_url = .api_url)$repository$pullRequest$commits$nodes
@@ -17,7 +18,7 @@ get_pullrequest_commits <- function(org, repo, number, .cc = FALSE, .api_url = "
 								"message" = .cv$commit$message,
 								"author" = ifelse(is.null(.cv$commit$author), NA_character_, .cv$commit$author$name),
 								"date" = .cv$commit$authoredDate))
-	}, .init = tibble("oid" = character(), "summary" = character(), "message" = character(), "author" = character(), "date" = character(), .rows = 0)) %>% mutate("date" = as.Date(date))
+	}, .init = tibble("oid" = character(), "summary" = character(), "message" = character(), "author" = character(), "date" = character(), .rows = 0)) %>% mutate("date" = parse_datetime(date))
 
 	if(!.cc) return(commits %>% select("oid", "message", "author", "date"))
 
