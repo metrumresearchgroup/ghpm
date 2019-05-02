@@ -7,7 +7,7 @@
 #' @importFrom readr parse_datetime
 #' @export
 get_all_pull_requests <- function(org, repo, .api_url = "https://api.github.com/graphql"){
-	data <- graphql_query("pullrequests/pullrequests.graphql", org = org, repo = repo, .api_url = .api_url)$repository$pullRequests$nodes
+	data <- graphql_query("pullrequests/get_all_pull_requests.graphql", org = org, repo = repo, .api_url = .api_url)$repository$pullRequests$nodes
 
 	prs <- reduce(data, function(.acc, .cv){
 		.acc <- .acc %>% add_row("pullrequest" = .cv$number,
