@@ -1,0 +1,49 @@
+---
+title: "Intro to GHPM"
+author: "Harsh Baid"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+library(ghpm)
+library(dplyr)
+```
+
+GHPM is an R Package designed to make grabbing data from a Github Repository and performing analytics easy. It does this by providing a set of flexible functions that query important aspects of a repository (pullrequests, commits, issues, etc..) via the Github API and pipes the output into dataframes.
+
+We can then use the powerful data manipulation tools that `dplyr` provides to create a resulting dataframe of the information we want.
+
+This document is designed to introduce you to some of these functions and the analytical data that can be extracted. To explore this functionality, we will be using [RStudio's Shiny repository](https://github.com/rstudio/shiny) to grab data from.
+
+## Issues
+
+Lets start with grabbing issues from shiny repo using the following command.
+```{r}
+get_issues("rstudio", "shiny")
+```
+
+However, depending on the information I am looking for, I can further refine my request. If I only wanted issues from a particular milestone that were closed, I could do the following:
+```{r}
+get_issues("rstudio", "shiny") %>% filter(milestone == "0.9.0" & state == "CLOSED")
+```
+
+or say I wanted to only get issues that a certain user created for a specific milestone
+```{r}
+get_issues("rstudio", "shiny") %>% filter(creator == "HarlanH" & milestone == "0.9.0")
+```
+
+I can get even more information by combining this query with other issue based queries. Like if I wanted to get the comments made on all the issues associated with `user: HarlanH` that were assigned in the 0.9.0 milestone, I could do:
+```{r}
+HarlanH_issues <- get_issues("rstudio", "shiny") %>% filter(creator == "HarlanH" & milestone == "0.9.0")
+
+get_issue_comments("rstudio", "shiny") %>% filter(issue %in% HarlanH_issues$issue)
+```
+

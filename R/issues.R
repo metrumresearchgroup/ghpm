@@ -10,7 +10,7 @@ get_issues <- function(org, repo, .api_url = "https://api.github.com/graphql"){
 		.acc <- .acc %>% add_row("issue" = .cv$number,
 								 "title" = .cv$title,
 								 "body" = .cv$bodyText,
-								 "creator" = .cv$author$login,
+								 "creator" = ifelse(is.null(.cv$author), NA_character_, .cv$author$login),
 								 "milestone" = ifelse(is.null(.cv$milestone), NA_character_, .cv$milestone$title),
 								 "state" = .cv$state)
 
