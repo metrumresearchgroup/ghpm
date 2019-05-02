@@ -1,4 +1,4 @@
-#' Gets a data frame of the commits of all the pull requests of a given repo
+#' Gets a data frame of the commits of a pull request
 #' @inheritParams get_pull_request_comments
 #' @param .cc Parse the commits as conventional commits. Defaults to FALSE.
 #' @return A data frame containing the oid | message | author | date of each commit of a pull request.
