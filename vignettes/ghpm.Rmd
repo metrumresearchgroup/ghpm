@@ -47,3 +47,12 @@ HarlanH_issues <- get_issues("rstudio", "shiny") %>% filter(creator == "HarlanH"
 get_issue_comments("rstudio", "shiny") %>% filter(issue %in% HarlanH_issues$issue)
 ```
 
+The following functions are provided to grab issue data
+
+* `get_issues()` - Grabs general data about each issue
+* `get_issue_labels()` - Grabs the labels attached to each issue
+* `get_issue_assignees()` - Grabs assignees assigned to each issue
+* `get_issue_events()` - Queries event data specific to issues being added and moved across project boards for each issue
+* `get_issue_comments()` - Grabs the comment data for each issue.
+
+## Pull Requests
