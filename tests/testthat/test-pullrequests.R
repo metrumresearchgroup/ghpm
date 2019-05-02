@@ -18,14 +18,14 @@ test_that("Default behavior of get_all_pull_requests()", {
 # 	expect_equal(get_pull_request_comments("some", "value"), readRDS("pullrequests/validated_pullrequest_comments.rds"))
 # })
 
-# test_that("Default behavior of get_pullrequest_reviewers()", {
-# 	mockery::stub(
-# 		get_pullrequest_reviewers,
-# 		"graphql_query",
-# 		readRDS("pullrequests/pullrequest_reviewers.rds")
-# 	)
-# 	expect_equal(get_pullrequest_reviewers("some", "value"), readRDS("pullrequests/validated_pullrequest_reviewers.rds"))
-# })
+test_that("Default behavior of get_all_pull_request_reviewers()", {
+	mockery::stub(
+		get_all_pull_request_reviewers,
+		"graphql_query",
+		readRDS("pullrequests/get_all_pull_request_reviewers.rds")
+	)
+	expect_equal(get_all_pull_request_reviewers("some", "value"), readRDS("pullrequests/validated_get_all_pull_request_reviewers.rds"))
+})
 #
 # test_that("Default behavior of get_pullrequest_commits() with conventional commits DISABLED", {
 # 	mockery::stub(

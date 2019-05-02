@@ -63,7 +63,7 @@ get_pull_request_comments <- function(org, repo, number, .api_url = "https://api
 #' @importFrom tibble tibble add_row
 #' @importFrom dplyr mutate select everything
 #' @export
-get_pullrequest_reviewers <- function(org, repo, .api_url = "https://api.github.com/graphql"){
+get_all_pull_request_reviewers <- function(org, repo, .api_url = "https://api.github.com/graphql"){
 	data <- graphql_query("pullrequests/pullrequest_reviewers.graphql", org = org, repo = repo, .api_url = .api_url)$repository$pullRequests$nodes
 	data <- keep(data, ~length(.x$reviewRequests$nodes) > 0)
 
