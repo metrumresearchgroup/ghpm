@@ -8,11 +8,6 @@ query issues($org: String!, $repo: String!) {
           login
         }
         number
-        labels(first: 15){
-          nodes {
-            name
-          }
-        }
         milestone {
           title
         }
