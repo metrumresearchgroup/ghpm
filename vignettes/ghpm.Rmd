@@ -56,3 +56,32 @@ The following functions are provided to grab issue data
 * `get_issue_comments()` - Grabs the comment data for each issue.
 
 ## Pull Requests
+
+Pull requests is another area where GHPM has a lot of flexibility. To just grab some basic information about pull requests, I can do the following:
+```{r}
+get_all_pull_requests("rstudio", "shiny")
+```
+
+or a more refined search of pull requests grabbing the ones that were created by a specific user and merged.
+```{r}
+dd <- get_all_pull_requests("rstudio", "shiny") %>% filter(author == "wch", state == "MERGED")
+```
+
+I can also grab the commit history of specific pull requests
+```{r}
+get_pull_request_commits("rstudio", "shiny", 271)
+```
+
+and even have the option to parse them into a conventional commits format
+```{r}
+get_pull_request_commits("rstudio", "shiny", 271, .cc = TRUE)
+```
+
+The following functions are provided to grab pull request data
+
+* `get_all_pull_requests()` - Grabs general data about all pull requests
+* `get_pull_request_comments()` - Grabs comment data of a pull request
+* `get_pull_request_reviewers()` - Grabs data about reviewers of all pull requests
+* `get_pull_request_commits()` - Grabs commit data of a pull request
+
+
