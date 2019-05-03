@@ -17,7 +17,7 @@ get_pull_request_comments(org, repo, number,
 \item{.api_url}{Optional API url to query. Defaults to "https://api.github.com/graphql"}
 }
 \value{
-A data frame containing the author | body | created_at of each pull request comment. Returns an empty dataframe if none are found.
+A data frame containing the pullrequest | author | body | created_at of each pull request comment. Returns an empty dataframe if none are found.
 }
 \description{
 Gets a data frame of the comments of all a pull request
