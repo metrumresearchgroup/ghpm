@@ -1,4 +1,4 @@
-query all_pull_request_reviewers($org: String!, $repo: String!) {
+query pull_request_reviewers($org: String!, $repo: String!) {
   repository(owner: $org, name: $repo) {
     pullRequests(first: 100) {
       nodes {

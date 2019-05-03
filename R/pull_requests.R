@@ -34,7 +34,7 @@ get_all_pull_requests <- function(org, repo, .api_url = "https://api.github.com/
 #' Gets a data frame of the comments of all a pull request
 #' @inheritParams get_milestones
 #' @param number The number of the pullrequest to grab data from.
-#' @return A data frame containing the author | body | created_at of each pull request comment. Returns an empty dataframe if none are found.
+#' @return A data frame containing the pullrequest | author | body | created_at of each pull request comment. Returns an empty dataframe if none are found.
 #' @importFrom purrr reduce
 #' @importFrom tibble tibble add_row
 #' @importFrom dplyr mutate
@@ -44,14 +44,16 @@ get_pull_request_comments <- function(org, repo, number, .api_url = "https://api
 	data <- graphql_query("pullrequests/pull_request_comments.graphql", org = org, repo = repo, number = number, .api_url = .api_url)$repository$pullRequest$comments$nodes
 
 	if(!length(data)){
-		return(tibble("author" = character(), "body" = character(), "created_at" = character(), .rows = 0))
+		return(tibble("pullrequest" = number, "author" = character(), "body" = character(), "created_at" = character(), .rows = 0))
 	}
 
 	comments <- reduce(data, function(.acc, .cv){
-		return(.acc %>% add_row("author" = ifelse(is.null(.cv$author), NA_character_, .cv$author$login),
+		return(.acc %>% add_row("pullrequest" = number,
+								"author" = ifelse(is.null(.cv$author), NA_character_, .cv$author$login),
 								"body" = .cv$bodyText,
 								"created_at" = .cv$createdAt))
-		}, .init = tibble("author" = character(), "body" = character(), "created_at" = character(), .rows = 0)) %>% mutate("created_at" = parse_datetime(created_at))
+		}, .init = tibble("pullrequest" = numeric(), "author" = character(), "body" = character(), "created_at" = character(), .rows = 0)) %>%
+		mutate("created_at" = parse_datetime(created_at))
 
 	return(comments)
 }
@@ -63,8 +65,8 @@ get_pull_request_comments <- function(org, repo, number, .api_url = "https://api
 #' @importFrom tibble tibble add_row
 #' @importFrom dplyr mutate select everything
 #' @export
-get_all_pull_request_reviewers <- function(org, repo, .api_url = "https://api.github.com/graphql"){
-	data <- graphql_query("pullrequests/all_pull_request_reviewers.graphql", org = org, repo = repo, .api_url = .api_url)$repository$pullRequests$nodes
+get_pull_request_reviewers <- function(org, repo, .api_url = "https://api.github.com/graphql"){
+	data <- graphql_query("pullrequests/pull_request_reviewers.graphql", org = org, repo = repo, .api_url = .api_url)$repository$pullRequests$nodes
 	data <- keep(data, ~length(.x$reviewRequests$nodes) > 0)
 
 	if(!length(data)){

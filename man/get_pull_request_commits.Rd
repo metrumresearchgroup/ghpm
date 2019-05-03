@@ -2,7 +2,7 @@
 % Please edit documentation in R/pull_request_commits.R
 \name{get_pull_request_commits}
 \alias{get_pull_request_commits}
-\title{Gets a data frame of the commits of all the pull requests of a given repo}
+\title{Gets a data frame of the commits of a pull request}
 \usage{
 get_pull_request_commits(org, repo, number, .cc = FALSE,
   .api_url = "https://api.github.com/graphql")
@@ -23,5 +23,5 @@ A data frame containing the oid | message | author | date of each commit of a pu
 If .cc = TRUE, the data frame will contain oid | type | description | body | footer | author | date
 }
 \description{
-Gets a data frame of the commits of all the pull requests of a given repo
+Gets a data frame of the commits of a pull request
 }
