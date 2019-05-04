@@ -83,10 +83,3 @@ The following functions are provided to grab pull request data
 * `get_pull_request_comments()` - Grabs comment data of a pull request
 * `get_pull_request_reviewers()` - Grabs data about reviewers of all pull requests
 * `get_pull_request_commits()` - Grabs commit data of a pull request
-
-## Miscellanious Functions
-
-GHPM also provides other miscellaneous functions for data that can be pulled from a Github repo:
-
-* `get_milestones()` - Grabs general data about the milestones in a repo.
-* `get_projectboard()` - Grabs data about issues and columns in a projectboard.
