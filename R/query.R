@@ -35,7 +35,7 @@ get_milestones <- function(org, repo, .api_url = "https://api.github.com/graphql
 		return(.acc %>% add_row("title" = .cv$title,
 								"description" = .cv$description,
 								"state" = .cv$state,
-								"author" = .cv$creator$login,
+								"author" = ifelse(is.null(.cv$author), NA_character_, .cv$author$login),
 								"url" = .cv$url))
 	}, .init = tibble("title" = character(), "description" = character(), "state" = character(), "author" = character(), "url" = character(), .rows = 0))
 	return(milestones)
