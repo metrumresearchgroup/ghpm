@@ -1,0 +1,24 @@
+query all_pull_requests($org: String!, $repo: String!) {
+  repository(owner: $org, name: $repo) {
+    pullRequests(first: 100) {
+      nodes {
+        number
+        title
+        author {
+          login
+        }
+        bodyText
+        milestone {
+          title
+        }
+        createdAt
+        mergedBy {
+          login
+        }
+        mergedAt
+        baseRefName
+        state
+      }
+    }
+  }
+}

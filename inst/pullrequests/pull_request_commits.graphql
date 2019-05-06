@@ -1,0 +1,19 @@
+query pull_request_commits($org: String!, $repo: String!, $number: Int!) {
+  repository(owner: $org, name: $repo) {
+    pullRequest(number: $number) {
+      commits(first: 100) {
+        nodes {
+          commit {
+            oid
+            author {
+              name
+            }
+            messageHeadline
+            message
+            authoredDate
+          }
+        }
+      }
+    }
+  }
+}
