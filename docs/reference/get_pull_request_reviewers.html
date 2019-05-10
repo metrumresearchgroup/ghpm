@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Gets a data frame of the comments of all a pull request — get_pull_request_comments • GHPM</title>
+<title>Gets a data frame of the reviewers of all the pull requests of a given repo — get_pull_request_reviewers • GHPM</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,9 +30,9 @@
 
 
 
-<meta property="og:title" content="Gets a data frame of the comments of all a pull request — get_pull_request_comments" />
+<meta property="og:title" content="Gets a data frame of the reviewers of all the pull requests of a given repo — get_pull_request_reviewers" />
 
-<meta property="og:description" content="Gets a data frame of the comments of all a pull request" />
+<meta property="og:description" content="Gets a data frame of the reviewers of all the pull requests of a given repo" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -102,18 +102,18 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Gets a data frame of the comments of all a pull request</h1>
+    <h1>Gets a data frame of the reviewers of all the pull requests of a given repo</h1>
     
-    <div class="hidden name"><code>get_pull_request_comments.Rd</code></div>
+    <div class="hidden name"><code>get_pull_request_reviewers.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Gets a data frame of the comments of all a pull request</p>
+    <p>Gets a data frame of the reviewers of all the pull requests of a given repo</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>get_pull_request_comments</span>(<span class='no'>org</span>, <span class='no'>repo</span>, <span class='no'>number</span>,
+    <pre class="usage"><span class='fu'>get_pull_request_reviewers</span>(<span class='no'>org</span>, <span class='no'>repo</span>,
   <span class='kw'>.api_url</span> <span class='kw'>=</span> <span class='st'>"https://api.github.com/graphql"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -128,10 +128,6 @@
       <td><p>Name of repository to query</p></td>
     </tr>
     <tr>
-      <th>number</th>
-      <td><p>The number of the pullrequest to grab data from.</p></td>
-    </tr>
-    <tr>
       <th>.api_url</th>
       <td><p>Optional API url to query. Defaults to "https://api.github.com/graphql"</p></td>
     </tr>
@@ -139,7 +135,7 @@
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A data frame containing the pullrequest | author | body | created_at of each pull request comment. Returns an empty dataframe if none are found.</p>
+    <p>A data frame containing the pullrequest | reviewer. Returns an empty dataframe if none are found.</p>
     
 
   </div>

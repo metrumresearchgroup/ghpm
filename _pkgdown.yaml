@@ -27,3 +27,8 @@ reference:
   - graphql_query
   - get_projectboard
   - get_milestones
+articles:
+- title: "Intro to GHPM"
+  desc: ~
+  contents: '`ghpm`'
+

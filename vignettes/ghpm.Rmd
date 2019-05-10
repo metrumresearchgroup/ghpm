@@ -76,3 +76,8 @@ and even have the option to parse them into a conventional commits format
 ```{r}
 get_pull_request_commits("rstudio", "shiny", 271, .cc = TRUE)
 ```
+
+```{r}
+devtools::session_info()
+```
+
