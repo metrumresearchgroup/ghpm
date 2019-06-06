@@ -22,5 +22,8 @@ Imports:
     glue
 Suggests: 
     testthat,
-    mockery
+    mockery,
+    knitr,
+    rmarkdown
 RoxygenNote: 6.1.1
+VignetteBuilder: knitr
