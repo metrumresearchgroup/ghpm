@@ -14,7 +14,7 @@ get_milestones(org, repo, .api_url = "https://api.github.com/graphql")
 \item{.api_url}{Optional API url to query. Defaults to "https://api.github.com/graphql"}
 }
 \value{
-A data frame containing the Title | Description | State | Author | Url of each milestone
+A data frame containing the title | description | state | author | url of each milestone
 }
 \description{
 Gets a data frame of the milestones associated with a given repo.

@@ -1,6 +1,7 @@
 Package: ghpm
 Type: Package
-Title: What the Package Does (Title Case)
+Title: GHPM
+Description: Grabs data about a repository from the Github API via GraphQL. 
 Version: 0.0.1
 Authors@R: 
 	person( given = "Harsh",
@@ -11,9 +12,19 @@ License: file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports: 
-    gh,
     purrr,
-    magrittr
+    magrittr,
+    dplyr,
+    readr,
+    gh,
+    tibble,
+    stringr,
+    glue
 Suggests: 
-    testthat
+    testthat,
+    mockery,
+    knitr,
+    rmarkdown,
+    sessioninfo
 RoxygenNote: 6.1.1
+VignetteBuilder: knitr
