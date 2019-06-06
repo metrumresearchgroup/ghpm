@@ -91,11 +91,10 @@ get_issue_events <- function(org, repo, .api_url = "https://api.github.com/graph
 			return(.acc %>% add_row("project" = .cv$project$name,
 									"type" = ifelse(.cv$`__typename` == "AddedToProjectEvent", "Added", "Moved"),
 									"column" = .cv$projectColumnName,
-									"author" = ifelse(is.null(.cv$author), NA_character_, .cv$author$login),
+									"author" = ifelse(is.null(.cv$actor), NA_character_, .cv$actor$login),
 									"date" = .cv$createdAt))
 
 		}, .init = tibble("project" = character(), "type" = character(), "column" = character(), "author" = character(), "date" = character(), .rows = 0))
-
 		return(event_data %>% mutate("issue" = x$number))
 	}) %>% mutate("date" = parse_datetime(date))
 

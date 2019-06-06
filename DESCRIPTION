@@ -24,6 +24,7 @@ Suggests:
     testthat,
     mockery,
     knitr,
-    rmarkdown
+    rmarkdown,
+    sessioninfo
 RoxygenNote: 6.1.1
 VignetteBuilder: knitr

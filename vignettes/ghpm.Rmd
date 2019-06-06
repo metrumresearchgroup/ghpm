@@ -64,7 +64,7 @@ get_all_pull_requests("rstudio", "shiny")
 
 or a more refined search of pull requests grabbing the ones that were created by a specific user and merged.
 ```{r}
-dd <- get_all_pull_requests("rstudio", "shiny") %>% filter(author == "wch", state == "MERGED")
+pr <- get_all_pull_requests("rstudio", "shiny") %>% filter(author == "wch", state == "MERGED")
 ```
 
 I can also grab the commit history of specific pull requests
@@ -78,6 +78,6 @@ get_pull_request_commits("rstudio", "shiny", 271, .cc = TRUE)
 ```
 
 ```{r}
-devtools::session_info()
+sessioninfo::session_info()
 ```
 
