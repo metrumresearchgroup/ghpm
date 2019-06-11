@@ -6,7 +6,7 @@
 #' @importFrom dplyr mutate select
 #' @export
 get_projectboard <- function(org, repo, .api_url = "https://api.github.com/graphql"){
-	data <- graphql_query("projects.graphql", org = org, repo = repo, .api_url = .api_url)$repository$projects$nodes
+	data <- graphql_query("projects/projects.graphql", org = org, repo = repo, .api_url = .api_url)$repository$projects$nodes
 
 	projects <- map_df(data, function(x){
 		result <- reduce(x$columns$nodes, get_projectboard_columns,
@@ -43,4 +43,22 @@ get_projectboard_issues <- function(.acc, .cv){
 		.acc <- .acc %>% add_row("issue" = .cv$content$number, "title" = .cv$content$title)
 	}
 	return(.acc)
+}
+
+create_projectboard <- function(){
+warning("IMPLEMENT")
+}
+
+#' Clones a projectboard
+#' @inheritParams get_milestones
+#' @param repo_from Name of repo to clone the projectboard from
+#' @param number Number of the projectboard to clone
+#' @param repo_to Name of repo to clone the projectboard to
+#' @return The ID of the projectboard that was cloned.
+#' @export
+clone_projectboard <- function(org, repo_from, number, repo_to, .api_url = "https://api.github.com/graphql"){
+	project_from <- graphql_query("projects/project_info.graphql", org = org, repo = repo_from, number = number, .api_url = .api_url)$repository$project
+	project_to <- graphql_query("repo_info.graphql", org = org, repo = repo_to, .api_url = .api_url)$repository$id
+
+	graphql_query("projects/clone_project.graphql", owner = project_to$id, source = project_from$id, name = project_from$name, body = project_from$body, .api_url = .api_url)
 }

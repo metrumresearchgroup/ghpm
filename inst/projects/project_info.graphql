@@ -1,0 +1,9 @@
+query project_info($org: String!, $repo: String!, $number: Int!){
+  repository(owner: $org, name: $repo){
+    project(number:$number) {
+      id
+      name
+      body
+    }
+  }
+}
