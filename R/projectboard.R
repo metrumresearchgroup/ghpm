@@ -1,3 +1,12 @@
+#' Gets info about a projectboard
+#' @inheritParams get_milestones
+#' @param number The number of the projectboard to query
+#' @return A list containing information about the projectboard
+#' @export
+get_projectboard_info <- function(org, repo, number, .api_url = "https://api.github.com/graphql"){
+	return(graphql_query("repo_info.graphql", org = org, repo = repo_to, .api_url = .api_url)$repository$project)
+}
+
 #' Gets a data frame of the issues and their columns on the project board
 #' @inheritParams get_milestones
 #' @return A data frame containing the issue | title | column | board of the project boards
@@ -64,8 +73,18 @@ create_projectboard <- function(org, repo, name, body = "", .api_url = "https://
 #' @return The ID of the projectboard that was cloned
 #' @export
 clone_projectboard <- function(org, repo_from, number, repo_to, .api_url = "https://api.github.com/graphql"){
-	project_from <- graphql_query("projects/project_info.graphql", org = org, repo = repo_from, number = number, .api_url = .api_url)$repository$project
+	project_from <- get_projectboard_info(org, repo = repo_from, number, .api_url)$repository$project
 	repo_id <- graphql_query("repo_info.graphql", org = org, repo = repo_to, .api_url = .api_url)$repository$id
 
 	return(graphql_query("projects/clone_project.graphql", owner = repo_id, source = project_from$id, name = project_from$name, body = project_from$body, .api_url = .api_url)$project$id)
+}
+
+#' Creates a projectboard column
+#' @inheritParams get_milestones
+#' @param id ID of the projectboard
+#' @param name Name of the column to create
+#' @return The ID of the projectboard the column was created in
+#' @export
+create_projectboard_column <- function(id, name, .api_url = "https://api.github.com/graphql"){
+	return(graphql_query("projects/create_project_column.graphql", owner = id, name = name, .api_url = .api_url))
 }

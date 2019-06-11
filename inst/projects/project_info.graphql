@@ -4,6 +4,12 @@ query project_info($org: String!, $repo: String!, $number: Int!){
       id
       name
       body
+      state
+      creator {
+        login
+      }
+      createdAt
+      closedAt
     }
   }
 }
