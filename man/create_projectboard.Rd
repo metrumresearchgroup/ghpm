@@ -4,7 +4,7 @@
 \alias{create_projectboard}
 \title{Creates a projectboard}
 \usage{
-create_projectboard(org, repo, name, body = "",
+create_projectboard(org, repo, name, body = "", columns = NULL,
   .api_url = "https://api.github.com/graphql")
 }
 \arguments{
@@ -14,12 +14,14 @@ create_projectboard(org, repo, name, body = "",
 
 \item{name}{Name of projectboard to create}
 
-\item{body}{Body of projectboard to create}
+\item{body}{Body of projectboard to create. Defaults to "".}
+
+\item{columns}{Optional parameter to specify a vector of projectboard columns to create. (ie: `column = c('column1', 'column2', 'column3', 'column4')`). Defaults to NULL}
 
 \item{.api_url}{Optional API url to query. Defaults to "https://api.github.com/graphql"}
 }
 \value{
-The ID of the projectboard that was created
+Boolean value if creation was successful.
 }
 \description{
 Creates a projectboard

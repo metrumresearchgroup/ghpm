@@ -57,12 +57,21 @@ get_projectboard_issues <- function(.acc, .cv){
 #' Creates a projectboard
 #' @inheritParams get_milestones
 #' @param name Name of projectboard to create
-#' @param body Body of projectboard to create
-#' @return The ID of the projectboard that was created
+#' @param body Body of projectboard to create. Defaults to "".
+#' @param columns Optional parameter to specify a vector of projectboard columns to create. (ie: `column = c('column1', 'column2', 'column3', 'column4')`). Defaults to NULL
+#' @return Boolean value if creation was successful.
 #' @export
-create_projectboard <- function(org, repo, name, body = "", .api_url = "https://api.github.com/graphql"){
-	repo_id <- graphql_query("repo_info.graphql", org = org, repo = repo, .api_url = .api_url)$repository$id
-	return(graphql_query("projects/create_project.graphql", owner = repo_id, name = name, body = body, .api_url = .api_url)$createProject$project$id)
+create_projectboard <- function(org, repo, name, body = "", columns = NULL, .api_url = "https://api.github.com/graphql"){
+	repo_id <- graphql_query("repo_info.graphql", org = org, repo = repo, .api_url = .api_url)$repository$i
+	proj_id <- graphql_query("projects/create_project.graphql", owner = repo_id, name = name, body = body, .api_url = .api_url)$createProject$project$id
+
+	if(!is.null(columns)){
+		lapply(columns, function(x){
+			graphql_query("projects/create_project_column.graphql", owner = proj_id, name = x, .api_url = .api_url)
+		})
+	}
+
+	return(TRUE)
 }
 
 #' Clones a projectboard
@@ -77,14 +86,4 @@ clone_projectboard <- function(org, repo_from, number, repo_to, .api_url = "http
 	repo_id <- graphql_query("repo_info.graphql", org = org, repo = repo_to, .api_url = .api_url)$repository$id
 
 	return(graphql_query("projects/clone_project.graphql", owner = repo_id, source = project_from$id, name = project_from$name, body = project_from$body, .api_url = .api_url)$project$id)
-}
-
-#' Creates a projectboard column
-#' @inheritParams get_milestones
-#' @param id ID of the projectboard
-#' @param name Name of the column to create
-#' @return The ID of the projectboard the column was created in
-#' @export
-create_projectboard_column <- function(id, name, .api_url = "https://api.github.com/graphql"){
-	return(graphql_query("projects/create_project_column.graphql", owner = id, name = name, .api_url = .api_url))
 }

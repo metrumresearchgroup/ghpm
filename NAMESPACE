@@ -3,7 +3,6 @@
 export("%>%")
 export(clone_projectboard)
 export(create_projectboard)
-export(create_projectboard_column)
 export(get_all_pull_requests)
 export(get_issue_assignees)
 export(get_issue_comments)
