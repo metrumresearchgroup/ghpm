@@ -1,5 +1,0 @@
-query id($id: ID!) {
-  node(id: $id){
-  	__typename
-  }
-}

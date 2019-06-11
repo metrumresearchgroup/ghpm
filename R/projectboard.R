@@ -45,8 +45,15 @@ get_projectboard_issues <- function(.acc, .cv){
 	return(.acc)
 }
 
-create_projectboard <- function(){
-warning("IMPLEMENT")
+#' Creates a projectboard
+#' @inheritParams get_milestones
+#' @param name Name of projectboard to create
+#' @param body Body of projectboard to create
+#' @return The ID of the projectboard that was created
+#' @export
+create_projectboard <- function(org, repo, name, body = "", .api_url = "https://api.github.com/graphql"){
+	repo_id <- graphql_query("repo_info.graphql", org = org, repo = repo, .api_url = .api_url)$repository$id
+	return(graphql_query("projects/create_project.graphql", owner = repo_id, name = name, body = body, .api_url = .api_url)$createProject$project$id)
 }
 
 #' Clones a projectboard
@@ -54,11 +61,11 @@ warning("IMPLEMENT")
 #' @param repo_from Name of repo to clone the projectboard from
 #' @param number Number of the projectboard to clone
 #' @param repo_to Name of repo to clone the projectboard to
-#' @return The ID of the projectboard that was cloned.
+#' @return The ID of the projectboard that was cloned
 #' @export
 clone_projectboard <- function(org, repo_from, number, repo_to, .api_url = "https://api.github.com/graphql"){
 	project_from <- graphql_query("projects/project_info.graphql", org = org, repo = repo_from, number = number, .api_url = .api_url)$repository$project
-	project_to <- graphql_query("repo_info.graphql", org = org, repo = repo_to, .api_url = .api_url)$repository$id
+	repo_id <- graphql_query("repo_info.graphql", org = org, repo = repo_to, .api_url = .api_url)$repository$id
 
-	graphql_query("projects/clone_project.graphql", owner = project_to$id, source = project_from$id, name = project_from$name, body = project_from$body, .api_url = .api_url)
+	return(graphql_query("projects/clone_project.graphql", owner = repo_id, source = project_from$id, name = project_from$name, body = project_from$body, .api_url = .api_url)$project$id)
 }

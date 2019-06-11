@@ -1,0 +1,16 @@
+```{r}
+library(ghpm)
+```
+
+```{r}
+org <- "tech-solutions"
+repo_from <- "DemoRepo"
+repo<- "ghpm"
+.api_url <- "https://ghe.metrumrg.com/api/graphql"
+name <- "NAMENAMENAME"
+body <- "BODYBODYBOYD"
+
+
+graphql_query("projects/create_project.graphql", owner = "MDEwOlJlcG9zaXRvcnkyMzk=", name = name, body = body, .api_url = .api_url)
+```
+
