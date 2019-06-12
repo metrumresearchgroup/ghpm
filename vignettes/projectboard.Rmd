@@ -1,0 +1,43 @@
+---
+title: "Using GitHub Project Boards"
+author: "Harsh Baid"
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+library(ghpm)
+```
+
+GHPM offers several useful functions for creating and grabbing data from project boards on GitHub. We can grab data general data from any project board by specifying a repository and then the project board number:
+
+```{r}
+str(get_projectboard_info("metrumresearchgroup", "pkgr", 1))
+```
+
+We can also grab information about the issues that are in each column in a project board
+```{r}
+get_projectboard("metrumresearchgroup", "pkgr")
+```
+
+The library also has ability to create project boards on the fly using the following command:
+```{r, eval=FALSE}
+create_projectboard("<Org Name>", "<Repo Name>", "<Project Board Title>", "<Project Board Body">)
+
+# an optional field of columns can be specified to automatically create columns
+create_projectboard("<Org Name>", "<Repo Name>", "<Project Board Title>", "<Project Board Body">, columns = c('First Column', 'Second Column', 'Third Column'))
+```
+
+Project boards can also be cloned using the command below. This is especially useful to quickly scaffold projectboards with automated workflows using a base repo as a template. The cloning process will only copy the name, body, columns, and workflows of a project board. It will NOT transfer over any issues or cards. This is currently limited to repos within in the same organization.
+
+```{r, eval=FALSE}
+clone_projectboard("<Org Name>", "<Repo to COPY FROM>", <Project Board Number>, "<Repo to COPY TO>")
+```
+

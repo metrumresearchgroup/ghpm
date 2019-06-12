@@ -4,7 +4,7 @@
 #' @return A list containing information about the projectboard
 #' @export
 get_projectboard_info <- function(org, repo, number, .api_url = "https://api.github.com/graphql"){
-	return(graphql_query("repo_info.graphql", org = org, repo = repo_to, .api_url = .api_url)$repository$project)
+	return(graphql_query("projects/project_info.graphql", org = org, repo = repo, number = number, .api_url = .api_url)$repository$project)
 }
 
 #' Gets a data frame of the issues and their columns on the project board
