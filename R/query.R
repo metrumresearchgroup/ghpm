@@ -14,7 +14,7 @@ graphql_query <- function(file, ..., .api_url = "https://api.github.com/graphql"
 
 	token <- ifelse(.api_url == "https://api.github.com/graphql", "GITHUB_PAT", "GHE_PAT")
 	if(Sys.getenv(token) == ""){
-		stop(glue::glue("please set the environment variable {token} to authorize"))
+		stop(glue("please set the environment variable {token} to authorize"))
 	}
 
 	return(gh("POST ", query = query, variables = compact(list(...)), .send_headers = .header,
