@@ -2,6 +2,7 @@
 
 export("%>%")
 export(clone_projectboard)
+export(create_labels)
 export(create_projectboard)
 export(delete_all_labels)
 export(get_all_pull_requests)
