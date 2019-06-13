@@ -1,10 +1,11 @@
 #' Adds labels from a dataframe to a repository
 #' @inheritParams get_milestones
-#' @param .api_url Optional API url to query. Defaults to "https://api.github.com/"]\
+#' @param .api_url Optional API url to query. Defaults to "https://api.github.com/"]
 #' @param label_df A dataframe containing the columns name, color, description of each label to create.
-#' ie: `data.frame(name = c("Label 1", "Label 2", "Label 3"), color = c("00FFFF", "FFFF00", "FF00FF"), description = c("This is the first description", "The second one", ""))`
+#' ie: \code{ data.frame(name = c("Label 1", "Label 2", "Label 3"), color = c("00FFFF", "FFFF00", "FF00FF"), description = c("This is the first description", "The second one", ""))}
 #' @return A message showing the tags that were deleted
 #' @importFrom glue glue
+#' @importFrom purrr is_empty
 #' @importFrom gh gh
 #' @export
 create_labels <- function(org, repo, label_df, .api_url = "https://api.github.com/"){
@@ -22,7 +23,7 @@ create_labels <- function(org, repo, label_df, .api_url = "https://api.github.co
 		return(x[[1]])
 	})
 
-	return(message("The following labels were added:\n", paste0(labels, "\n ")))
+	return(message("The following labels were added: \n", paste0(labels, "\n ")))
 }
 
 #' Deletes all the labels from a given repository.
