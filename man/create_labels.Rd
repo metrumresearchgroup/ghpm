@@ -11,14 +11,16 @@ create_labels(org, repo, label_df, .api_url = "https://api.github.com/")
 
 \item{repo}{Name of repository to query}
 
-\item{label_df}{A dataframe containing the columns name, color, description of each label to create.
-ie: \code{ data.frame(name = c("Label 1", "Label 2", "Label 3"), color = c("00FFFF", "FFFF00", "FF00FF"), description = c("This is the first description", "The second one", ""))}}
+\item{label_df}{A dataframe containing the columns name, color, description of each label to create. See details.}
 
-\item{.api_url}{Optional API url to query. Defaults to "https://api.github.com/"]}
+\item{.api_url}{Optional API url to query. Defaults to "https://api.github.com/" This function uses the v3 REST API instead of the v4 GraphQL}
 }
 \value{
 A message showing the tags that were deleted
 }
 \description{
 Adds labels from a dataframe to a repository
+}
+\details{
+The label dataframe should be structured as follows: \code{ data.frame(name = c("Label 1", "Label 2", "Label 3"), color = c("00FFFF", "FFFF00", "FF00FF"), description = c("This is the first description", "The second one", ""))}
 }

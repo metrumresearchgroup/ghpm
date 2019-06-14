@@ -11,7 +11,7 @@ delete_all_labels(org, repo, .api_url = "https://api.github.com/")
 
 \item{repo}{Name of repository to query}
 
-\item{.api_url}{Optional API url to query. Defaults to "https://api.github.com/"}
+\item{.api_url}{Optional API url to query. Defaults to "https://api.github.com/" This function uses the v3 REST API instead of the v4 GraphQL}
 }
 \value{
 A message showing the tags that were deleted
