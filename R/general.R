@@ -4,7 +4,7 @@
 #' @importFrom purrr reduce
 #' @importFrom tibble tibble add_row
 #' @export
-get_milestones <- function(org, repo, .api_url = "https://api.github.com/graphql"){
+get_milestones <- function(org, repo, .api_url = api_url()){
 	data <- graphql_query("milestones.graphql", org = org, repo = repo, .api_url = .api_url)$repository$milestones$nodes
 	milestones <- reduce(data, function(.acc, .cv){
 		return(.acc %>% add_row("title" = .cv$title,

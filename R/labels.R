@@ -8,13 +8,14 @@
 #' @importFrom purrr pmap
 #' @importFrom gh gh
 #' @export
-create_labels <- function(org, repo, label_df, .api_url = "https://api.github.com/"){
+create_labels <- function(org, repo, label_df, .api_url = api_url(graphql = FALSE)){
 	labels <- pmap(label_df, function(name, color, description){
 		gh(glue("POST /repos/{org}/{repo}/labels"),
 		   "name" = name,
 		   "color" = color,
 		   "description" = ifelse(description == "" || is.na(description), "", description),
-		   .token = get_token(.api_url))
+		   .token = get_token(.api_url),
+		   .api_url = .api_url)
 		return(name)
 	})
 
@@ -28,7 +29,7 @@ create_labels <- function(org, repo, label_df, .api_url = "https://api.github.co
 #' @importFrom glue glue
 #' @importFrom gh gh
 #' @export
-delete_all_labels <- function(org, repo, .api_url = "https://api.github.com/"){
+delete_all_labels <- function(org, repo, .api_url = api_url(graphql = FALSE)){
 	token <- get_token(.api_url)
 	labels <- lapply(gh(glue("GET repos/{org}/{repo}/labels"), .token = token, .api_url = .api_url), function(x){
 		gh(glue("DELETE repos/{org}/{repo}/labels/{x$name}"), .token = token, .api_url = .api_url)
