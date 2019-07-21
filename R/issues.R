@@ -1,5 +1,5 @@
 #' Gets a data frame of the issues associated with a given repo
-#' @inheritParams get_milestones
+#' @inheritParams ghpm
 #' @return A data frame containing the issue | title | body | creator | milestone | state of each issue
 #' @importFrom purrr reduce
 #' @importFrom tibble tibble add_row
@@ -21,7 +21,7 @@ get_issues <- function(org, repo, .api_url = "https://api.github.com/graphql"){
 }
 
 #' Gets a data frame of the labels of each issue
-#' @inheritParams get_milestones
+#' @inheritParams ghpm
 #' @return A data frame containing issue | label of each issue. Returns an empty dataframe if none are found.
 #' @importFrom purrr reduce map_df keep
 #' @importFrom tibble tibble add_row
@@ -46,7 +46,7 @@ get_issue_labels <- function(org, repo, .api_url = "https://api.github.com/graph
 }
 
 #' Gets a data frame of the assignees of each issue
-#' @inheritParams get_milestones
+#' @inheritParams ghpm
 #' @return A data frame containing issue | assignedTo of each issue. Returns an empty dataframe if none are found.
 #' @importFrom purrr reduce map_df keep
 #' @importFrom tibble tibble add_row
@@ -71,7 +71,7 @@ get_issue_assignees <- function(org, repo, .api_url = "https://api.github.com/gr
 }
 
 #' Gets a data frame of the project board events of each issue
-#' @inheritParams get_milestones
+#' @inheritParams ghpm
 #' @return A data frame containing issue | project | type | column | author | date of each issue. Returns an empty dataframe if none are found.
 #' @importFrom purrr reduce map_df keep
 #' @importFrom tibble tibble add_row
@@ -102,7 +102,7 @@ get_issue_events <- function(org, repo, .api_url = "https://api.github.com/graph
 }
 
 #' Gets a data frame of the comments of each issue
-#' @inheritParams get_milestones
+#' @inheritParams ghpm
 #' @return A data frame containing the issue | date | author | comment of each issue. Returns an empty dataframe if none are found.
 #' @importFrom purrr reduce map_df keep
 #' @importFrom tibble tibble add_row

@@ -1,0 +1,10 @@
+mutation create_project_column($owner: ID!, $name: String!){
+  addProjectColumn(input: {
+    projectId: $owner,
+    name: $name
+  }){
+    project{
+      id
+    }
+  }
+}

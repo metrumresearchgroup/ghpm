@@ -17,7 +17,7 @@ library(ghpm)
 library(dplyr)
 ```
 
-GHPM is an R Package designed to make grabbing data from a Github Repository and performing analytics easy. It does this by providing a set of flexible functions that query important aspects of a repository (pullrequests, commits, issues, etc..) via the Github API and pipes the output into dataframes.
+GHPM is an R Package designed to make grabbing data from a GitHub Repository and performing analytics easy. It does this by providing a set of flexible functions that query important aspects of a repository (pullrequests, commits, issues, etc..) via the GitHub API and pipes the output into dataframes.
 
 We can then use the powerful data manipulation tools that `dplyr` provides to create a resulting dataframe of the information we want.
 

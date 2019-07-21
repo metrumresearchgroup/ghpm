@@ -1,5 +1,5 @@
 #' Gets a data frame of the pull requests associated with a given repo
-#' @inheritParams get_milestones
+#' @inheritParams ghpm
 #' @return A data frame containing the pullrequest | title | author | body | milestone | created_at | merged_by | merged_at | merged_to | state of each issue
 #' @importFrom purrr reduce
 #' @importFrom tibble tibble add_row
@@ -32,7 +32,7 @@ get_all_pull_requests <- function(org, repo, .api_url = "https://api.github.com/
 }
 
 #' Gets a data frame of the comments of all a pull request
-#' @inheritParams get_milestones
+#' @inheritParams ghpm
 #' @param number The number of the pullrequest to grab data from.
 #' @return A data frame containing the pullrequest | author | body | created_at of each pull request comment. Returns an empty dataframe if none are found.
 #' @importFrom purrr reduce
@@ -59,7 +59,7 @@ get_pull_request_comments <- function(org, repo, number, .api_url = "https://api
 }
 
 #' Gets a data frame of the reviewers of all the pull requests of a given repo
-#' @inheritParams get_milestones
+#' @inheritParams ghpm
 #' @return A data frame containing the pullrequest | reviewer. Returns an empty dataframe if none are found.
 #' @importFrom purrr keep map_df reduce
 #' @importFrom tibble tibble add_row
