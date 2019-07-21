@@ -19,9 +19,10 @@ Imports:
     gh,
     tibble,
     stringr,
-    glue
+    glue,
+    checkmate
 Suggests: 
-    testthat,
+    testthat (>= 2.1.0),
     mockery,
     knitr,
     rmarkdown,
