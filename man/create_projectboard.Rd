@@ -5,7 +5,7 @@
 \title{Creates a projectboard}
 \usage{
 create_projectboard(org, repo, name, body = "", columns = NULL,
-  .api_url = "https://api.github.com/graphql")
+  .api_url = api_url())
 }
 \arguments{
 \item{org}{Name of organization to query}

@@ -4,7 +4,7 @@
 \alias{delete_all_labels}
 \title{Deletes all the labels from a given repository.}
 \usage{
-delete_all_labels(org, repo, .api_url = "https://api.github.com/")
+delete_all_labels(org, repo, .api_url = api_url(graphql = FALSE))
 }
 \arguments{
 \item{org}{Name of organization to query}

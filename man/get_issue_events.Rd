@@ -4,7 +4,7 @@
 \alias{get_issue_events}
 \title{Gets a data frame of the project board events of each issue}
 \usage{
-get_issue_events(org, repo, .api_url = "https://api.github.com/graphql")
+get_issue_events(org, repo, .api_url = api_url())
 }
 \arguments{
 \item{org}{Name of organization to query}

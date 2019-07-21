@@ -4,8 +4,7 @@
 \alias{get_issue_assignees}
 \title{Gets a data frame of the assignees of each issue}
 \usage{
-get_issue_assignees(org, repo,
-  .api_url = "https://api.github.com/graphql")
+get_issue_assignees(org, repo, .api_url = api_url())
 }
 \arguments{
 \item{org}{Name of organization to query}

@@ -4,7 +4,7 @@
 \alias{get_projectboard}
 \title{Gets a data frame of the issues and their columns on the project board}
 \usage{
-get_projectboard(org, repo, .api_url = "https://api.github.com/graphql")
+get_projectboard(org, repo, .api_url = api_url())
 }
 \arguments{
 \item{org}{Name of organization to query}

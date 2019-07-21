@@ -4,8 +4,7 @@
 \alias{clone_projectboard}
 \title{Clones a projectboard}
 \usage{
-clone_projectboard(org, repo_from, number, repo_to,
-  .api_url = "https://api.github.com/graphql")
+clone_projectboard(org, repo_from, number, repo_to, .api_url = api_url())
 }
 \arguments{
 \item{org}{Name of organization to query}

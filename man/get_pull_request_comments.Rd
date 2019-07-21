@@ -4,8 +4,7 @@
 \alias{get_pull_request_comments}
 \title{Gets a data frame of the comments of all a pull request}
 \usage{
-get_pull_request_comments(org, repo, number,
-  .api_url = "https://api.github.com/graphql")
+get_pull_request_comments(org, repo, number, .api_url = api_url())
 }
 \arguments{
 \item{org}{Name of organization to query}
