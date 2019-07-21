@@ -3,6 +3,8 @@ query issue_assignees($org: String!, $repo: String!) {
     issues(first: 100){
       nodes{
         number
+        id
+        databaseId
         assignees(first:10) {
           nodes {
             login
