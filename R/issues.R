@@ -4,7 +4,7 @@
 #' @importFrom purrr reduce
 #' @importFrom tibble tibble add_row
 #' @export
-get_issues <- function(org, repo, .api_url = "https://api.github.com/graphql"){
+get_issues <- function(org, repo, .api_url = api_url()){
 	data <- graphql_query("issues/issues.graphql", org = org, repo = repo, .api_url = .api_url)$repository$issues$nodes
 	issues <- reduce(data, function(.acc, .cv){
 		.acc <- .acc %>% add_row("issue" = .cv$number,
@@ -12,10 +12,20 @@ get_issues <- function(org, repo, .api_url = "https://api.github.com/graphql"){
 								 "body" = .cv$bodyText,
 								 "creator" = ifelse(is.null(.cv$author), NA_character_, .cv$author$login),
 								 "milestone" = ifelse(is.null(.cv$milestone), NA_character_, .cv$milestone$title),
-								 "state" = .cv$state)
+								 "state" = .cv$state,
+								 "id" = .cv$id,
+								 "databaseId" = .cv$databaseId)
 
 		return(.acc)
-	}, .init = tibble("issue" = numeric(), "title" = character(), "body" = character(), "creator" = character(), "milestone" = character(), "state" = character(), .rows = 0))
+	}, .init = tibble("issue" = numeric(),
+					  "title" = character(),
+					  "body" = character(),
+					  "creator" = character(),
+					  "milestone" = character(),
+					  "state" = character(),
+					  "id" = character(),
+					  "databaseId" = integer(),
+					  .rows = 0))
 
 	return(issues)
 }
@@ -27,7 +37,7 @@ get_issues <- function(org, repo, .api_url = "https://api.github.com/graphql"){
 #' @importFrom tibble tibble add_row
 #' @importFrom dplyr mutate select everything
 #' @export
-get_issue_labels <- function(org, repo, .api_url = "https://api.github.com/graphql"){
+get_issue_labels <- function(org, repo, .api_url = api_url()){
 	data <- graphql_query("issues/issue_labels.graphql", org = org, repo = repo, .api_url = .api_url)$repository$issues$nodes
 	data <- keep(data, ~length(.x$labels$nodes) > 0)
 
@@ -40,7 +50,7 @@ get_issue_labels <- function(org, repo, .api_url = "https://api.github.com/graph
 			return(.acc %>% add_row("label" = .cv$name))
 		}, .init = tibble("label" = character(), .rows = 0))
 
-		return(label_data %>% mutate("issue" = x$number))
+		return(label_data %>% mutate("issue" = x$number, "id" = x$id, "databaseId" = x$databaseId))
 	})
 	return(labels %>% select(issue, everything()))
 }
@@ -52,8 +62,9 @@ get_issue_labels <- function(org, repo, .api_url = "https://api.github.com/graph
 #' @importFrom tibble tibble add_row
 #' @importFrom dplyr mutate select everything
 #' @export
-get_issue_assignees <- function(org, repo, .api_url = "https://api.github.com/graphql"){
-	data <- graphql_query("issues/issue_assignees.graphql", org = org, repo = repo, .api_url = .api_url)$repository$issues$nodes
+get_issue_assignees <- function(org, repo, .api_url = api_url()){
+	data <- graphql_query("issues/issue_assignees.graphql",
+						  org = org, repo = repo, .api_url = .api_url)$repository$issues$nodes
 	data <- keep(data, ~length(.x$assignees$nodes) > 0)
 
 	if(!length(data)){
@@ -65,7 +76,7 @@ get_issue_assignees <- function(org, repo, .api_url = "https://api.github.com/gr
 			return(.acc %>% add_row("assigned_to" = .cv$login))
 		}, .init = tibble("assigned_to" = character(), .rows = 0))
 
-		return(assignee_data %>% mutate(issue = x$number))
+		return(assignee_data %>% mutate(issue = x$number, "id" = x$id, "databaseId" = x$databaseId))
 	})
 	return(assignees %>% select(issue, everything()))
 }
@@ -78,12 +89,19 @@ get_issue_assignees <- function(org, repo, .api_url = "https://api.github.com/gr
 #' @importFrom dplyr mutate arrange select everything
 #' @importFrom readr parse_datetime
 #' @export
-get_issue_events <- function(org, repo, .api_url = "https://api.github.com/graphql"){
-	data <- graphql_query("issues/issue_events.graphql", org = org, repo = repo, .header = c("Accept" = "application/vnd.github.starfox-preview+json"))$repository$issues$nodes
+get_issue_events <- function(org, repo, .api_url = api_url()){
+	data <- graphql_query("issues/issue_events.graphql", org = org, repo = repo,
+						  .header = c("Accept" = "application/vnd.github.starfox-preview+json"))$repository$issues$nodes
 	data <- keep(data, ~length(.x$timelineItems$nodes) > 0)
 
 	if(!length(data)){
-		return(tibble("issue" = numeric(), "project" = character(), "type" = character(), "column" = character(), "author" = character(), "date" = character(), .rows = 0))
+		return(tibble("issue" = numeric(),
+					  "project" = character(),
+					  "type" = character(),
+					  "column" = character(),
+					  "author" = character(),
+					  "date" = character(),
+					  .rows = 0))
 	}
 
 	timeline <- map_df(data, function(x){
@@ -94,8 +112,13 @@ get_issue_events <- function(org, repo, .api_url = "https://api.github.com/graph
 									"author" = ifelse(is.null(.cv$actor), NA_character_, .cv$actor$login),
 									"date" = .cv$createdAt))
 
-		}, .init = tibble("project" = character(), "type" = character(), "column" = character(), "author" = character(), "date" = character(), .rows = 0))
-		return(event_data %>% mutate("issue" = x$number))
+		}, .init = tibble("project" = character(),
+						  "type" = character(),
+						  "column" = character(),
+						  "author" = character(),
+						  "date" = character(),
+						  .rows = 0))
+		return(event_data %>% mutate("issue" = x$number, "id" = x$id, "databaseId" = x$databaseId))
 	}) %>% mutate("date" = parse_datetime(date))
 
 	return(timeline %>% arrange(project) %>% select("issue", everything()))
@@ -109,12 +132,18 @@ get_issue_events <- function(org, repo, .api_url = "https://api.github.com/graph
 #' @importFrom dplyr mutate select everything
 #' @importFrom readr parse_datetime
 #' @export
-get_issue_comments <- function(org, repo, .api_url = "https://api.github.com/graphql"){
+get_issue_comments <- function(org, repo, .api_url = api_url()){
 	data <- graphql_query("issues/issue_comments.graphql", org = org, repo = repo)$repository$issues$nodes
 	data <- keep(data, ~length(.x$comments$nodes) > 0)
 
 	if(!length(data)){
-		return(tibble("issue" = numeric(), "comment" = character(), "author" = character(), "date" = character(), .rows = 0))
+		return(tibble("issue" = numeric(),
+					  "comment" = character(),
+					  "author" = character(),
+					  "date" = character(),
+					  "id" = character(),
+					  "databaseId" = integer(),
+					  .rows = 0))
 	}
 
 	comments <- map_df(data, function(x){
@@ -122,9 +151,15 @@ get_issue_comments <- function(org, repo, .api_url = "https://api.github.com/gra
 			return(.acc %>% add_row("comment" = .cv$bodyText,
 									"author" = ifelse(is.null(.cv$author), NA_character_, .cv$author$login),
 									"date" = .cv$createdAt))
-		}, .init = tibble("comment" = character(), "author" = character(), "date" = character(), .rows = 0))
+		}, .init = tibble("issue" = numeric(),
+						  "comment" = character(),
+						  "author" = character(),
+						  "date" = character(),
+						  "id" = character(),
+						  "databaseId" = integer(),
+						  .rows = 0))
 
-		return(comment_data %>% mutate("issue" = x$number))
+		return(comment_data %>% mutate("issue" = x$number, "id" = x$id, "databaseId" = x$databaseId))
 	}) %>% mutate("date" = parse_datetime(date))
 
 	return(comments %>% select("issue", everything()))

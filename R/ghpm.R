@@ -20,7 +20,8 @@ NULL
 #' @importFrom purrr compact
 #' @importFrom glue glue
 #' @export
-graphql_query <- function(file, ..., .api_url = "https://api.github.com/graphql", .header = NULL) {
+graphql_query <- function(file, ..., .api_url = api_url(), .header = NULL) {
+	assert_url(.api_url)
 	file <- system.file(file, package = "ghpm")
 	query <- readChar(file, file.info(file)$size)
 
@@ -32,7 +33,7 @@ graphql_query <- function(file, ..., .api_url = "https://api.github.com/graphql"
 #' @param .api_url API URL you will be querying
 #' @return A Personal Access Token via a system environment variable
 get_token <- function(.api_url){
-	token <- ifelse(grepl("github", .api_url), "GITHUB_PAT", "GHE_PAT")
+	token <- ifelse(grepl(x = .api_url, "https://api.github.com", fixed = TRUE), "GITHUB_PAT", "GHE_PAT")
 	if(Sys.getenv(token) == ""){
 		stop("Please set the environment variable ", token, " with your personal access token to authorize GHPM")
 	}

@@ -4,7 +4,7 @@
 \alias{get_issues}
 \title{Gets a data frame of the issues associated with a given repo}
 \usage{
-get_issues(org, repo, .api_url = "https://api.github.com/graphql")
+get_issues(org, repo, .api_url = api_url())
 }
 \arguments{
 \item{org}{Name of organization to query}

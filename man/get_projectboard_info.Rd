@@ -4,8 +4,7 @@
 \alias{get_projectboard_info}
 \title{Gets info about a projectboard}
 \usage{
-get_projectboard_info(org, repo, number,
-  .api_url = "https://api.github.com/graphql")
+get_projectboard_info(org, repo, number, .api_url = api_url())
 }
 \arguments{
 \item{org}{Name of organization to query}

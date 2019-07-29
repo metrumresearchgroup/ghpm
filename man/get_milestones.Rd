@@ -4,7 +4,7 @@
 \alias{get_milestones}
 \title{Gets a data frame of the milestones associated with a given repo.}
 \usage{
-get_milestones(org, repo, .api_url = "https://api.github.com/graphql")
+get_milestones(org, repo, .api_url = api_url())
 }
 \arguments{
 \item{org}{Name of organization to query}

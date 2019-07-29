@@ -4,8 +4,7 @@
 \alias{get_pull_request_reviewers}
 \title{Gets a data frame of the reviewers of all the pull requests of a given repo}
 \usage{
-get_pull_request_reviewers(org, repo,
-  .api_url = "https://api.github.com/graphql")
+get_pull_request_reviewers(org, repo, .api_url = api_url())
 }
 \arguments{
 \item{org}{Name of organization to query}

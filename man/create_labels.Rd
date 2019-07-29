@@ -4,7 +4,7 @@
 \alias{create_labels}
 \title{Adds labels from a dataframe to a repository}
 \usage{
-create_labels(org, repo, label_df, .api_url = "https://api.github.com/")
+create_labels(org, repo, label_df, .api_url = api_url(graphql = FALSE))
 }
 \arguments{
 \item{org}{Name of organization to query}

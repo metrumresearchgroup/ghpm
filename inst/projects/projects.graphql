@@ -1,9 +1,9 @@
 query projects($org: String!, $repo: String!) {
   repository(owner: $org, name: $repo) {
-    projects(first: 10) {
+    projects(first: 5) {
       nodes {
         name
-        columns(first: 15) {
+        columns(first: 10) {
           nodes {
             name
             cards(first: 100) {
@@ -12,6 +12,8 @@ query projects($org: String!, $repo: String!) {
                   ... on Issue {
                     title
                     number
+                    id
+                    databaseId
                   }
                 }
               }
