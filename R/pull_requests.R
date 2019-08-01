@@ -13,7 +13,7 @@ get_all_pull_requests <- function(org, repo, .api_url = api_url()){
 		.acc <- .acc %>% add_row("pullrequest" = .cv$number,
 								 "title" = .cv$title,
 								 "author" = ifelse(is.null(.cv$author), NA_character_, .cv$author$login),
-								 "body" = .cv$bodyText,
+								 "body" = .cv$body,
 								 "milestone" = ifelse(is.null(.cv$milestone), NA_character_, .cv$milestone$title),
 								 "created_at" = .cv$createdAt,
 								 "merged_by" = ifelse(is.null(.cv$mergedBy), NA_character_, .cv$mergedBy$login),
@@ -50,7 +50,7 @@ get_pull_request_comments <- function(org, repo, number, .api_url = api_url()){
 	comments <- reduce(data, function(.acc, .cv){
 		return(.acc %>% add_row("pullrequest" = number,
 								"author" = ifelse(is.null(.cv$author), NA_character_, .cv$author$login),
-								"body" = .cv$bodyText,
+								"body" = .cv$body,
 								"created_at" = .cv$createdAt))
 		}, .init = tibble("pullrequest" = numeric(), "author" = character(), "body" = character(), "created_at" = character(), .rows = 0)) %>%
 		mutate("created_at" = parse_datetime(created_at))
