@@ -8,7 +8,7 @@
 #' @importFrom dplyr mutate select slice bind_cols
 #' @importFrom readr parse_datetime
 #' @export
-get_pull_request_commits <- function(org, repo, number, .cc = FALSE, .api_url = "https://api.github.com/graphql"){
+get_pull_request_commits <- function(org, repo, number, .cc = FALSE, .api_url = api_url()){
 	data <- graphql_query("pullrequests/pull_request_commits.graphql", org = org, repo = repo, number = number, .api_url = .api_url)$repository$pullRequest$commits$nodes
 
 	commits <- reduce(data, function(.acc, .cv){

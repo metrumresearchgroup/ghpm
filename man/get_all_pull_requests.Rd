@@ -4,8 +4,7 @@
 \alias{get_all_pull_requests}
 \title{Gets a data frame of the pull requests associated with a given repo}
 \usage{
-get_all_pull_requests(org, repo,
-  .api_url = "https://api.github.com/graphql")
+get_all_pull_requests(org, repo, .api_url = api_url())
 }
 \arguments{
 \item{org}{Name of organization to query}

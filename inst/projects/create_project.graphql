@@ -1,0 +1,11 @@
+mutation create_project($owner: ID!, $name: String!, $body: String!){
+  createProject(input: {
+    ownerId: $owner,
+    name: $name,
+    body: $body
+  }){
+    project{
+      id
+    }
+  }
+}

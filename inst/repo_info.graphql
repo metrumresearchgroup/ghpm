@@ -1,0 +1,5 @@
+query id($org: String!, $repo: String!) {
+  repository(owner: $org, name: $repo){
+    id
+  }
+}

@@ -1,0 +1,14 @@
+mutation clone_project($owner: ID!, $source: ID!, $name: String!, $body: String!){
+  cloneProject(input: {
+    targetOwnerId: $owner,
+    sourceId: $source,
+    includeWorkflows: true,
+    name: $name,
+    body: $body,
+    public: true
+  }){
+    project{
+      id
+    }
+  }
+}

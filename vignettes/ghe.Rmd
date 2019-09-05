@@ -1,0 +1,36 @@
+---
+title: "Using github enterprise"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = FALSE
+)
+library(ghpm)
+library(dplyr)
+```
+
+
+## Issues
+
+Lets start with grabbing issues from shiny repo using the following command.
+```{r}
+options("ghpm.hostname" = "ghe.metrumrg.com")
+ghpm_issues <- get_issues("tech-solutions", "ghpm")
+```
+
+```{r}
+ghpm_issues_labels <- get_issue_labels("tech-solutions", "ghpm")
+```
+
+```{r}
+ghpm_issues %>% left_join(ghpm_issues_labels, by = "issue")
+```
+
