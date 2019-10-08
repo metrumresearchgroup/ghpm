@@ -5,13 +5,13 @@ query issue_comments($org: String!, $repo: String!) {
         number
         id
         databaseId
-        comments(first: 20){
+        comments(first: 50){
           nodes{
             author {
               login
             }
             createdAt
-            bodyText
+            body
           }
         }
       }

@@ -9,7 +9,7 @@ get_issues <- function(org, repo, .api_url = api_url()){
 	issues <- reduce(data, function(.acc, .cv){
 		.acc <- .acc %>% add_row("issue" = .cv$number,
 								 "title" = .cv$title,
-								 "body" = .cv$bodyText,
+								 "body" = .cv$body,
 								 "creator" = ifelse(is.null(.cv$author), NA_character_, .cv$author$login),
 								 "milestone" = ifelse(is.null(.cv$milestone), NA_character_, .cv$milestone$title),
 								 "state" = .cv$state,
@@ -148,7 +148,7 @@ get_issue_comments <- function(org, repo, .api_url = api_url()){
 
 	comments <- map_df(data, function(x){
 		comment_data <- reduce(x$comments$nodes, function(.acc, .cv){
-			return(.acc %>% add_row("comment" = .cv$bodyText,
+			return(.acc %>% add_row("comment" = .cv$body,
 									"author" = ifelse(is.null(.cv$author), NA_character_, .cv$author$login),
 									"date" = .cv$createdAt))
 		}, .init = tibble("issue" = numeric(),
