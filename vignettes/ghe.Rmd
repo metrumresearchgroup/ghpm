@@ -27,6 +27,10 @@ ghpm_issues <- get_issues("tech-solutions", "ghpm")
 ```
 
 ```{r}
+ghpm_issues %>% filter(milestone == "v0.2.0")
+```
+
+```{r}
 ghpm_issues_labels <- get_issue_labels("tech-solutions", "ghpm")
 ```
 
