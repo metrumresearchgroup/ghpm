@@ -1,0 +1,17 @@
+mutation create_pull_request($repoID: ID!, $baseBranch: String!, $headBranch: String!, $title: String!, $body: String!) {
+  createPullRequest(input: {
+    repositoryId: $repoID,
+    baseRefName: $baseBranch,
+    headRefName: $headBranch,
+    title: $title,
+    body: $body
+  }){
+    pullRequest {
+      title
+      createdAt
+      author {
+        login
+      }
+    }
+  }
+}

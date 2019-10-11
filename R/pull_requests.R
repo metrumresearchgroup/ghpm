@@ -1,3 +1,25 @@
+#' Creates a pull request
+#' @inheritParams ghpm
+#' @param base Name of base branch that changes will be pulled into
+#' @param head Name of head branch where changes will be pulled from
+#' @param title Title of pull request
+#' @param body Body of pull request. Defaults to ""
+#' @return A list containing the title, creation date, and author of the pull request
+#' @export
+create_pull_request <- function(org, repo, base, head, title, body = "", .api_url = api_url()){
+	repo_id <- graphql_query("repo_info.graphql", org = org, repo = repo, .api_url = .api_url)$repository$id
+
+	data <- graphql_query("pullrequests/create_pull_requests.graphql",
+						  repoID = repo_id,
+						  baseBranch = repo,
+						  headBranch = head,
+						  title = title,
+						  body = body,
+						  .api_url = .api_url)$pullRequest
+
+	return(list(title = data$title, created_at = data$createdAt, author = data$author$login))
+}
+
 #' Gets a data frame of the pull requests associated with a given repo
 #' @inheritParams ghpm
 #' @return A data frame containing the pullrequest | title | author | body | milestone | created_at | merged_by | merged_at | merged_to | state of each issue
