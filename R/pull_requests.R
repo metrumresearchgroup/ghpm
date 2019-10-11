@@ -11,12 +11,12 @@ create_pull_request <- function(org, repo, base, head, title, body = "", .api_ur
 
 	data <- graphql_query("pullrequests/create_pull_request.graphql",
 						  repoID = repo_id,
-						  baseBranch = repo,
+						  baseBranch = base,
 						  headBranch = head,
 						  title = title,
 						  body = body,
-						  .api_url = .api_url)
-	browser()
+						  .api_url = .api_url)$createPullRequest$pullRequest
+
 	return(list(title = data$title, created_at = data$createdAt, author = data$author$login))
 }
 
