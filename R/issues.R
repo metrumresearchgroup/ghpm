@@ -4,7 +4,7 @@
 #' @importFrom purrr reduce
 #' @importFrom tibble tibble add_row
 #' @export
-get_issues <- function(org, repo, .api_url = api_url()){
+get_repo_issues <- function(org, repo, .api_url = api_url()){
 	data <- graphql_query("issues/issues.graphql", org = org, repo = repo, .api_url = .api_url)$repository$issues$nodes
 	issues <- reduce(data, function(.acc, .cv){
 		.acc <- .acc %>% add_row("issue" = .cv$number,
@@ -37,7 +37,7 @@ get_issues <- function(org, repo, .api_url = api_url()){
 #' @importFrom tibble tibble add_row
 #' @importFrom dplyr mutate select everything
 #' @export
-get_issue_labels <- function(org, repo, .api_url = api_url()){
+get_repo_issue_labels <- function(org, repo, .api_url = api_url()){
 	data <- graphql_query("issues/issue_labels.graphql", org = org, repo = repo, .api_url = .api_url)$repository$issues$nodes
 	data <- keep(data, ~length(.x$labels$nodes) > 0)
 

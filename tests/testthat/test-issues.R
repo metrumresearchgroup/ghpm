@@ -2,20 +2,20 @@ context("test-issues")
 
 test_that("Default behavior of get_issues()", {
 	mockery::stub(
-		get_issues,
+		get_repo_issues,
 		"graphql_query",
 		readRDS("issues/get_issues.rds")
 	)
-	expect_equal(get_issues("some", "value"), readRDS("issues/validate_get_issues.rds"))
+	expect_equal(get_repo_issues("some", "value"), readRDS("issues/validate_get_issues.rds"))
 })
 
 test_that("Default behavior of get_issue_labels()", {
 	mockery::stub(
-		get_issue_labels,
+		get_repo_issue_labels,
 		"graphql_query",
 		readRDS("issues/issue_labels.rds")
 	)
-	expect_equal(get_issue_labels("some", "value"), readRDS("issues/validate_issue_labels.rds"))
+	expect_equal(get_repo_issue_labels("some", "value"), readRDS("issues/validate_issue_labels.rds"))
 })
 
 test_that("Default behavior of get_issue_assignees()", {
