@@ -9,14 +9,14 @@
 create_pull_request <- function(org, repo, base, head, title, body = "", .api_url = api_url()){
 	repo_id <- graphql_query("repo_info.graphql", org = org, repo = repo, .api_url = .api_url)$repository$id
 
-	data <- graphql_query("pullrequests/create_pull_requests.graphql",
+	data <- graphql_query("pullrequests/create_pull_request.graphql",
 						  repoID = repo_id,
 						  baseBranch = repo,
 						  headBranch = head,
 						  title = title,
 						  body = body,
-						  .api_url = .api_url)$pullRequest
-
+						  .api_url = .api_url)
+	browser()
 	return(list(title = data$title, created_at = data$createdAt, author = data$author$login))
 }
 
