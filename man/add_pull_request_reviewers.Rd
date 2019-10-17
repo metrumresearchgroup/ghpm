@@ -13,6 +13,9 @@ add_pull_request_reviewers(id, users, .api_url = api_url())
 
 \item{.api_url}{Optional API url to query. Defaults to "https://api.github.com/graphql"}
 }
+\value{
+The title and id of the pull request
+}
 \description{
 Sets review requests from a specified list of users to a pull request
 }

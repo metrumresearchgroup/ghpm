@@ -101,7 +101,7 @@ get_pull_request_comments <- function(org, repo, number, .api_url = api_url()){
 #' @inheritParams ghpm
 #' @param id Pull Request ID
 #' @param users A list of users (by username) to add as reviewers from the pull request
-#' @return
+#' @return The title and id of the pull request
 #' @export
 add_pull_request_reviewers <- function(id, users, .api_url = api_url()){
 	return(sanitize_respone(graphql_query("pullrequests/add_pull_request_reviewers.graphql",
