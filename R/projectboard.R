@@ -4,7 +4,7 @@
 #' @return A list containing information about the projectboard
 #' @export
 get_projectboard_info <- function(org, repo, number, .api_url = api_url()){
-	return(graphql_query("projects/project_info.graphql", org = org, repo = repo, number = number, .api_url = .api_url)$repository$project)
+	return(sanitize_respone(graphql_query("projects/project_info.graphql", org = org, repo = repo, number = number, .api_url = .api_url))$repository$project)
 }
 
 #' Gets a data frame of the issues and their columns on the project board
@@ -15,7 +15,7 @@ get_projectboard_info <- function(org, repo, number, .api_url = api_url()){
 #' @importFrom dplyr mutate select
 #' @export
 get_projectboard <- function(org, repo, .api_url = api_url()){
-	data <- graphql_query("projects/projects.graphql", org = org, repo = repo, .api_url = .api_url)$repository$projects$nodes
+	data <- sanitize_respone(graphql_query("projects/projects.graphql", org = org, repo = repo, .api_url = .api_url))$repository$projects$nodes
 
 	projects <- map_df(data, function(x){
 		result <- reduce(x$columns$nodes, get_projectboard_columns,
@@ -62,8 +62,8 @@ get_projectboard_issues <- function(.acc, .cv){
 #' @return Boolean value if creation was successful.
 #' @export
 create_projectboard <- function(org, repo, name, body = "", columns = NULL, .api_url = api_url()){
-	repo_id <- graphql_query("repo_info.graphql", org = org, repo = repo, .api_url = .api_url)$repository$id
-	proj_id <- graphql_query("projects/create_project.graphql", owner = repo_id, name = name, body = body, .api_url = .api_url)$createProject$project$id
+	repo_id <- sanitize_respone(graphql_query("repo_info.graphql", org = org, repo = repo, .api_url = .api_url))$repository$id
+	proj_id <- sanitize_respone(graphql_query("projects/create_project.graphql", owner = repo_id, name = name, body = body, .api_url = .api_url))$createProject$project$id
 
 	if(!is.null(columns)){
 		lapply(columns, function(x){
@@ -83,7 +83,7 @@ create_projectboard <- function(org, repo, name, body = "", columns = NULL, .api
 #' @export
 clone_projectboard <- function(org, repo_from, number, repo_to, .api_url = api_url()){
 	project_from <- get_projectboard_info(org, repo = repo_from, number, .api_url)$repository$project
-	repo_id <- graphql_query("repo_info.graphql", org = org, repo = repo_to, .api_url = .api_url)$repository$id
+	repo_id <- sanitize_respone(graphql_query("repo_info.graphql", org = org, repo = repo_to, .api_url = .api_url))$repository$id
 
-	return(graphql_query("projects/clone_project.graphql", owner = repo_id, source = project_from$id, name = project_from$name, body = project_from$body, .api_url = .api_url)$project$id)
+	return(sanitize_respone(graphql_query("projects/clone_project.graphql", owner = repo_id, source = project_from$id, name = project_from$name, body = project_from$body, .api_url = .api_url))$project$id)
 }

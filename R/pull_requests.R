@@ -4,18 +4,27 @@
 #' @param head Name of head branch where changes will be pulled from
 #' @param title Title of pull request
 #' @param body Body of pull request. Defaults to ""
+#' @param reviewers List of usernames to request reviews from (ie: `reviewers = c('devinp', 'harshb')`)
 #' @return A list containing the title, creation date, and author of the pull request
 #' @export
-create_pull_request <- function(org, repo, base, head, title, body = "", .api_url = api_url()){
-	repo_id <- graphql_query("repo_info.graphql", org = org, repo = repo, .api_url = .api_url)$repository$id
+create_pull_request <- function(org, repo, base, head, title, body = "", reviewers = NULL, .api_url = api_url()){
+	repo_id <- sanitize_respone(graphql_query("repo_info.graphql", org = org, repo = repo, .api_url = .api_url))$repository$id
 
-	data <- graphql_query("pullrequests/create_pull_request.graphql",
-						  repoID = repo_id,
-						  baseBranch = base,
-						  headBranch = head,
-						  title = title,
-						  body = body,
-						  .api_url = .api_url)$createPullRequest$pullRequest
+	data <- sanitize_respone(
+		graphql_query("pullrequests/create_pull_request.graphql",
+					  repoID = repo_id,
+					  baseBranch = base,
+					  headBranch = head,
+					  title = title,
+					  body = body,
+					  .api_url = .api_url))$createPullRequest$pullRequest
+
+	if(!is.null(reviewers) && length(reviewers) > 0){
+		userIDs = lapply(reviewers, function(user){
+			return(get_user_info(user, .api_url = .api_url)$id)
+		})
+		add_pull_request_reviewers(data$id, users = userIDs, .api_url = .api_url)
+	}
 
 	return(list(title = data$title, created_at = data$createdAt, author = data$author$login))
 }
@@ -29,7 +38,7 @@ create_pull_request <- function(org, repo, base, head, title, body = "", .api_ur
 #' @importFrom readr parse_datetime
 #' @export
 get_all_pull_requests <- function(org, repo, .api_url = api_url()){
-	data <- graphql_query("pullrequests/all_pull_requests.graphql", org = org, repo = repo, .api_url = .api_url)$repository$pullRequests$nodes
+	data <- sanitize_respone(graphql_query("pullrequests/all_pull_requests.graphql", org = org, repo = repo, .api_url = .api_url))$repository$pullRequests$nodes
 
 	prs <- reduce(data, function(.acc, .cv){
 		.acc <- .acc %>% add_row("pullrequest" = .cv$number,
@@ -63,7 +72,7 @@ get_all_pull_requests <- function(org, repo, .api_url = api_url()){
 #' @importFrom readr parse_datetime
 #' @export
 get_pull_request_comments <- function(org, repo, number, .api_url = api_url()){
-	data <- graphql_query("pullrequests/pull_request_comments.graphql", org = org, repo = repo, number = number, .api_url = .api_url)$repository$pullRequest$comments$nodes
+	data <- sanitize_respone(graphql_query("pullrequests/pull_request_comments.graphql", org = org, repo = repo, number = number, .api_url = .api_url))$repository$pullRequest$comments$nodes
 
 	if(!length(data)){
 		return(tibble("pullrequest" = number, "author" = character(), "body" = character(), "created_at" = character(), .rows = 0))
@@ -80,15 +89,26 @@ get_pull_request_comments <- function(org, repo, number, .api_url = api_url()){
 	return(comments)
 }
 
+#' Sets review requests from a specified list of users to a pull request
+#' @inheritParams ghpm
+#' @param id Pull Request ID
+#' @param users A list of users (by username) to add as reviewers from the pull request
+#' @return
+#' @export
+add_pull_request_reviewers <- function(id, users, .api_url = api_url()){
+	return(sanitize_respone(graphql_query("pullrequests/add_pull_request_reviewers.graphql",
+										  id = id, userIDs = user, .api_url = .api_url), stop = FALSE)$requestReviews$pullRequest)
+}
+
 #' Gets a data frame of the reviewers of all the pull requests of a given repo
 #' @inheritParams ghpm
 #' @return A data frame containing the pullrequest | reviewer. Returns an empty dataframe if none are found.
-#' @importFrom purrr keep map_df reduce
+#' @importFrom purrr keep map_df reusers
 #' @importFrom tibble tibble add_row
 #' @importFrom dplyr mutate select everything
 #' @export
 get_pull_request_reviewers <- function(org, repo, .api_url = api_url()){
-	data <- graphql_query("pullrequests/pull_request_reviewers.graphql", org = org, repo = repo, .api_url = .api_url)$repository$pullRequests$nodes
+	data <- sanitize_respone(graphql_query("pullrequests/pull_request_reviewers.graphql", org = org, repo = repo, .api_url = .api_url))$repository$pullRequests$nodes
 	data <- keep(data, ~length(.x$reviewRequests$nodes) > 0)
 
 	if(!length(data)){
