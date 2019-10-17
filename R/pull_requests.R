@@ -103,7 +103,7 @@ add_pull_request_reviewers <- function(id, users, .api_url = api_url()){
 #' Gets a data frame of the reviewers of all the pull requests of a given repo
 #' @inheritParams ghpm
 #' @return A data frame containing the pullrequest | reviewer. Returns an empty dataframe if none are found.
-#' @importFrom purrr keep map_df reusers
+#' @importFrom purrr keep map_df reduce
 #' @importFrom tibble tibble add_row
 #' @importFrom dplyr mutate select everything
 #' @export

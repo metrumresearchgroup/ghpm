@@ -5,7 +5,7 @@
 \title{Creates a pull request}
 \usage{
 create_pull_request(org, repo, base, head, title, body = "",
-  .api_url = api_url())
+  reviewers = NULL, .api_url = api_url())
 }
 \arguments{
 \item{org}{Name of organization to query}
@@ -19,6 +19,8 @@ create_pull_request(org, repo, base, head, title, body = "",
 \item{title}{Title of pull request}
 
 \item{body}{Body of pull request. Defaults to ""}
+
+\item{reviewers}{List of usernames to request reviews from (ie: `reviewers = c('devinp', 'harshb')`)}
 
 \item{.api_url}{Optional API url to query. Defaults to "https://api.github.com/graphql"}
 }
