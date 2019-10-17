@@ -5,9 +5,10 @@
 #' @param title Title of pull request
 #' @param body Body of pull request. Defaults to ""
 #' @param reviewers List of usernames to request reviews from (ie: `reviewers = c('devinp', 'harshb')`)
+#' @param assignees List of usernames to assign to the pull request.
 #' @return A list containing the title, creation date, and author of the pull request
 #' @export
-create_pull_request <- function(org, repo, base, head, title, body = "", reviewers = NULL, .api_url = api_url()){
+create_pull_request <- function(org, repo, base, head, title, body = "", reviewers = NULL, assignees = NULL, .api_url = api_url()){
 	repo_id <- sanitize_respone(graphql_query("repo_info.graphql", org = org, repo = repo, .api_url = .api_url))$repository$id
 
 	data <- sanitize_respone(
@@ -20,13 +21,20 @@ create_pull_request <- function(org, repo, base, head, title, body = "", reviewe
 					  .api_url = .api_url))$createPullRequest$pullRequest
 
 	if(!is.null(reviewers) && length(reviewers) > 0){
-		userIDs = lapply(reviewers, function(user){
+		userIDs <- lapply(reviewers, function(user){
 			return(get_user_info(user, .api_url = .api_url)$id)
 		})
 		add_pull_request_reviewers(data$id, users = userIDs, .api_url = .api_url)
 	}
 
-	return(list(title = data$title, created_at = data$createdAt, author = data$author$login))
+	if(!is.null(assignees) && length(assignees) > 0){
+		userIDs <- lapply(assignees, function(user){
+			return(get_user_info(user, .api_url = .api_url)$id)
+		})
+		assign_to_object(data$id, users = userIDs, .api_url = .api_url)
+	}
+
+	return(list(title = data$title, created_at = data$createdAt, author = data$author$login, reviewers = data$reviewRequests$nodes))
 }
 
 #' Gets a data frame of the pull requests associated with a given repo
@@ -97,7 +105,7 @@ get_pull_request_comments <- function(org, repo, number, .api_url = api_url()){
 #' @export
 add_pull_request_reviewers <- function(id, users, .api_url = api_url()){
 	return(sanitize_respone(graphql_query("pullrequests/add_pull_request_reviewers.graphql",
-										  id = id, userIDs = user, .api_url = .api_url), stop = FALSE)$requestReviews$pullRequest)
+										  id = id, userIDs = user, .api_url = .api_url))$requestReviews$pullRequest)
 }
 
 #' Gets a data frame of the reviewers of all the pull requests of a given repo

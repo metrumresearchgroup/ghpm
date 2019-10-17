@@ -22,3 +22,10 @@ get_milestones <- function(org, repo, .api_url = api_url()){
 get_user_info <- function(username, .api_url = api_url()){
 	return(sanitize_respone(graphql_query("user_info.graphql", username = username, .api_url = .api_url))$user)
 }
+
+#' Assigns a list of users to an object (usually an issue or pull request)
+#' @param id The id of the object
+#' @param users A list of user IDs
+assign_to_object <- function(id, users, .api_url = api_url()){
+	return(sanitize_respone(graphql_query("user_info.graphql", id = id, userIDs = users , .api_url = .api_url)))
+}
