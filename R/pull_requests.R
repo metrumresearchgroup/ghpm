@@ -6,7 +6,7 @@
 #' @param body Body of pull request. Defaults to ""
 #' @param reviewers List of usernames to request reviews from (ie: `reviewers = c('devinp', 'harshb')`)
 #' @param assignees List of usernames to assign to the pull request.
-#' @return A list containing the title, creation date, and author of the pull request
+#' @return A list containing the title, creation date, author, reviewers, and assignees of the pull request
 #' @export
 create_pull_request <- function(org, repo, base, head, title, body = "", reviewers = NULL, assignees = NULL, .api_url = api_url()){
 	repo_id <- sanitize_respone(graphql_query("repo_info.graphql", org = org, repo = repo, .api_url = .api_url))$repository$id
@@ -34,7 +34,7 @@ create_pull_request <- function(org, repo, base, head, title, body = "", reviewe
 		assign_to_object(data$id, users = userIDs, .api_url = .api_url)
 	}
 
-	return(list(title = data$title, created_at = data$createdAt, author = data$author$login, reviewers = data$reviewRequests$nodes))
+	return(list(title = data$title, created_at = data$createdAt, author = data$author$login, reviewers = data$reviewRequests$nodes, assignees = data$assignees$nodes))
 }
 
 #' Gets a data frame of the pull requests associated with a given repo

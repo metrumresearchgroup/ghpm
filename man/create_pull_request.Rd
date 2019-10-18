@@ -27,7 +27,7 @@ create_pull_request(org, repo, base, head, title, body = "",
 \item{.api_url}{Optional API url to query. Defaults to "https://api.github.com/graphql"}
 }
 \value{
-A list containing the title, creation date, and author of the pull request
+A list containing the title, creation date, author, reviewers, and assignees of the pull request
 }
 \description{
 Creates a pull request
