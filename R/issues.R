@@ -63,7 +63,7 @@ get_repo_issue_labels <- function(org, repo, .api_url = api_url()){
 #' @importFrom dplyr mutate select everything
 #' @export
 get_issue_assignees <- function(org, repo, .api_url = api_url()){
-	data <- sanitize_respone(graphql_query("issues/issue_assignees.graphql",
+	data <- sanitize_response(graphql_query("issues/issue_assignees.graphql",
 										   org = org, repo = repo, .api_url = .api_url))$repository$issues$nodes
 	data <- keep(data, ~length(.x$assignees$nodes) > 0)
 
@@ -90,7 +90,7 @@ get_issue_assignees <- function(org, repo, .api_url = api_url()){
 #' @importFrom readr parse_datetime
 #' @export
 get_issue_events <- function(org, repo, .api_url = api_url()){
-	data <- sanitize_respone(graphql_query("issues/issue_events.graphql", org = org, repo = repo,
+	data <- sanitize_response(graphql_query("issues/issue_events.graphql", org = org, repo = repo,
 										   .header = c("Accept" = "application/vnd.github.starfox-preview+json")))$repository$issues$nodes
 	data <- keep(data, ~length(.x$timelineItems$nodes) > 0)
 
@@ -133,7 +133,7 @@ get_issue_events <- function(org, repo, .api_url = api_url()){
 #' @importFrom readr parse_datetime
 #' @export
 get_issue_comments <- function(org, repo, .api_url = api_url()){
-	data <- sanitize_respone(graphql_query("issues/issue_comments.graphql", org = org, repo = repo))$repository$issues$nodes
+	data <- sanitize_response(graphql_query("issues/issue_comments.graphql", org = org, repo = repo))$repository$issues$nodes
 	data <- keep(data, ~length(.x$comments$nodes) > 0)
 
 	if(!length(data)){

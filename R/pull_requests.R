@@ -9,9 +9,9 @@
 #' @return A list containing the title, creation date, author, reviewers, and assignees of the pull request
 #' @export
 create_pull_request <- function(org, repo, base, head, title, body = "", reviewers = NULL, assignees = NULL, .api_url = api_url()){
-	repo_id <- sanitize_respone(graphql_query("repo_info.graphql", org = org, repo = repo, .api_url = .api_url))$repository$id
+	repo_id <- sanitize_response(graphql_query("repo_info.graphql", org = org, repo = repo, .api_url = .api_url))$repository$id
 
-	data <- sanitize_respone(
+	data <- sanitize_response(
 		graphql_query("pullrequests/create_pull_request.graphql",
 					  repoID = repo_id,
 					  baseBranch = base,
@@ -46,7 +46,7 @@ create_pull_request <- function(org, repo, base, head, title, body = "", reviewe
 #' @importFrom readr parse_datetime
 #' @export
 get_all_pull_requests <- function(org, repo, .api_url = api_url()){
-	data <- sanitize_respone(graphql_query("pullrequests/all_pull_requests.graphql", org = org, repo = repo, .api_url = .api_url))$repository$pullRequests$nodes
+	data <- sanitize_response(graphql_query("pullrequests/all_pull_requests.graphql", org = org, repo = repo, .api_url = .api_url))$repository$pullRequests$nodes
 
 	prs <- reduce(data, function(.acc, .cv){
 		.acc <- .acc %>% add_row("pullrequest" = .cv$number,
@@ -80,7 +80,7 @@ get_all_pull_requests <- function(org, repo, .api_url = api_url()){
 #' @importFrom readr parse_datetime
 #' @export
 get_pull_request_comments <- function(org, repo, number, .api_url = api_url()){
-	data <- sanitize_respone(graphql_query("pullrequests/pull_request_comments.graphql", org = org, repo = repo, number = number, .api_url = .api_url))$repository$pullRequest$comments$nodes
+	data <- sanitize_response(graphql_query("pullrequests/pull_request_comments.graphql", org = org, repo = repo, number = number, .api_url = .api_url))$repository$pullRequest$comments$nodes
 
 	if(!length(data)){
 		return(tibble("pullrequest" = number, "author" = character(), "body" = character(), "created_at" = character(), .rows = 0))
@@ -104,7 +104,7 @@ get_pull_request_comments <- function(org, repo, number, .api_url = api_url()){
 #' @return The title and id of the pull request
 #' @export
 add_pull_request_reviewers <- function(id, users, .api_url = api_url()){
-	return(sanitize_respone(graphql_query("pullrequests/add_pull_request_reviewers.graphql",
+	return(sanitize_response(graphql_query("pullrequests/add_pull_request_reviewers.graphql",
 										  id = id, userIDs = user, .api_url = .api_url))$requestReviews$pullRequest)
 }
 
@@ -116,7 +116,7 @@ add_pull_request_reviewers <- function(id, users, .api_url = api_url()){
 #' @importFrom dplyr mutate select everything
 #' @export
 get_pull_request_reviewers <- function(org, repo, .api_url = api_url()){
-	data <- sanitize_respone(graphql_query("pullrequests/pull_request_reviewers.graphql", org = org, repo = repo, .api_url = .api_url))$repository$pullRequests$nodes
+	data <- sanitize_response(graphql_query("pullrequests/pull_request_reviewers.graphql", org = org, repo = repo, .api_url = .api_url))$repository$pullRequests$nodes
 	data <- keep(data, ~length(.x$reviewRequests$nodes) > 0)
 
 	if(!length(data)){
