@@ -1,9 +1,10 @@
-query issues($org: String!, $repo: String!) {
+query issues($org: String!, $repo: String!, $cursor: String) {
   repository(owner: $org, name: $repo) {
-    issues(last: 100){
+    issues(last: 100, before: $cursor){
       nodes{
         title
         body
+        id
         author {
           login
         }
@@ -12,6 +13,10 @@ query issues($org: String!, $repo: String!) {
           title
         }
         state
+      }
+      pageInfo {
+        hasPreviousPage
+        startCursor
       }
     }
   }
