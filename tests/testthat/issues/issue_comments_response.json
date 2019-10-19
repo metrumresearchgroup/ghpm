@@ -1,0 +1,143 @@
+{
+	"data": {
+		"repository": {
+			"issues": {
+				"nodes": [
+					{
+						"number": 152,
+						"comments": {
+							"nodes": []
+						}
+					},
+					{
+						"number": 155,
+						"comments": {
+							"nodes": [
+								{
+									"author": {
+										"login": "dpastoor"
+									},
+									"createdAt": "2019-09-03T02:17:14Z",
+									"body": "@david-lyder you didnt' test the change you'd made this did you?\r\n\r\nERRO[0016] error copying binary                          from=/tmp/PLBBPBTOFIBP/ellipsis_0.2.0.1_R_x86_64-pc-linux-gnu.tar.gz to=/root/.cache/pkgr/CRAN-739227e5b53e/binary/ellipsis_0.2.0.1_R_x86_64-pc-linux-gnu.tar.gz/3.6\r\n\r\n the binary path is constructed incorrectly. I fixed it in #158"
+								},
+								{
+									"author": {
+										"login": "david-lyder"
+									},
+									"createdAt": "2019-09-03T13:03:27Z",
+									"body": "correct, sorry about that - I knew this needed to be reviewed, I should have committed as WIP"
+								}
+							]
+						}
+					},
+					{
+						"number": 159,
+						"comments": {
+							"nodes": [
+								{
+									"author": {
+										"login": "dpastoor"
+									},
+									"createdAt": "2019-09-04T14:07:12Z",
+									"body": "hey bill,\r\n\r\nunfortunately cran.microsoft.com is DOWN 😱 \r\n\r\nThe panic error definitely can get cleaned up to communicate more effectively to the user, but as of now, the \"fix\" to this is to point to a repo that actually works - namely cran.rstudio.com or otherwise.\r\n\r\nI'm hoping that this is an azure hiccup or something other than that is now gone forever."
+								},
+								{
+									"author": {
+										"login": "dpastoor"
+									},
+									"createdAt": "2019-09-04T14:08:04Z",
+									"body": "to be clear - the error comes from trying to fetch from a repo that is invalid url"
+								},
+								{
+									"author": {
+										"login": "billdenney"
+									},
+									"createdAt": "2019-09-04T14:10:26Z",
+									"body": "That makes sense.  I was guessing that it was some issue with the URL, but I didn't assume that cran.microsoft.com would go down, so I didn't check that path.  (When I first was reporting it, I was using the internet from my phone while in the back of a Lyft, so I thought that it could be an unreliable internet issue, too.)\r\n\r\nGiven the above, I guess this is a feature request for the more informative error message that you indicate above."
+								}
+							]
+						}
+					},
+					{
+						"number": 160,
+						"comments": {
+							"nodes": []
+						}
+					},
+					{
+						"number": 163,
+						"comments": {
+							"nodes": []
+						}
+					},
+					{
+						"number": 164,
+						"comments": {
+							"nodes": []
+						}
+					},
+					{
+						"number": 165,
+						"comments": {
+							"nodes": []
+						}
+					},
+					{
+						"number": 166,
+						"comments": {
+							"nodes": []
+						}
+					},
+					{
+						"number": 167,
+						"comments": {
+							"nodes": []
+						}
+					},
+					{
+						"number": 168,
+						"comments": {
+							"nodes": [
+								{
+									"author": {
+										"login": "kylebaron"
+									},
+									"createdAt": "2019-10-17T17:22:11Z",
+									"body": "@billdenney It looks like CRAN hasn't built the windows binary for r-release yet.\r\n\r\nhttps://cran.r-project.org/package=mrgsolve\r\n\r\nNot sure if it has to get checked on windows r-release before they build it?\r\n\r\n\r\n"
+								},
+								{
+									"author": {
+										"login": "billdenney"
+									},
+									"createdAt": "2019-10-17T17:26:45Z",
+									"body": "Ahh, I didn't know that pkgr required binaries for windows.  I thought that it would build them if not available.\r\n\r\nPerhaps a notification from `pkgr` that a source package is available which is newer would be a useful message to receive."
+								},
+								{
+									"author": {
+										"login": "dpastoor"
+									},
+									"createdAt": "2019-10-17T17:55:23Z",
+									"body": "it doesn't require binaries, it just prefers them on platforms it can (just like install.packages)\r\n\r\nin this case, you can get the newest version easily witht he same tweak as the metrumrg package\r\n\r\n```diff\r\nCustomizations:\r\n  Packages:\r\n  - metrumrg:\r\n      Type: source\r\n+  - mrgsolve:\r\n+      Type: source\r\n```\r\n\r\nthat will install the src version. Inspecting and making decisions around src vs binary latest etc is known but pretty low priority item at the moment. In particular we + many of our clients are now moving to a curated package repo\r\n\r\nFor example: https://mpn.metworx.com/snapshots/stable/2019-10-04\r\n\r\nOur solution has instead been that we build consistent binaries for windows mac R 3.5 + 3.6 as well as src versions, so there are 'never' inconsistencies (unless a new package version is not compatible with old version of R), so that mitigates that pain point for us. I know that isn't what you'd like to hear directly, but to give you some context around how/why the prioritization of this request might sit.\r\n\r\nFor better or worse, the examination and introspection of differences on cran between src and binaries currently sits on other tooling upstream to do that reconciliation as well as other reconciliation like deltas from github releases etc. All that uses a combination of go and R tooling that doesn't really fit in scope for pkgr for now (as I do have a bunch of R plumbing for now that pkgr couldn't use and stay agnostic).\r\n\r\nThat said, we're slowly adding more dev-inspection type functionality to make choices as a user around what things you might want to change in the configuration beyond what is currently presented in the plan, and this will definitely make it in, just is low on the queue until other forces give it the (financial/bandwidth) nudge to push it up the line."
+								},
+								{
+									"author": {
+										"login": "billdenney"
+									},
+									"createdAt": "2019-10-17T18:30:52Z",
+									"body": "Whoops, thanks for the reminder of the \"Type: source\" option!\r\n\r\nAnd, thanks for the detailed explanation of the rest of the info.  Everything you say makes sense.  I'll leave the issue open for your consideration to close or not (I'm fine with either).\r\n\r\nTo make the revised potential feature specific:  For packages installed from binaries (not source), check the source version.  If the source version is greater t than the binary version, issue a message that \"The binary version of <pkgname> is being installed, but a newer source version is available.  To install from source, please add the customization 'Type: source' for that package.\""
+								},
+								{
+									"author": {
+										"login": "dpastoor"
+									},
+									"createdAt": "2019-10-17T20:22:39Z",
+									"body": "yup, there are also things like - if I update to a different snapshot what would be different, if I switched to different repo (eg on REPO2 mrgsolve is v0.11.0 OMG).\r\n\r\nI'm hoping we can get some support to do a funded \"dev-focused\" push in 2020 that gives more tools to power users around that type of inspection and \"decision-making\""
+								}
+							]
+						}
+					}
+				]
+			}
+		}
+	}
+}

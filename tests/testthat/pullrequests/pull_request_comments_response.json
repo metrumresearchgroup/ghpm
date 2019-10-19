@@ -1,0 +1,47 @@
+{
+	"data": {
+		"repository": {
+			"pullRequest": {
+				"comments": {
+					"nodes": [
+						{
+							"author": {
+								"login": "Dreznel"
+							},
+							"bodyText": "I'm going to start refactoring from here to make sure this makes sense, and I will add automated tests as I go. If you'd like a head start, please take a look at the guide for integration_tests/rollback and tell me if there are cases you wish to try and add.",
+							"createdAt": "2019-08-14T14:37:46Z"
+						},
+						{
+							"author": {
+								"login": "Dreznel"
+							},
+							"bodyText": "Question I will look into:\n\"preinstalled packages\" in InstallPlan will end up containing the \"outdated  packages\" as well. This isn't affecting the overall process as far as I can tell, but that probably means we're calculating preinstalled packages a second time downstream in the process sometime after we've moved the \"to update\" packages to the __OLD__ folders. What bothers me about this is that we're essentially defining two different sets of packages as \"preinstalled\": one that includes \"to update\" packages, and one that doesn't.\nIt's not a functional problem, but it might make things a bit confusing later on.",
+							"createdAt": "2019-08-14T18:24:28Z"
+						},
+						{
+							"author": {
+								"login": "Dreznel"
+							},
+							"bodyText": "As for the question above, the install process checks each package individually if it's installed prior to doing anything with it. In other words, the downstream process doesn't ever really generate a \"list\" of what's preinstalled, it just checks as it goes. While this is still kind of redundant, I don't think it's something we need to address at this time.",
+							"createdAt": "2019-08-14T20:08:30Z"
+						},
+						{
+							"author": {
+								"login": "Dreznel"
+							},
+							"bodyText": "Note: found a bug related to outdated packages. In this branch (at least), if pkgs not related to the pkgr.yml file are already installed (i.e. they're not tracked by pkgr), and these packages have \"updated\" versions available in one of the listed repos, pkgr will move these packages into \"OLD\" folders without actually upgrading them.\nI'll make sure that gets remedied in the next commit.",
+							"createdAt": "2019-08-15T19:25:19Z"
+						},
+						{
+							"author": {
+								"login": "Dreznel"
+							},
+							"bodyText": "(Next on my list is to add unit tests where I can)",
+							"createdAt": "2019-08-16T01:02:13Z"
+						}
+					]
+				}
+			}
+		}
+	}
+}

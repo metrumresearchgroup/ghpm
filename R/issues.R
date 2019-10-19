@@ -38,7 +38,7 @@ get_repo_issues <- function(org, repo, .api_url = api_url()){
 #' @importFrom dplyr mutate select everything
 #' @export
 get_repo_issue_labels <- function(org, repo, .api_url = api_url()){
-	data <- graphql_query("issues/issue_labels.graphql", org = org, repo = repo, .api_url = .api_url)$repository$issues$nodes
+	data <- sanitize_response(graphql_query("issues/issue_labels.graphql", org = org, repo = repo, .api_url = .api_url))$repository$issues$nodes
 	data <- keep(data, ~length(.x$labels$nodes) > 0)
 
 	if(!length(data)){
@@ -50,7 +50,7 @@ get_repo_issue_labels <- function(org, repo, .api_url = api_url()){
 			return(.acc %>% add_row("label" = .cv$name))
 		}, .init = tibble("label" = character(), .rows = 0))
 
-		return(label_data %>% mutate("issue" = x$number, "id" = x$id, "databaseId" = x$databaseId))
+		return(label_data %>% mutate("issue" = x$number))
 	})
 	return(labels %>% select(issue, everything()))
 }
@@ -76,7 +76,7 @@ get_issue_assignees <- function(org, repo, .api_url = api_url()){
 			return(.acc %>% add_row("assigned_to" = .cv$login))
 		}, .init = tibble("assigned_to" = character(), .rows = 0))
 
-		return(assignee_data %>% mutate(issue = x$number, "id" = x$id, "databaseId" = x$databaseId))
+		return(assignee_data %>% mutate(issue = x$number))
 	})
 	return(assignees %>% select(issue, everything()))
 }
@@ -118,7 +118,7 @@ get_issue_events <- function(org, repo, .api_url = api_url()){
 						  "author" = character(),
 						  "date" = character(),
 						  .rows = 0))
-		return(event_data %>% mutate("issue" = x$number, "id" = x$id, "databaseId" = x$databaseId))
+		return(event_data %>% mutate("issue" = x$number))
 	}) %>% mutate("date" = parse_datetime(date))
 
 	return(timeline %>% arrange(project) %>% select("issue", everything()))
@@ -141,8 +141,6 @@ get_issue_comments <- function(org, repo, .api_url = api_url()){
 					  "comment" = character(),
 					  "author" = character(),
 					  "date" = character(),
-					  "id" = character(),
-					  "databaseId" = integer(),
 					  .rows = 0))
 	}
 
@@ -155,11 +153,9 @@ get_issue_comments <- function(org, repo, .api_url = api_url()){
 						  "comment" = character(),
 						  "author" = character(),
 						  "date" = character(),
-						  "id" = character(),
-						  "databaseId" = integer(),
 						  .rows = 0))
 
-		return(comment_data %>% mutate("issue" = x$number, "id" = x$id, "databaseId" = x$databaseId))
+		return(comment_data %>% mutate("issue" = x$number))
 	}) %>% mutate("date" = parse_datetime(date))
 
 	return(comments %>% select("issue", everything()))

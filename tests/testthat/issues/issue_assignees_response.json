@@ -1,0 +1,135 @@
+{
+	"data": {
+		"repository": {
+			"issues": {
+				"nodes": [
+					{
+						"number": 553,
+						"id": "MDU6SXNzdWU1MDM1MDkyOTk=",
+						"databaseId": 503509299,
+						"assignees": {
+							"nodes": [
+								{
+									"login": "kylebaron"
+								}
+							]
+						}
+					},
+					{
+						"number": 555,
+						"id": "MDU6SXNzdWU1MDM1NjE0MzU=",
+						"databaseId": 503561435,
+						"assignees": {
+							"nodes": [
+								{
+									"login": "dpastoor"
+								},
+								{
+									"login": "kylebaron"
+								}
+							]
+						}
+					},
+					{
+						"number": 561,
+						"id": "MDU6SXNzdWU1MDQ5OTk5OTA=",
+						"databaseId": 504999990,
+						"assignees": {
+							"nodes": [
+								{
+									"login": "kylebaron"
+								}
+							]
+						}
+					},
+					{
+						"number": 563,
+						"id": "MDU6SXNzdWU1MDU0MDg1NTU=",
+						"databaseId": 505408555,
+						"assignees": {
+							"nodes": [
+								{
+									"login": "kylebaron"
+								}
+							]
+						}
+					},
+					{
+						"number": 565,
+						"id": "MDU6SXNzdWU1MDU0NTc1MDQ=",
+						"databaseId": 505457504,
+						"assignees": {
+							"nodes": [
+								{
+									"login": "kylebaron"
+								}
+							]
+						}
+					},
+					{
+						"number": 568,
+						"id": "MDU6SXNzdWU1MDU1ODAwNDI=",
+						"databaseId": 505580042,
+						"assignees": {
+							"nodes": [
+								{
+									"login": "kylebaron"
+								}
+							]
+						}
+					},
+					{
+						"number": 571,
+						"id": "MDU6SXNzdWU1MDY3OTMzMjg=",
+						"databaseId": 506793328,
+						"assignees": {
+							"nodes": [
+								{
+									"login": "dpastoor"
+								},
+								{
+									"login": "kylebaron"
+								}
+							]
+						}
+					},
+					{
+						"number": 573,
+						"id": "MDU6SXNzdWU1MDY3OTg5NzU=",
+						"databaseId": 506798975,
+						"assignees": {
+							"nodes": [
+								{
+									"login": "dpastoor"
+								},
+								{
+									"login": "kylebaron"
+								}
+							]
+						}
+					},
+					{
+						"number": 575,
+						"id": "MDU6SXNzdWU1MDg2NTkzOTk=",
+						"databaseId": 508659399,
+						"assignees": {
+							"nodes": []
+						}
+					},
+					{
+						"number": 576,
+						"id": "MDU6SXNzdWU1MDg3OTMxNjM=",
+						"databaseId": 508793163,
+						"assignees": {
+							"nodes": [
+								{
+									"login": "kylebaron"
+								}
+							]
+						}
+					}
+				]
+			}
+		}
+	}
+}
