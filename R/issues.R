@@ -12,9 +12,7 @@ get_repo_issues <- function(org, repo, .api_url = api_url()){
 								 "body" = .cv$body,
 								 "creator" = ifelse(is.null(.cv$author), NA_character_, .cv$author$login),
 								 "milestone" = ifelse(is.null(.cv$milestone), NA_character_, .cv$milestone$title),
-								 "state" = .cv$state,
-								 "id" = .cv$id,
-								 "databaseId" = .cv$databaseId)
+								 "state" = .cv$state)
 
 		return(.acc)
 	}, .init = tibble("issue" = numeric(),
@@ -23,8 +21,6 @@ get_repo_issues <- function(org, repo, .api_url = api_url()){
 					  "creator" = character(),
 					  "milestone" = character(),
 					  "state" = character(),
-					  "id" = character(),
-					  "databaseId" = integer(),
 					  .rows = 0))
 
 	return(issues)

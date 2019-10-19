@@ -2,8 +2,6 @@ query issues($org: String!, $repo: String!) {
   repository(owner: $org, name: $repo) {
     issues(last: 100){
       nodes{
-        id
-        databaseId
         title
         body
         author {

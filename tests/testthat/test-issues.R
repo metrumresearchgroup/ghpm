@@ -8,7 +8,7 @@ describe("issue functions", {
 			jsonlite::read_json("issues/issues_response.json")
 		)
 		result <- get_repo_issues("test", "test")
-		expect_equal(names(result), c("issue", "title", "body", "creator", "milestone", "state", "id", "databaseId"))
+		expect_equal(names(result), c("issue", "title", "body", "creator", "milestone", "state"))
 		expect_true(is.data.frame(result))
 	})
 

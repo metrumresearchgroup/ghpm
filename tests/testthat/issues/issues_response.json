@@ -4,8 +4,6 @@
 			"issues": {
 				"nodes": [
 					{
-						"id": "MDU6SXNzdWU0ODE0NDM3NTI=",
-						"databaseId": 481443752,
 						"title": "review all map structures for proper locking if referenced in go routines",
 						"body": "",
 						"author": {
@@ -16,8 +14,6 @@
 						"state": "OPEN"
 					},
 					{
-						"id": "MDU6SXNzdWU0ODQ5NDYxMTM=",
-						"databaseId": 484946113,
 						"title": "cache location bug on linux",
 						"body": "when transitioning to a R version namespaced cache, the binary copying in https://github.com/metrumresearchgroup/pkgr/blob/master//rcmd/install.go#L439 was not updated to support, hence they are being copied into `binary` rather than `binary/rversion`",
 						"author": {
@@ -30,8 +26,6 @@
 						"state": "CLOSED"
 					},
 					{
-						"id": "MDU6SXNzdWU0ODg4Mzg1MTE=",
-						"databaseId": 488838511,
 						"title": "nil pointer error",
 						"body": "\r\nI just got the nil pointer error below when I ran pkgr (0.5.0) on Windows 10 with the attached .yml file: [pkgr.yml.txt](https://github.com/metrumresearchgroup/pkgr/files/3571737/pkgr.yml.txt) (.txt added for GitHum to allow attachments).\r\n\r\n```\r\npkgr --update install\r\nINFO[0000] R Version 3.6.1\r\nINFO[0002] found installed packages                      count=253\r\nWARN[0002] Packages not installed by pkgr                packages=\"[lmtest PKNCA censReg glmmML plm TopicLongTable xpose Rdpack sandwich gbRd formulops latex.makers bsd.report maxLik bdsmatrix miscTools PKdata Rsdtm]\"\r\nWARN[0003] error downloading repo r_validated, type: binary, with information: failed fetching PACKAGES file from https://metrumresearchgroup.github.io/r_validated/bin/windows/contrib/3.6/PACKAGES, with status 404 Not Found\r\npanic: runtime error: invalid memory address or nil pointer dereference\r\n[signal 0xc0000005 code=0x0 addr=0x10 pc=0x76788f]\r\n\r\ngoroutine 51 [running]:\r\ngithub.com/metrumresearchgroup/pkgr/cran.(*RepoDb).FetchPackages.func1(0xc00016e0f0, 0x3, 0x6, 0x1, 0xc00049e060, 0xc000066170, 0x1)\r\n        /Users/devinpastoor/go/src/github.com/metrumresearchgroup/pkgr/cran/repodb.go:132 +0x10f\r\ncreated by github.com/metrumresearchgroup/pkgr/cran.(*RepoDb).FetchPackages\r\n        /Users/devinpastoor/go/src/github.com/metrumresearchgroup/pkgr/cran/repodb.go:124 +0x2ea\r\npanic: runtime error: invalid memory address or nil pointer dereference\r\n[signal 0xc0000005 code=0x0 addr=0x10 pc=0x76788f]\r\n\r\ngoroutine 50 [running]:\r\ngithub.com/metrumresearchgroup/pkgr/cran.(*RepoDb).FetchPackages.func1(0xc00016e0f0, 0x3, 0x6, 0x1, 0xc00049e060, 0xc000066170, 0x2)\r\n        /Users/devinpastoor/go/src/github.com/metrumresearchgroup/pkgr/cran/repodb.go:132 +0x10f\r\ncreated by github.com/metrumresearchgroup/pkgr/cran.(*RepoDb).FetchPackages\r\n        /Users/devinpastoor/go/src/github.com/metrumresearchgroup/pkgr/cran/repodb.go:124 +0x2ea\r\n\r\n```",
 						"author": {
@@ -42,8 +36,6 @@
 						"state": "OPEN"
 					},
 					{
-						"id": "MDU6SXNzdWU0OTk4NDI5Nzg=",
-						"databaseId": 499842978,
 						"title": "download all package srcs to single dir for archival or starting cran-like repo",
 						"body": "",
 						"author": {
@@ -54,8 +46,6 @@
 						"state": "OPEN"
 					},
 					{
-						"id": "MDU6SXNzdWU1MDAyNjYzMTM=",
-						"databaseId": 500266313,
 						"title": "pkgr must more aggressively error on failed download",
 						"body": "when downloading packages, receiving a 404 or other issue where cannot download should not just print a warning and proceed, as the installation will obviously fail since that package does not exist\r\n\r\n```\r\n1388:{\"level\":\"warning\",\"msg\":\"bad server response\",\"package\":\"cmprsk\",\"status\":\"404 Not Found\",\"status_code\":404,\"time\":\"2019-09-30T08:42:15-04:00\",\"url\":\"https://metrumresear\r\nchgroup.github.io/cran/2019-09-22/src/contrib/cmprsk_2.2-7.1.tar.gz\"}\r\n```\r\n\r\n\r\n\r\n```\r\nERRO[0509] installation failed for packages: cmprsk\r\nTRAC[0509] Resetting package environment\r\nINFO[0510] duration:8m30.328218453s\r\nFATA[0510] failed package install with err, failed installation for packages: cmprsk\r\n```",
 						"author": {
@@ -66,8 +56,6 @@
 						"state": "OPEN"
 					},
 					{
-						"id": "MDU6SXNzdWU1MDQ4MDA0NDE=",
-						"databaseId": 504800441,
 						"title": "updating description file should ONLY retain the repo installed from, not the original repo",
 						"body": "else this causes issues with snapshotting\r\n\r\nFor example in the original description given:\r\n\r\n```\r\nRepository: CRAN\r\n```\r\n\r\nafter installing from MPN it will look like:\r\n\r\n```\r\nRepository: CRAN MPN\r\n```\r\n\r\n```\r\nRepository: MPN\r\n```\r\n\r\nwhen detected that already Repository Field exists, it can change to `OriginRepository`",
 						"author": {
@@ -80,8 +68,6 @@
 						"state": "OPEN"
 					},
 					{
-						"id": "MDU6SXNzdWU1MDY5NjA1ODc=",
-						"databaseId": 506960587,
 						"title": "difficult to trace bug when doing multiple R version installs",
 						"body": "I remember going through this in a live code review, looks like it was never reverted. @Dreznel transitioned an info to a Fatal call, which exits right then, making the rest of the code a no-op.\r\n\r\nhttps://github.com/metrumresearchgroup/pkgr/blame/1e295f9c3ccc76e2167eee848275ccbbbf62865a/cran/pkg_nexus.go#L45\r\n\r\nCurrently trying to debug a situation on windows where running pkgr plan/install on multiple versions of R consecutively to build binaries and the second R version fails with this error:\r\n\r\n```\r\nPS C:\\Users\\DevinPastoor\\Documents\\pkgrbuilder\\3.5\\2019-10-04> pkgr plan                                                                                           INFO[0000] Installation would launch 8 workers                                                                                                                     INFO[0000] R Version 3.5.3                                                                                                                                         INFO[0000] found installed packages                      count=0                                                                                                   FATA[0000] error downloading repo information from: MPN:https://mpn.metworx.com/snapshots/stable/2019-10-04  \r\n```\r\n\r\nIf I change the name to MPN2, it proceeds correctly, so something is going wrong decoding the cache. This doesn't completely make sense as the Hash for the cache does use the R version explicitly https://github.com/metrumresearchgroup/pkgr/blob/master/cran/repodb.go\r\n\r\nUnfortunately, this error is being swallowed until we do a new build",
 						"author": {
@@ -94,8 +80,6 @@
 						"state": "OPEN"
 					},
 					{
-						"id": "MDU6SXNzdWU1MDY5NjEwMTI=",
-						"databaseId": 506961012,
 						"title": "pkgr add fails on windows",
 						"body": "```\r\nC:\\Users\\DevinPastoor\\Documents\\pkgrbuilder\\3.5\\2019-10-04> pkgr add pkg                                                                                        FATA[0000] yaml: line 4: block sequence entries are not allowed in this context    \r\n```\r\n\r\nI have tried both indentation styles\r\n\r\n```\r\nPackages:\r\n- pkg\r\n```\r\n\r\nand\r\n\r\n```\r\nPackages:\r\n  - pkg\r\n```\r\n\r\nand add still chokes",
 						"author": {
@@ -108,8 +92,6 @@
 						"state": "OPEN"
 					},
 					{
-						"id": "MDU6SXNzdWU1MDg0NDAyMzk=",
-						"databaseId": 508440239,
 						"title": "pkg random tmp install location is not actually random",
 						"body": "",
 						"author": {
@@ -122,8 +104,6 @@
 						"state": "OPEN"
 					},
 					{
-						"id": "MDU6SXNzdWU1MDg2MDIxMzk=",
-						"databaseId": 508602139,
 						"title": "Why isn't mrgsolve 0.10 installed on Windows?",
 						"body": "With the attached pkgr.yml file (rename from .txt to .yml) on Windows, I do not get mrgsolve 0.10 even though it is on the CRAN mirror provided.  Any ideas why it is not installed when running `pkgr --update install`?  As additional information, I already have mrgsolve 0.9.2 installed by pkgr.\r\n\r\nI don't know how to check this, but might it be doing a lexicographical instead of version number sort to determine what is new?\r\n\r\n[pkgr.txt](https://github.com/metrumresearchgroup/pkgr/files/3740420/pkgr.txt)",
 						"author": {
