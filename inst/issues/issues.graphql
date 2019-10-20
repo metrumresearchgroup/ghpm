@@ -4,7 +4,6 @@ query issues($org: String!, $repo: String!, $cursor: String) {
       nodes{
         title
         body
-        id
         author {
           login
         }
