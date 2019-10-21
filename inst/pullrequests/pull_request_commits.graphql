@@ -13,6 +13,10 @@ query pull_request_commits($org: String!, $repo: String!, $number: Int!) {
             authoredDate
           }
         }
+        pageInfo {
+          hasPreviousPage
+          startCursor
+        }
       }
     }
   }

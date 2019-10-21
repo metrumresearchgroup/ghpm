@@ -3,7 +3,7 @@ query pull_request_reviewers($org: String!, $repo: String!) {
     pullRequests(last: 100) {
       nodes {
         number
-        reviewRequests(last:100){
+        reviewRequests(last:15){
           nodes {
             requestedReviewer{
               ... on User {

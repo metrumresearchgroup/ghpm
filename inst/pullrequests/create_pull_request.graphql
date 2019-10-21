@@ -13,7 +13,7 @@ mutation create_pull_request($repoID: ID!, $baseBranch: String!, $headBranch: St
       author {
         login
       }
-      assignees(last:100) {
+      assignees(last:15) {
         nodes {
           name
         }

@@ -9,7 +9,7 @@ get_repo_issues <- function(org, repo, .api_url = api_url()){
 	data <- response$nodes
 	while(response$pageInfo$hasPreviousPage){
 		response <- sanitize_response(graphql_query("issues/issues.graphql", org = org, repo = repo, cursor = response$pageInfo$startCursor, .api_url = .api_url))$repository$issues
-		data <- append(data, response$nodes)
+		data <- c(data, response$nodes)
 	}
 	issues <- reduce(data, function(.acc, .cv){
 		.acc <- .acc %>% add_row("issue" = .cv$number,
