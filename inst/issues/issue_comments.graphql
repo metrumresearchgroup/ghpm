@@ -1,17 +1,17 @@
 query issue_comments($org: String!, $repo: String!) {
   repository(owner: $org, name: $repo) {
-    issues(first: 100){
+    issues(last: 100){
       nodes{
         number
         id
         databaseId
-        comments(first: 20){
+        comments(first: 50){
           nodes{
             author {
               login
             }
             createdAt
-            bodyText
+            body
           }
         }
       }
