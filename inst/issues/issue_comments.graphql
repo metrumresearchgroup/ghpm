@@ -3,8 +3,6 @@ query issue_comments($org: String!, $repo: String!) {
     issues(last: 100){
       nodes{
         number
-        id
-        databaseId
         comments(first: 50){
           nodes{
             author {

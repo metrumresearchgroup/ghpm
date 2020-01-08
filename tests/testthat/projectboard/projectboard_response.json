@@ -1,0 +1,500 @@
+{
+	"data": {
+		"repository": {
+			"projects": {
+				"nodes": [
+					{
+						"name": "active",
+						"columns": {
+							"nodes": [
+								{
+									"name": "backlog",
+									"cards": {
+										"nodes": []
+									}
+								},
+								{
+									"name": "scope",
+									"cards": {
+										"nodes": [
+											{
+												"content": null
+											}
+										]
+									}
+								},
+								{
+									"name": "scope complete",
+									"cards": {
+										"nodes": [
+											{
+												"content": null
+											}
+										]
+									}
+								},
+								{
+									"name": "Implement",
+									"cards": {
+										"nodes": []
+									}
+								},
+								{
+									"name": "Implement Complete",
+									"cards": {
+										"nodes": [
+											{
+												"content": {
+													"title": "provide list of packages to install",
+													"number": 131
+												}
+											},
+											{
+												"content": {
+													"title": "improve the error messages when incorrectly specifying pkgr.yml path",
+													"number": 126
+												}
+											},
+											{
+												"content": {
+													"title": "pkg random tmp install location is not actually random",
+													"number": 167
+												}
+											}
+										]
+									}
+								},
+								{
+									"name": "accept",
+									"cards": {
+										"nodes": [
+											{
+												"content": {
+													"title": "inject R install location to system Path if RPath is specified",
+													"number": 95
+												}
+											},
+											{
+												"content": {
+													"title": "new lockfile configuration option",
+													"number": 116
+												}
+											}
+										]
+									}
+								},
+								{
+									"name": "accept-complete",
+									"cards": {
+										"nodes": []
+									}
+								},
+								{
+									"name": "Done",
+									"cards": {
+										"nodes": [
+											{
+												"content": {
+													"title": "pkgr clean cache Leaves Empty Directories",
+													"number": 151
+												}
+											},
+											{
+												"content": {
+													"title": "cache location bug on linux",
+													"number": 155
+												}
+											},
+											{
+												"content": {
+													"title": "v0.5.0 Impact assessment",
+													"number": 146
+												}
+											},
+											{
+												"content": {
+													"title": "detect and alert packages not installed by pkgr",
+													"number": 107
+												}
+											},
+											{
+												"content": {
+													"title": "pkgr clean fails if config has elements that cause plan to fail",
+													"number": 118
+												}
+											},
+											{
+												"content": {
+													"title": "refactor: break up planInstall into testable chunks and write unit tests",
+													"number": 88
+												}
+											},
+											{
+												"content": {
+													"title": "update fails with too many open files",
+													"number": 142
+												}
+											},
+											{
+												"content": {
+													"title": "full rollback after failed package installation",
+													"number": 145
+												}
+											},
+											{
+												"content": {
+													"title": "clean up integrations_tests area",
+													"number": 51
+												}
+											},
+											{
+												"content": {
+													"title": "Documentation Request: How to install on Windows?",
+													"number": 133
+												}
+											},
+											{
+												"content": {
+													"title": "windows compat",
+													"number": 43
+												}
+											},
+											{
+												"content": {
+													"title": "add/rm packages directly from the command line",
+													"number": 96
+												}
+											},
+											{
+												"content": {
+													"title": "optimize acquisition of R version and platform",
+													"number": 103
+												}
+											},
+											{
+												"content": {
+													"title": "panic when trying to download package from local src",
+													"number": 127
+												}
+											},
+											{
+												"content": {
+													"title": "pkgr must error with non-zero exit codes on failure",
+													"number": 89
+												}
+											},
+											{
+												"content": {
+													"title": "update should also update dependencies",
+													"number": 77
+												}
+											},
+											{
+												"content": {
+													"title": "clearer information about what is there/would be done",
+													"number": 75
+												}
+											},
+											{
+												"content": {
+													"title": "pkgr plan supports use of update flag/setting",
+													"number": 74
+												}
+											},
+											{
+												"content": {
+													"title": "show size of pkgs downloaded",
+													"number": 62
+												}
+											},
+											{
+												"content": {
+													"title": "pkgr install --update option",
+													"number": 69
+												}
+											},
+											{
+												"content": {
+													"title": "pkgr clean fails if non-directory file present",
+													"number": 67
+												}
+											},
+											{
+												"content": {
+													"title": "pkgr does not respect non-default R versions",
+													"number": 65
+												}
+											},
+											{
+												"content": {
+													"title": "print version of already-installed packages on plan/install",
+													"number": 61
+												}
+											},
+											{
+												"content": null
+											},
+											{
+												"content": null
+											},
+											{
+												"content": null
+											},
+											{
+												"content": {
+													"title": "clean/invalidate pkgdb",
+													"number": 49
+												}
+											},
+											{
+												"content": {
+													"title": "more user feedback over whats going on when pkg downloading",
+													"number": 47
+												}
+											},
+											{
+												"content": {
+													"title": "binary versions should be cached for the particular R version",
+													"number": 44
+												}
+											},
+											{
+												"content": {
+													"title": "show recursive dependency tree",
+													"number": 41
+												}
+											},
+											{
+												"content": {
+													"title": "clean/invalidate caches",
+													"number": 40
+												}
+											},
+											{
+												"content": {
+													"title": "show examples as animated svg",
+													"number": 39
+												}
+											},
+											{
+												"content": {
+													"title": "show dependencies per package",
+													"number": 11
+												}
+											},
+											{
+												"content": {
+													"title": "logging option to delete existing log file",
+													"number": 18
+												}
+											},
+											{
+												"content": {
+													"title": "cache not recognized since changing to unique repo naming",
+													"number": 36
+												}
+											},
+											{
+												"content": {}
+											},
+											{
+												"content": {
+													"title": "show reverse/inverse dependencies",
+													"number": 38
+												}
+											}
+										]
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "roadmap",
+						"columns": {
+							"nodes": [
+								{
+									"name": "icebox",
+									"cards": {
+										"nodes": [
+											{
+												"content": {
+													"title": "preinstalling dependent system library prior to installing an R package",
+													"number": 130
+												}
+											}
+										]
+									}
+								},
+								{
+									"name": "scope",
+									"cards": {
+										"nodes": []
+									}
+								},
+								{
+									"name": "high priority",
+									"cards": {
+										"nodes": [
+											{
+												"content": {
+													"title": "yml config protection from spacing errors",
+													"number": 27
+												}
+											},
+											{
+												"content": {
+													"title": "leverage docker containers for key integration tests",
+													"number": 72
+												}
+											},
+											{
+												"content": {
+													"title": "custom makevars at a package level",
+													"number": 3
+												}
+											}
+										]
+									}
+								},
+								{
+									"name": "medium priority",
+									"cards": {
+										"nodes": [
+											{
+												"content": {
+													"title": "support installation of dependencies from DESCRIPTION file",
+													"number": 16
+												}
+											},
+											{
+												"content": {
+													"title": "emulate packrat caching behavior",
+													"number": 2
+												}
+											},
+											{
+												"content": {
+													"title": "catch all errors and present at the end as well",
+													"number": 9
+												}
+											},
+											{
+												"content": {
+													"title": "only download packages if needed to install",
+													"number": 24
+												}
+											},
+											{
+												"content": {
+													"title": "`pkgr inspect` on a New Windows Installation Fails",
+													"number": 134
+												}
+											},
+											{
+												"content": {
+													"title": "show size of pkgs downloaded",
+													"number": 62
+												}
+											}
+										]
+									}
+								},
+								{
+									"name": "low priority",
+									"cards": {
+										"nodes": [
+											{
+												"content": {
+													"title": "pkgr clean cache Leaves Empty Directories",
+													"number": 151
+												}
+											},
+											{
+												"content": {
+													"title": "snapshot for undo",
+													"number": 4
+												}
+											},
+											{
+												"content": {
+													"title": "internally convert all relative paths to absolute from config",
+													"number": 23
+												}
+											},
+											{
+												"content": {
+													"title": "enhancement: installation progress bar",
+													"number": 129
+												}
+											},
+											{
+												"content": {
+													"title": "tuning recompilation from src",
+													"number": 48
+												}
+											},
+											{
+												"content": {
+													"title": "capture Rprofile",
+													"number": 10
+												}
+											},
+											{
+												"content": {
+													"title": "Feature Request: Allow R not to be on the Windows PATH",
+													"number": 135
+												}
+											},
+											{
+												"content": {
+													"title": "Make pkgr clean cache/pkgr clean pkgdbs arguments more robust",
+													"number": 55
+												}
+											}
+										]
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "release",
+						"columns": {
+							"nodes": [
+								{
+									"name": "To do",
+									"cards": {
+										"nodes": [
+											{
+												"content": null
+											},
+											{
+												"content": {
+													"title": "release v0.2.0",
+													"number": 59
+												}
+											}
+										]
+									}
+								},
+								{
+									"name": "In progress",
+									"cards": {
+										"nodes": []
+									}
+								},
+								{
+									"name": "Done",
+									"cards": {
+										"nodes": []
+									}
+								}
+							]
+						}
+					}
+				]
+			}
+		}
+	}
+}

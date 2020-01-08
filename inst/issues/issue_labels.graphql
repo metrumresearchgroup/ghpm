@@ -3,8 +3,6 @@ query issue_labels($org: String!, $repo: String!) {
     issues(last: 100){
       nodes{
         number
-        id
-        databaseId
         labels(first: 15) {
           nodes {
             name

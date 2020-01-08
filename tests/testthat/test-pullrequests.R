@@ -1,46 +1,37 @@
-context("test-pullrequests")
+context("test-pull-requests")
 
-test_that("Default behavior of get_all_pull_requests()", {
-	mockery::stub(
-		get_all_pull_requests,
-		"graphql_query",
-		readRDS("pullrequests/get_all_pull_requests.rds")
-	)
-	expect_equal(get_all_pull_requests("some", "value"), readRDS("pullrequests/validated_get_all_pull_requests.rds"))
-})
+describe("pull request functions", {
 
-test_that("Default behavior of get_pullrequest_comments()", {
-	mockery::stub(
-		get_pull_request_comments,
-		"graphql_query",
-		readRDS("pullrequests/get_pull_request_comments.rds")
-	)
-	expect_equal(get_pull_request_comments("some", "value", 99), readRDS("pullrequests/validated_get_pull_request_comments.rds"))
-})
+	it("can get pull request commits", {
+		mockery::stub(
+			get_pull_request_commits,
+			"graphql_query",
+			jsonlite::read_json("pullrequests/pull_request_commits_response.json")
+		)
+		result <- get_pull_request_commits("test", "test")
+		expect_equal(names(result), c("oid", "message", "author", "date"))
+		expect_true(is.data.frame(result))
+	})
 
-test_that("Default behavior of get_pull_request_reviewers()", {
-	mockery::stub(
-		get_pull_request_reviewers,
-		"graphql_query",
-		readRDS("pullrequests/get_pull_request_reviewers.rds")
-	)
-	expect_equal(get_pull_request_reviewers("some", "value"), readRDS("pullrequests/validated_get_pull_request_reviewers.rds"))
-})
+	it("can get all pull requests", {
+		mockery::stub(
+			get_all_pull_requests,
+			"graphql_query",
+			jsonlite::read_json("pullrequests/all_pull_requests_response.json")
+		)
+		result <- get_all_pull_requests("test", "test")
+		expect_equal(names(result), c("pullrequest", "title", "author", "body", "milestone", "created_at", "merged_by", "merged_at", "merged_to", "state"))
+		expect_true(is.data.frame(result))
+	})
 
-test_that("Default behavior of get_pull_request_commits() with conventional commits DISABLED", {
-	mockery::stub(
-		get_pull_request_commits,
-		"graphql_query",
-		readRDS("pullrequests/get_pull_request_commits.rds")
-	)
-	expect_equal(get_pull_request_commits("some", "value"), readRDS("pullrequests/validated_get_pull_request_commits.rds"))
-})
-
-test_that("Default behavior of get_pullrequest_commits() with conventional commits ENABLED", {
-	mockery::stub(
-		get_pull_request_commits,
-		"graphql_query",
-		readRDS("pullrequests/get_pull_request_commits.rds")
-	)
-	expect_equal(get_pull_request_commits("some", "value", .cc = TRUE), readRDS("pullrequests/validated_cc_get_pull_request_commits.rds"))
+	it("can get all pull request comments", {
+		mockery::stub(
+			get_pull_request_reviewers,
+			"graphql_query",
+			jsonlite::read_json("pullrequests/pull_request_reviewers_response.json")
+		)
+		result <- get_pull_request_reviewers("test", "test")
+		expect_equal(names(result), c("pullrequest", "reviewer"))
+		expect_true(is.data.frame(result))
+	})
 })

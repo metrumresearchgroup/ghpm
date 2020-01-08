@@ -23,7 +23,7 @@ library(dplyr)
 Lets start with grabbing issues from shiny repo using the following command.
 ```{r}
 options("ghpm.hostname" = "ghe.metrumrg.com")
-ghpm_issues <- get_issues("tech-solutions", "ghpm")
+ghpm_issues <- get_repo_issues("tech-solutions", "ghpm")
 ```
 
 ```{r}
@@ -31,7 +31,7 @@ ghpm_issues %>% filter(milestone == "v0.2.0")
 ```
 
 ```{r}
-ghpm_issues_labels <- get_issue_labels("tech-solutions", "ghpm")
+ghpm_issues_labels <- get_repo_issue_labels("tech-solutions", "ghpm")
 ```
 
 ```{r}
