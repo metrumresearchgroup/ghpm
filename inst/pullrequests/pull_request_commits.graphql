@@ -1,7 +1,7 @@
 query pull_request_commits($org: String!, $repo: String!, $number: Int!) {
   repository(owner: $org, name: $repo) {
     pullRequest(number: $number) {
-      commits(first: 100) {
+      commits(last: 100) {
         nodes {
           commit {
             oid
@@ -12,6 +12,10 @@ query pull_request_commits($org: String!, $repo: String!, $number: Int!) {
             message
             authoredDate
           }
+        }
+        pageInfo {
+          hasPreviousPage
+          startCursor
         }
       }
     }

@@ -13,12 +13,12 @@ mutation create_pull_request($repoID: ID!, $baseBranch: String!, $headBranch: St
       author {
         login
       }
-      assignees(first:100) {
+      assignees(last:15) {
         nodes {
           name
         }
       }
-      reviewRequests(first: 100){
+      reviewRequests(last: 100){
         nodes {
           requestedReviewer {
             ...on User {
