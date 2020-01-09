@@ -1,6 +1,6 @@
-query issue_labels($org: String!, $repo: String!) {
+query issue_labels($org: String!, $repo: String!, $cursor: String) {
   repository(owner: $org, name: $repo) {
-    issues(last: 100){
+    issues(last: 100, before: $cursor){
       nodes{
         number
         labels(first: 15) {
@@ -8,6 +8,10 @@ query issue_labels($org: String!, $repo: String!) {
             name
           }
         }
+      }
+      pageInfo {
+        hasPreviousPage
+        startCursor
       }
     }
   }

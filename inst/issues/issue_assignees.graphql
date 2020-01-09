@@ -1,6 +1,6 @@
-query issue_assignees($org: String!, $repo: String!) {
+query issue_assignees($org: String!, $repo: String!, $cursor: String) {
   repository(owner: $org, name: $repo) {
-    issues(last: 100){
+    issues(last: 100, before: $cursor){
       nodes{
         number
         assignees(first:10) {
@@ -8,6 +8,10 @@ query issue_assignees($org: String!, $repo: String!) {
             login
           }
         }
+      }
+      pageInfo {
+        hasPreviousPage
+        startCursor
       }
     }
   }

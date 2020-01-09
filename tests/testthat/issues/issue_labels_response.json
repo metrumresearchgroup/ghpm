@@ -112,7 +112,11 @@
 							"nodes": []
 						}
 					}
-				]
+				],
+		        "pageInfo": {
+		          "hasPreviousPage": false,
+		          "startCursor": "Y3Vyc29yOnYyOpHOGSVHRg=="
+		        }
 			}
 		}
 	}

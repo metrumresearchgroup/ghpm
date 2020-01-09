@@ -1,143 +1,1667 @@
 {
-	"data": {
-		"repository": {
-			"issues": {
-				"nodes": [
-					{
-						"number": 152,
-						"comments": {
-							"nodes": []
-						}
-					},
-					{
-						"number": 155,
-						"comments": {
-							"nodes": [
-								{
-									"author": {
-										"login": "dpastoor"
-									},
-									"createdAt": "2019-09-03T02:17:14Z",
-									"body": "@david-lyder you didnt' test the change you'd made this did you?\r\n\r\nERRO[0016] error copying binary                          from=/tmp/PLBBPBTOFIBP/ellipsis_0.2.0.1_R_x86_64-pc-linux-gnu.tar.gz to=/root/.cache/pkgr/CRAN-739227e5b53e/binary/ellipsis_0.2.0.1_R_x86_64-pc-linux-gnu.tar.gz/3.6\r\n\r\n the binary path is constructed incorrectly. I fixed it in #158"
-								},
-								{
-									"author": {
-										"login": "david-lyder"
-									},
-									"createdAt": "2019-09-03T13:03:27Z",
-									"body": "correct, sorry about that - I knew this needed to be reviewed, I should have committed as WIP"
-								}
-							]
-						}
-					},
-					{
-						"number": 159,
-						"comments": {
-							"nodes": [
-								{
-									"author": {
-										"login": "dpastoor"
-									},
-									"createdAt": "2019-09-04T14:07:12Z",
-									"body": "hey bill,\r\n\r\nunfortunately cran.microsoft.com is DOWN 😱 \r\n\r\nThe panic error definitely can get cleaned up to communicate more effectively to the user, but as of now, the \"fix\" to this is to point to a repo that actually works - namely cran.rstudio.com or otherwise.\r\n\r\nI'm hoping that this is an azure hiccup or something other than that is now gone forever."
-								},
-								{
-									"author": {
-										"login": "dpastoor"
-									},
-									"createdAt": "2019-09-04T14:08:04Z",
-									"body": "to be clear - the error comes from trying to fetch from a repo that is invalid url"
-								},
-								{
-									"author": {
-										"login": "billdenney"
-									},
-									"createdAt": "2019-09-04T14:10:26Z",
-									"body": "That makes sense.  I was guessing that it was some issue with the URL, but I didn't assume that cran.microsoft.com would go down, so I didn't check that path.  (When I first was reporting it, I was using the internet from my phone while in the back of a Lyft, so I thought that it could be an unreliable internet issue, too.)\r\n\r\nGiven the above, I guess this is a feature request for the more informative error message that you indicate above."
-								}
-							]
-						}
-					},
-					{
-						"number": 160,
-						"comments": {
-							"nodes": []
-						}
-					},
-					{
-						"number": 163,
-						"comments": {
-							"nodes": []
-						}
-					},
-					{
-						"number": 164,
-						"comments": {
-							"nodes": []
-						}
-					},
-					{
-						"number": 165,
-						"comments": {
-							"nodes": []
-						}
-					},
-					{
-						"number": 166,
-						"comments": {
-							"nodes": []
-						}
-					},
-					{
-						"number": 167,
-						"comments": {
-							"nodes": []
-						}
-					},
-					{
-						"number": 168,
-						"comments": {
-							"nodes": [
-								{
-									"author": {
-										"login": "kylebaron"
-									},
-									"createdAt": "2019-10-17T17:22:11Z",
-									"body": "@billdenney It looks like CRAN hasn't built the windows binary for r-release yet.\r\n\r\nhttps://cran.r-project.org/package=mrgsolve\r\n\r\nNot sure if it has to get checked on windows r-release before they build it?\r\n\r\n\r\n"
-								},
-								{
-									"author": {
-										"login": "billdenney"
-									},
-									"createdAt": "2019-10-17T17:26:45Z",
-									"body": "Ahh, I didn't know that pkgr required binaries for windows.  I thought that it would build them if not available.\r\n\r\nPerhaps a notification from `pkgr` that a source package is available which is newer would be a useful message to receive."
-								},
-								{
-									"author": {
-										"login": "dpastoor"
-									},
-									"createdAt": "2019-10-17T17:55:23Z",
-									"body": "it doesn't require binaries, it just prefers them on platforms it can (just like install.packages)\r\n\r\nin this case, you can get the newest version easily witht he same tweak as the metrumrg package\r\n\r\n```diff\r\nCustomizations:\r\n  Packages:\r\n  - metrumrg:\r\n      Type: source\r\n+  - mrgsolve:\r\n+      Type: source\r\n```\r\n\r\nthat will install the src version. Inspecting and making decisions around src vs binary latest etc is known but pretty low priority item at the moment. In particular we + many of our clients are now moving to a curated package repo\r\n\r\nFor example: https://mpn.metworx.com/snapshots/stable/2019-10-04\r\n\r\nOur solution has instead been that we build consistent binaries for windows mac R 3.5 + 3.6 as well as src versions, so there are 'never' inconsistencies (unless a new package version is not compatible with old version of R), so that mitigates that pain point for us. I know that isn't what you'd like to hear directly, but to give you some context around how/why the prioritization of this request might sit.\r\n\r\nFor better or worse, the examination and introspection of differences on cran between src and binaries currently sits on other tooling upstream to do that reconciliation as well as other reconciliation like deltas from github releases etc. All that uses a combination of go and R tooling that doesn't really fit in scope for pkgr for now (as I do have a bunch of R plumbing for now that pkgr couldn't use and stay agnostic).\r\n\r\nThat said, we're slowly adding more dev-inspection type functionality to make choices as a user around what things you might want to change in the configuration beyond what is currently presented in the plan, and this will definitely make it in, just is low on the queue until other forces give it the (financial/bandwidth) nudge to push it up the line."
-								},
-								{
-									"author": {
-										"login": "billdenney"
-									},
-									"createdAt": "2019-10-17T18:30:52Z",
-									"body": "Whoops, thanks for the reminder of the \"Type: source\" option!\r\n\r\nAnd, thanks for the detailed explanation of the rest of the info.  Everything you say makes sense.  I'll leave the issue open for your consideration to close or not (I'm fine with either).\r\n\r\nTo make the revised potential feature specific:  For packages installed from binaries (not source), check the source version.  If the source version is greater t than the binary version, issue a message that \"The binary version of <pkgname> is being installed, but a newer source version is available.  To install from source, please add the customization 'Type: source' for that package.\""
-								},
-								{
-									"author": {
-										"login": "dpastoor"
-									},
-									"createdAt": "2019-10-17T20:22:39Z",
-									"body": "yup, there are also things like - if I update to a different snapshot what would be different, if I switched to different repo (eg on REPO2 mrgsolve is v0.11.0 OMG).\r\n\r\nI'm hoping we can get some support to do a funded \"dev-focused\" push in 2020 that gives more tools to power users around that type of inspection and \"decision-making\""
-								}
-							]
-						}
-					}
-				]
-			}
-		}
-	}
+  "data": {
+    "repository": {
+      "issues": {
+        "nodes": [
+          {
+            "number": 47,
+            "comments": {
+              "nodes": [
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-03-26T18:10:17Z",
+                  "body": "before implement complete we'll need to downgrade the download message to a debug. I think given it will make more sense to see what its about to do in case it hangs, rather than just being blank, at an info level show the downloading pkg... then at debug level a download complete message.\r\n\r\n"
+                },
+                {
+                  "author": {
+                    "login": "Dreznel"
+                  },
+                  "createdAt": "2019-03-26T19:00:45Z",
+                  "body": "@dpastoor see [this commit](https://github.com/metrumresearchgroup/pkgr/pull/52/commits/267afa9755fda9f094998b180741d7751230fd9b), which is currently living in PR #52 .\r\n\r\nI messed up the commit message, it should read \"chore: removing libpaths from test yml files and demoting a log line.\""
+                },
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-03-26T19:22:08Z",
+                  "body": "Thanks, I'm thinking do you mind inverting the info/debug so info is for downloading..., and debug is for downloaded."
+                }
+              ]
+            }
+          },
+          {
+            "number": 48,
+            "comments": {
+              "nodes": []
+            }
+          },
+          {
+            "number": 49,
+            "comments": {
+              "nodes": [
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-04-03T12:54:19Z",
+                  "body": "api implemented and discussed in #40 "
+                }
+              ]
+            }
+          },
+          {
+            "number": 51,
+            "comments": {
+              "nodes": [
+                {
+                  "author": {
+                    "login": "david-lyder"
+                  },
+                  "createdAt": "2019-05-28T15:38:45Z",
+                  "body": "\"pkgr plan\" and \"pkgr install\" completed successfully for the following folders:\r\n  mixed-source/\r\n  simple-suggests/ \r\n  outdated-pkgs-no-update/ (Needed to create dir test-library)\r\n  simple/\r\n  outdated-pkgs/ \r\n  repo-order/\r\npointed to the master branch."
+                },
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-08-13T14:57:55Z",
+                  "body": "all integration tests should be justified in _what_ they are testing, and for any manual tests, guidance on what should be checked after running to confirm the cases tested in the test are fulfilled."
+                },
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-08-28T03:52:07Z",
+                  "body": "addressed by @Dreznel with guides for each integration test. Fantastic work, as tracked in #146 "
+                }
+              ]
+            }
+          },
+          {
+            "number": 53,
+            "comments": {
+              "nodes": []
+            }
+          },
+          {
+            "number": 54,
+            "comments": {
+              "nodes": []
+            }
+          },
+          {
+            "number": 55,
+            "comments": {
+              "nodes": []
+            }
+          },
+          {
+            "number": 56,
+            "comments": {
+              "nodes": []
+            }
+          },
+          {
+            "number": 59,
+            "comments": {
+              "nodes": [
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-04-01T13:13:19Z",
+                  "body": "@Dreznel took care of updating the docs, I will handle the remaining activities"
+                }
+              ]
+            }
+          },
+          {
+            "number": 61,
+            "comments": {
+              "nodes": []
+            }
+          },
+          {
+            "number": 62,
+            "comments": {
+              "nodes": []
+            }
+          },
+          {
+            "number": 65,
+            "comments": {
+              "nodes": []
+            }
+          },
+          {
+            "number": 67,
+            "comments": {
+              "nodes": [
+                {
+                  "author": {
+                    "login": "Dreznel"
+                  },
+                  "createdAt": "2019-04-04T22:12:55Z",
+                  "body": "Can you recreate this with a \"Trace\" enabled, or provide the config file and the exact location of the .DS_Store file?\r\n\r\nWhen I run `pkgr clean cache --binaries-only` on my machine with a .DS_Store file in every folder and subfolder of the cache as defined in pkgr.config, the command still works and clears out everything properly."
+                },
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-04-24T23:36:35Z",
+                  "body": "couldn't reproduce, so for now will close"
+                }
+              ]
+            }
+          },
+          {
+            "number": 69,
+            "comments": {
+              "nodes": [
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-05-04T14:45:29Z",
+                  "body": "closing as so closely aligned to #74 that can use that for validation records"
+                }
+              ]
+            }
+          },
+          {
+            "number": 72,
+            "comments": {
+              "nodes": []
+            }
+          },
+          {
+            "number": 74,
+            "comments": {
+              "nodes": [
+                {
+                  "author": {
+                    "login": "Dreznel"
+                  },
+                  "createdAt": "2019-04-18T15:00:39Z",
+                  "body": "Plan  _does_ presently list outdated packages as warnings regardless of what options you pass in, but I will change this to make it more explicit."
+                },
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-04-27T01:38:05Z",
+                  "body": "after correction for not trying to open non-folder elements in the package library to fail DESCRIPTION, this is complete"
+                },
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-05-04T14:49:03Z",
+                  "body": "fixed WARNING about missing DESCRIPTION from non-directory file in the package library (in the testing case a .gitignore).\r\n\r\nfunctionality is good to go!"
+                }
+              ]
+            }
+          },
+          {
+            "number": 75,
+            "comments": {
+              "nodes": [
+                {
+                  "author": {
+                    "login": "Dreznel"
+                  },
+                  "createdAt": "2019-04-24T15:51:26Z",
+                  "body": "Now that I'm digging into this again...\r\n\r\nIt looks like the `info about what needs to be done, including new installs/upgrades` piece is going to require some hefty refactoring, based on the following observations:\r\n* We probably want this at the end of the \"plan\" command, not during the install command.\r\n* We don't keep a count of what's already been downloaded/installed, and the only time we check for duplicates is during the install process. That means we're going to have to pull this piece into plan, which may or may not be simple.\r\n\r\nNot a big deal, but I just wanted to call out that from a Scrum-ish perspective, I would consider that last piece its own story."
+                },
+                {
+                  "author": {
+                    "login": "Dreznel"
+                  },
+                  "createdAt": "2019-04-24T15:57:18Z",
+                  "body": "I may have spoke too soon, stay tuned."
+                }
+              ]
+            }
+          },
+          {
+            "number": 76,
+            "comments": {
+              "nodes": [
+                {
+                  "author": {
+                    "login": "Dreznel"
+                  },
+                  "createdAt": "2019-04-18T15:04:35Z",
+                  "body": "Probably a pathing problem, if I had to make a shot in the dark. I'll keep an eye out for this bug."
+                }
+              ]
+            }
+          },
+          {
+            "number": 77,
+            "comments": {
+              "nodes": [
+                {
+                  "author": {
+                    "login": "Dreznel"
+                  },
+                  "createdAt": "2019-04-18T19:16:35Z",
+                  "body": "Can you provide a sample environment (in a zip or something) that recreates this issue you saw?\r\n\r\nBased on what I know, **all** packages that are already installed are checked for outdatedness when you run install --update. Following this, here's my train of thought as to why this should already work:\r\n\r\n1. The desired behavior of pkgr is to only install the latest versions of any package. \r\n    * We have not yet built in functionality for installing old packages, and we have deemed that out of scope for this task.\r\n2. It follows from (1) that we expect packages to only depend on the latest versions of other packages.\r\n3. If pkgr scans every installed package for outdatedness prior to installing, then it shouldn't be possible for dependencies to remain out of date in a normal, CRAN-ish space, unless 1/2 are not true.\r\n4. An example:\r\n    * If package A is dependent on package DEP, and package A is installed, then package DEP is installed. \r\n    * If A is outdated, then the newest version of A should depend on the most recent version of DEP. \r\n    * When we scan all packages for outdatedness, package A will be and primed for reinstallation. Package DEP will be flagged and primed as well iff the latest version is not already installed.\r\n    * Package installation should proceed as normal from there."
+                },
+                {
+                  "author": {
+                    "login": "Dreznel"
+                  },
+                  "createdAt": "2019-04-18T19:20:16Z",
+                  "body": "Nevermind, I recreated the problem but not the crash. Let me look into this."
+                },
+                {
+                  "author": {
+                    "login": "Dreznel"
+                  },
+                  "createdAt": "2019-04-18T19:46:45Z",
+                  "body": "commit ddd3550 makes the functionality as described above."
+                },
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-05-04T14:51:31Z",
+                  "body": "tested in #74, where crayon is an outdated dep only (not user package) and is shown to be flagged for update"
+                }
+              ]
+            }
+          },
+          {
+            "number": 80,
+            "comments": {
+              "nodes": []
+            }
+          },
+          {
+            "number": 82,
+            "comments": {
+              "nodes": [
+                {
+                  "author": {
+                    "login": "Dreznel"
+                  },
+                  "createdAt": "2019-04-26T13:55:02Z",
+                  "body": "@dpastoor "
+                },
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-05-04T14:44:46Z",
+                  "body": "The point is that R tooling will always target the first repo that provides the needed dependencies. There is only so far down the rabbit hole of customization we can go. If someone really needs all dependencies for shiny to also come from CRAN even if in CRAN-micro they can either change the order so CRAN takes precedence or set customizations for all dependencies as well to specify the repo.\r\n\r\nAt the moment, my current philosophical take is I do not yet want to support something like:\r\n\r\n```\r\nCustomizations:\r\n   Packages:\r\n     - shiny:\r\n          Repo: CRAN\r\n          Deps: ... # do something to specify to try to force deps from same repo or something\r\n```\r\n\r\nas there are too many nuances - what if not all deps are available at that repo, do you fully go recursively, etc.\r\n\r\nTo that end, this is definitely not a bug, its behaving exactly how it was designed. Whether people will want the dependency behavior we will see."
+                }
+              ]
+            }
+          },
+          {
+            "number": 84,
+            "comments": {
+              "nodes": [
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-04-26T15:16:24Z",
+                  "body": "the cache is the package cache, not the repodb cache, so this is not a bug. There shouldn't really be a reason for the user to specify custom cache dirs for the repodb/pkgnexus"
+                }
+              ]
+            }
+          },
+          {
+            "number": 85,
+            "comments": {
+              "nodes": [
+                {
+                  "author": {
+                    "login": "Dreznel"
+                  },
+                  "createdAt": "2019-04-26T19:02:43Z",
+                  "body": "This story is a bit hefty at the moment, we should probably split it out into smaller pieces. "
+                }
+              ]
+            }
+          },
+          {
+            "number": 86,
+            "comments": {
+              "nodes": []
+            }
+          },
+          {
+            "number": 87,
+            "comments": {
+              "nodes": []
+            }
+          },
+          {
+            "number": 88,
+            "comments": {
+              "nodes": [
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-08-16T04:24:43Z",
+                  "body": "identified in #146 as must be addressed "
+                },
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-08-28T03:58:03Z",
+                  "body": "refactored in #149 "
+                }
+              ]
+            }
+          },
+          {
+            "number": 89,
+            "comments": {
+              "nodes": []
+            }
+          },
+          {
+            "number": 91,
+            "comments": {
+              "nodes": []
+            }
+          },
+          {
+            "number": 92,
+            "comments": {
+              "nodes": [
+                {
+                  "author": {
+                    "login": "Dreznel"
+                  },
+                  "createdAt": "2019-05-08T21:05:18Z",
+                  "body": "Notes:\r\n\r\n- [ ] Modify repoDb FetchPackages to store repo cache by Rversion and to link to specific, R-versioned caches\r\n- [ ] Change repoDb FetchPackages to only store packages that are valid with the passed-in version of R\r\n\r\nAnd I believe this should cover it, but I'm still a bit fuzzy on the specifics.\r\n\r\nFetchPackages could also use a general refactoring, but we'll save that for another day unless it becomes too cumbersome."
+                }
+              ]
+            }
+          },
+          {
+            "number": 95,
+            "comments": {
+              "nodes": [
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-05-30T20:08:56Z",
+                  "body": "install.go in rmd, inject into the envVars so the PATH also contains R\r\n\r\nbasically we want:\r\n\r\n`$PATH=path/to/R:$PATH`"
+                },
+                {
+                  "author": {
+                    "login": "david-lyder"
+                  },
+                  "createdAt": "2019-06-07T13:46:52Z",
+                  "body": "There is this function in rcmd config.go \"configureEnv\" that would be a good place to set the R path.\r\nThere is a TODO related to ordering: \r\n // TODO: determine if using globalenvvars as a map could cause subtle bug given ordering precedence\r\nI am concerned and will look into deterministic ordering for the map (or use another object)"
+                },
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-06-07T15:09:24Z",
+                  "body": "yes plz. maps are _non-deterministically_ returned. You might want a custom data structure with like an get/add/exists/rm/ToString methods that maintains the key/value relationship but also can be toString'd to the key=val needs the environment variables have etc\r\n\r\nThanks for noticing, this would be great safety-wise to implement as well"
+                }
+              ]
+            }
+          },
+          {
+            "number": 96,
+            "comments": {
+              "nodes": [
+                {
+                  "author": {
+                    "login": "david-lyder"
+                  },
+                  "createdAt": "2019-05-24T15:19:25Z",
+                  "body": "**Test** **cases:**\r\n1. View usage/help for both add and remove.  Expect long and short description.\r\n2. Add a single package, without --install. Expect pkgr.yml file to have new package in Packages section.\r\n3. Remove a single package. Expect package to not be in Packages section of pkgr.yml file.\r\n4. Add multiple packages, without --install. Expect pkgr.yml file to have new packages in Packages section.\r\n5. Remove a multiple packages. Expect packages to not be in Packages section of pkgr.yml file.\r\n6. Add a single package, with --install. Expect pkgr.yml file to have new package in Packages section and package folder to exist in test-library folder.\r\n7. Add a multiple packages, with --install. Expect pkgr.yml file to have new packages in Packages section and package folders to exist in test-library folder.\r\n8. Add the same package more than once. Expect no-operation and messaging.\r\n9. Remove the same package more than once. Expect no-operation and no messaging.\r\n10. Run \"go test\" that exercises end-to-end \"add\" and \"remove\" test.\r\n\r\n\r\nNote: \"remove\" does not remove package folders from test-library. If folders exist, they must be manually removed to test \"--install\""
+                },
+                {
+                  "author": {
+                    "login": "david-lyder"
+                  },
+                  "createdAt": "2019-05-24T15:34:44Z",
+                  "body": "Test 1: add and remove usage:\r\n<img width=\"1027\" alt=\"Screen Shot 2019-05-24 at 11 31 52 AM\" src=\"https://user-images.githubusercontent.com/47984902/58339469-aa6b0a00-7e17-11e9-8ee0-24f005383558.png\">\r\n\r\n<img width=\"1027\" alt=\"Screen Shot 2019-05-24 at 11 34 11 AM\" src=\"https://user-images.githubusercontent.com/47984902/58339578-e605d400-7e17-11e9-957e-39104d5d3ef0.png\">\r\n"
+                },
+                {
+                  "author": {
+                    "login": "david-lyder"
+                  },
+                  "createdAt": "2019-05-24T16:07:10Z",
+                  "body": "Test 2: Add a single package, without --install. Expect pkgr.yml file to have new package in Packages section.\r\n<img width=\"1025\" alt=\"Screen Shot 2019-05-24 at 12 06 16 PM\" src=\"https://user-images.githubusercontent.com/47984902/58341525-6d554680-7e1c-11e9-8208-596e48982f5f.png\">\r\n"
+                },
+                {
+                  "author": {
+                    "login": "david-lyder"
+                  },
+                  "createdAt": "2019-05-24T16:08:46Z",
+                  "body": "Test 3: Remove a single package. Expect package to not be in Packages section of pkgr.yml file.\r\n<img width=\"1025\" alt=\"Screen Shot 2019-05-24 at 12 07 54 PM\" src=\"https://user-images.githubusercontent.com/47984902/58341613-a4c3f300-7e1c-11e9-9791-cb8f5fa6637c.png\">\r\n"
+                },
+                {
+                  "author": {
+                    "login": "david-lyder"
+                  },
+                  "createdAt": "2019-05-24T16:11:03Z",
+                  "body": "Test 4: Add multiple packages, without --install. Expect pkgr.yml file to have new packages in Packages section.\r\n<img width=\"1025\" alt=\"Screen Shot 2019-05-24 at 12 10 17 PM\" src=\"https://user-images.githubusercontent.com/47984902/58341751-f8364100-7e1c-11e9-8005-a14d85e16214.png\">\r\n"
+                },
+                {
+                  "author": {
+                    "login": "david-lyder"
+                  },
+                  "createdAt": "2019-05-24T17:35:09Z",
+                  "body": "Test 5: Remove a multiple packages. Expect packages to not be in Packages section of pkgr.yml file.\r\n<img width=\"1025\" alt=\"Screen Shot 2019-05-24 at 1 34 25 PM\" src=\"https://user-images.githubusercontent.com/47984902/58346371-ba3f1a00-7e28-11e9-8844-913b04db7642.png\">\r\n"
+                },
+                {
+                  "author": {
+                    "login": "david-lyder"
+                  },
+                  "createdAt": "2019-05-24T17:39:46Z",
+                  "body": "Test 7: Add a single package, with --install. Expect pkgr.yml file to have new package in Packages section and package folder to exist in test-library folder.\r\n<img width=\"1025\" alt=\"Screen Shot 2019-05-24 at 1 37 10 PM\" src=\"https://user-images.githubusercontent.com/47984902/58346503-1f930b00-7e29-11e9-90c2-4469c48465cc.png\">\r\n\r\n<img width=\"1025\" alt=\"Screen Shot 2019-05-24 at 1 38 21 PM\" src=\"https://user-images.githubusercontent.com/47984902/58346538-3b96ac80-7e29-11e9-9db4-2e96d32d0dac.png\">\r\n\r\n<img width=\"1005\" alt=\"Screen Shot 2019-05-24 at 1 39 05 PM\" src=\"https://user-images.githubusercontent.com/47984902/58346560-510bd680-7e29-11e9-899b-98987e047172.png\">\r\n"
+                },
+                {
+                  "author": {
+                    "login": "david-lyder"
+                  },
+                  "createdAt": "2019-05-24T17:43:36Z",
+                  "body": "Test 7: Add a multiple packages, with --install. Expect pkgr.yml file to have new packages in Packages section and package folders to exist in test-library folder.\r\n<img width=\"1005\" alt=\"Screen Shot 2019-05-24 at 1 40 52 PM\" src=\"https://user-images.githubusercontent.com/47984902/58346676-a34cf780-7e29-11e9-9bc8-2666fa343c1c.png\">\r\n\r\n<img width=\"1005\" alt=\"Screen Shot 2019-05-24 at 1 42 20 PM\" src=\"https://user-images.githubusercontent.com/47984902/58346727-c8da0100-7e29-11e9-9cfa-c185e6f8889b.png\">\r\n\r\n<img width=\"1005\" alt=\"Screen Shot 2019-05-24 at 1 43 12 PM\" src=\"https://user-images.githubusercontent.com/47984902/58346766-e5763900-7e29-11e9-9e0d-b0ac71d6f83f.png\">\r\n"
+                },
+                {
+                  "author": {
+                    "login": "david-lyder"
+                  },
+                  "createdAt": "2019-05-24T17:46:44Z",
+                  "body": "Test 8: Add the same package more than once. Expect no-operation and messaging.\r\n<img width=\"1005\" alt=\"Screen Shot 2019-05-24 at 1 45 59 PM\" src=\"https://user-images.githubusercontent.com/47984902/58346897-561d5580-7e2a-11e9-8dae-41db79fb5500.png\">\r\n"
+                },
+                {
+                  "author": {
+                    "login": "david-lyder"
+                  },
+                  "createdAt": "2019-05-24T17:49:42Z",
+                  "body": "Test 9:  Remove the same package more than once. Expect no-operation and no messaging.\r\n<img width=\"1005\" alt=\"Screen Shot 2019-05-24 at 1 49 09 PM\" src=\"https://user-images.githubusercontent.com/47984902/58347037-bf9d6400-7e2a-11e9-815c-41ef57a97bcb.png\">\r\n"
+                },
+                {
+                  "author": {
+                    "login": "david-lyder"
+                  },
+                  "createdAt": "2019-05-24T18:08:33Z",
+                  "body": "Test 10: Run \"go test\" that exercises end-to-end \"add\" and \"remove\" test.\r\nThe file \"add_test.go\" contains a test named \"Test_rAdd\" that adds and removes a package using the \"simple\" setup in the integration test folder.\r\n\r\nNote: During the remove step, \"Test_rAdd\" removes the installed folders from the \"test-libraries\" folder.  \r\n\r\n<img width=\"1005\" alt=\"Screen Shot 2019-05-24 at 1 55 16 PM\" src=\"https://user-images.githubusercontent.com/47984902/58347674-751ce700-7e2c-11e9-8d39-2edd8c3a37c4.png\">\r\n"
+                },
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-05-25T18:44:55Z",
+                  "body": "good work! looks ready to merge #102 "
+                }
+              ]
+            }
+          },
+          {
+            "number": 97,
+            "comments": {
+              "nodes": []
+            }
+          },
+          {
+            "number": 98,
+            "comments": {
+              "nodes": [
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-05-15T00:10:22Z",
+                  "body": "implementation in #99 "
+                }
+              ]
+            }
+          },
+          {
+            "number": 103,
+            "comments": {
+              "nodes": [
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-05-25T18:56:57Z",
+                  "body": "implemented in #102 "
+                }
+              ]
+            }
+          },
+          {
+            "number": 105,
+            "comments": {
+              "nodes": []
+            }
+          },
+          {
+            "number": 107,
+            "comments": {
+              "nodes": [
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-06-03T13:07:16Z",
+                  "body": "## implementation with packrat\r\n\r\nhttps://github.com/rstudio/packrat/blob/master/inst/resources/init.R#L189\r\n```\r\n## Tag the installed packrat so we know it's managed by packrat\r\n## TODO: should this be taking information from the lockfile? this is a bit awkward\r\n## because we're taking an un-annotated packrat source tarball and simply assuming it's now\r\n## an 'installed from source' version\r\n\r\n## -- InstallAgent -- ##\r\ninstallAgent <- \"InstallAgent: packrat 0.5.0-8\"\r\n\r\n## -- InstallSource -- ##\r\ninstallSource <- \"InstallSource: source\"\r\n\r\npackratDescPath <- file.path(lib, \"packrat\", \"DESCRIPTION\")\r\nDESCRIPTION <- readLines(packratDescPath)\r\nDESCRIPTION <- c(DESCRIPTION, installAgent, installSource)\r\ncat(DESCRIPTION, file = packratDescPath, sep = \"\\n\")\r\n```\r\n\r\n## implementation strategy\r\n\r\nSteps:\r\n* After succesfully installing the package, append to the DESCRIPTION file\r\nat `<install_path>/DESCRIPTION`\r\n\r\n* PkgrVersion: <version>\r\n* PkgrInstallType: <Source/Binary>\r\n* Repository: <Repository name>\r\n* PkgrRepositoryUrl: <Repository URL>\r\n\r\nNote: the repository is what packrat uses to snapshot and maintain a link\r\nso we want that to match the pkgr file. This is a common field to set,\r\nso it should also be checked for in the DESCRIPTION file prior, and removed. \r\nThis way the Repository name will always match up with what pkgr has, which\r\ncan facilitate lockfile generation and otherwise\r\n\r\n## implementation\r\n\r\n* function that consumes []bytes (the read in description) + the necessary metadata + the path \r\nto the description file, and returns a new []bytes, for focus of unit tests\r\n* function that consumes []bytes and returns the appropriate pkgr metadata that would\r\nhave been set at install\r\n* reading/writing can be handled upstream/downstream, with a couple integration tests to check\r\n* write to warning for all packages NOT installed by pkgr, after installing\r\nwith the definition of not installed by pkgr being the metadata not detected in description file \r\n\r\n"
+                },
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-06-05T19:37:46Z",
+                  "body": "answer regardless is no not at all! just some sort of format that is sane to understand. It should be parseable though as a single element. Having multiple individual json blobs print out would not be ideal.\r\n\r\n-- oops, I probably should not have deleted my comment. For historical purposes, I was asking if the JSON output had to exactly match the above example. The reason for the question was that \"prettyPrint\" was printing maps and slices fine, but was not printing user structs ... the reason? The 'ol \"must be uppercase to be public rule\". With the change to upper case (even with an anonymous structure!!) , the output meets the above spec. -DJL"
+                },
+                {
+                  "author": {
+                    "login": "david-lyder"
+                  },
+                  "createdAt": "2019-06-05T20:14:49Z",
+                  "body": "Trying to flesh out the warning feature ... after a successful install, show:\r\n  INFO[0001] package installation status ...\r\n  INFO[0001] package installation targets ...\r\n  **INFO[0001] packages found not installed by pkgr: [shiny, R6, pillar]**\r\n  ...\r\n  ..."
+                }
+              ]
+            }
+          },
+          {
+            "number": 116,
+            "comments": {
+              "nodes": [
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-05-30T20:18:41Z",
+                  "body": "initially, can no-op renv/pkgr"
+                },
+                {
+                  "author": {
+                    "login": "david-lyder"
+                  },
+                  "createdAt": "2019-05-30T20:52:21Z",
+                  "body": "**Requirements:**\r\nSupport \"packrat\"-like folder structure (packrat/lib/<platform>/<rversion>) when pkgr.yml file:\r\n1. Does not define \"Library\"\r\nand\r\n2. Defines Lockfile Type as \"packrat\""
+                },
+                {
+                  "author": {
+                    "login": "david-lyder"
+                  },
+                  "createdAt": "2019-05-30T21:03:51Z",
+                  "body": "**Implementation proposal**\r\n1. Define new type in PkgrConfig to support Lockfile, etc.\r\n2. It's easy and tempting to overwrite cfg.Library if we are in \"packrat mode', but it does not feel legit to overwrite viper marshall.  \r\n\r\ncfg.Library is called in 3 locations, we can add logic in each location to use cfg.Library or a packrat path, or we can build a function\\property to return the appropriate value.  \r\n\r\nI lean toward a function in cmd\\utils.go, or maybe in structs.go. It may not be a bad pattern to have \"property-like\" getters and setters in structs.go. For this, something like:\r\n\r\n    func (p PkgrConfig) LibraryPath(version, platform string) string { ....\r\n     }\r\n\r\nor\r\n\r\n   func (p PkgrConfig) LibraryPath(rs RSettings) string { ....\r\n     }\r\n\r\n\r\nOne pattern could be to make all fields private and provide getters:\r\n\r\nfunc (p PkgrConfig) Version() string {\r\n     return p.version\r\n     }"
+                },
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-05-31T13:01:59Z",
+                  "body": "I am wondering if we need such \"dynamism\" in having a LibraryPath method that would have logic each time it is invoked. It would also require version and platform and/or the RSettings struct, based on your examples, to be carried around externally any place it was called. \r\n\r\nMy gut is to say, given that this is a pretty static derivation, why not just do this logic in the constructor and be \"done\" with it, however that is at odds with how we are currently unmarshalling the cfg struct directly. That said, the more I think about it, per our convo on the phone, the more I'm thinking we may be doing some pre-processing after unmarshalling, but before the struct does anything else (eg variable replacement/injection), so creating an official constructor and doing it there could be a nice stepping stone to that.\r\n\r\n"
+                },
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-05-31T13:07:55Z",
+                  "body": "https://github.com/metrumresearchgroup/pkgr/blob/master/cmd/root.go#L108\r\n\r\nI could imagine this as instead being something like\r\n\r\n```\r\nNewConfig(&cfg)\r\n```\r\n\r\nwhere NewConfig did the unmarshalling, then also started marching through and doing additional refinements, for example, checking if lockfile is of type packrat, and adjusting library, etc."
+                },
+                {
+                  "author": {
+                    "login": "david-lyder"
+                  },
+                  "createdAt": "2019-05-31T13:15:02Z",
+                  "body": "I'm good with this idea ... the NewConfig function gives us a central location to make changes after the marshal"
+                },
+                {
+                  "author": {
+                    "login": "david-lyder"
+                  },
+                  "createdAt": "2019-05-31T16:05:25Z",
+                  "body": "For \"pkgr plan\", we log fatal if the Library path does not exist. Is it the user's responsibility to create Library path?"
+                },
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-06-04T16:05:51Z",
+                  "body": "@david-lyder pkgr pattern for install location is: `renv/library/R-<versionstringmajorminor>/platform` - eg `renv/library/R-3.5/x86_64-apple-darwin15.6.0`\r\n"
+                },
+                {
+                  "author": {
+                    "login": "david-lyder"
+                  },
+                  "createdAt": "2019-06-05T14:24:45Z",
+                  "body": "Not sure I understand the comment. There has been no change to the \"Library\" property for \"pkgr\". For \"packrat\", (from the packrat docs) I see an example installation folder of:\r\n/Users/kevin/projects/babynames/packrat/lib/x86_64-apple-darwin13.1.0/3.2.0\r\nwhich is like:\r\n{some folder}/packrat/lib/{PLATFORM}/{R-VERSION}\r\nNot sure what needs to change ... add the 'R-\" in front of R version?"
+                },
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-06-05T18:05:29Z",
+                  "body": "slip of the tongue, i meant to say that was the renv folder path"
+                },
+                {
+                  "author": {
+                    "login": "david-lyder"
+                  },
+                  "createdAt": "2019-08-30T20:38:49Z",
+                  "body": "@dpastoor need some clarity on the  expected behavior when using the \"renv\" type. Thanks."
+                }
+              ]
+            }
+          },
+          {
+            "number": 118,
+            "comments": {
+              "nodes": []
+            }
+          },
+          {
+            "number": 125,
+            "comments": {
+              "nodes": []
+            }
+          },
+          {
+            "number": 126,
+            "comments": {
+              "nodes": [
+                {
+                  "author": {
+                    "login": "Dreznel"
+                  },
+                  "createdAt": "2019-07-31T19:41:47Z",
+                  "body": "Acceptance Criteria:\r\n- When pkgr.yml path is incorrectly specified, the program stops and a clear error message describing the problem (invalid path given) is displayed."
+                },
+                {
+                  "author": {
+                    "login": "Dreznel"
+                  },
+                  "createdAt": "2019-11-06T00:42:36Z",
+                  "body": "Would it be possible to provide more detail on the issue as it exists now? Did e5cf0c3 address the AC?"
+                }
+              ]
+            }
+          },
+          {
+            "number": 127,
+            "comments": {
+              "nodes": [
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-07-21T03:17:43Z",
+                  "body": "fixed and confirmed in #128 "
+                }
+              ]
+            }
+          },
+          {
+            "number": 129,
+            "comments": {
+              "nodes": [
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-08-16T04:35:32Z",
+                  "body": "so I gave a crack at this. The problem is that progress bars inherently must control the entire console. They are constantly flushing the buffer/screen and redrawing to present the progress bar itself. This causes some very problematic behavior with the stream of log file results coming across, which the progress bar keeps on wiping out. \r\n\r\nAs such to implement a _true_ progress bar, would be a significant re-architecture, however the request to at least have a sense of where the installation is is quite reasonable and could be at least logged more effectively.\r\n\r\nPriority wise, we are working hard on getting 0.5 out, so this is in the roadmap to re-consider as a future enhancement."
+                },
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-12-02T17:03:38Z",
+                  "body": "@yonicd in 0.5.1 we have implemented at least a `remaining` token:\r\n\r\n![image](https://user-images.githubusercontent.com/3196313/69978608-c3f1ba80-14fa-11ea-8098-a3f6b6c9b6fb.png)\r\n\r\nIn combination with the plan, which will specify the initial number to install, this should give a sense of the countdown\r\n"
+                }
+              ]
+            }
+          },
+          {
+            "number": 130,
+            "comments": {
+              "nodes": [
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-08-06T02:22:22Z",
+                  "body": "this is unlikely to be in scope for pkgr in the (nearish) term, which focuses, for now, on the packages themselves and leaves the system deps up to the user. \r\n\r\nIn particular, how do you detect and declare this for multiple platforms and OS flavors. Your syntax is travis-esque, which works, if you \"only\" care about ubuntu/debian flavors of linux. But this should be reasonably portable and what happens if someone wants redhat (yum), osx (homebrew), etc. \r\n\r\nThere are some initiatives to try to track this down, such as: `https://github.com/r-hub/sysreqsdb` but it is a hard problem in-itself. \r\n\r\nFurthermore, many of these would require privileged use to install correctly, and could be open to a huge amount of nuance between how organizations manage such applications. As it exists, pkgr does not require admin privs and can be dumped onto just about any system, even without install rights (since don't really need to 'install' anything, just invoke the binary). \r\n\r\nThat said, an upstream, composeable package, that can support such activities is probably in the cards.\r\n\r\nA shorter term objective could be to parse failures and more clearly articulate/guess what is needed for a user to install. especially for particular dependency patterns."
+                },
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-08-16T04:32:01Z",
+                  "body": "closed but tracked in icebox of roadmap as a known request for future consideration as a potential expanded scope"
+                }
+              ]
+            }
+          },
+          {
+            "number": 131,
+            "comments": {
+              "nodes": [
+                {
+                  "author": {
+                    "login": "Dreznel"
+                  },
+                  "createdAt": "2019-07-31T19:38:14Z",
+                  "body": "It looks like this is already in progress, but it's not assigned to anyone and it was in the backlog. Could we clarify what's left to do, exactly?"
+                },
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-07-31T20:06:11Z",
+                  "body": "thanks for checking - yes we should move this to implementation complete.\r\n\r\nOverall, this is one of those areas that is a bit of a testing grey area, as its not necessarily a change in how pkgr works, just how it logs back to the user. Some people argue these types of things don't even get tested at all, but if not it should get reviewed for whether the new implementation makes sense and is more effective at communicating information (eg I'm going for less info overall, but having it be more relevant to their decision making)."
+                }
+              ]
+            }
+          },
+          {
+            "number": 133,
+            "comments": {
+              "nodes": [
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-07-24T13:37:04Z",
+                  "body": "hey bill. Yes I can add a note explicitly in the readme. In the meanwhile, the simple answer is, we don't go through any system package management solution on windows (eg chocolatey), so similar to linux, its just about dumping it in a folder thats on your path.\r\n\r\nInstall steps:\r\n\r\n1) go to the latest release https://github.com/metrumresearchgroup/pkgr/releases/latest\r\n\r\n2) download the windows tarball\r\n\r\n![image](https://user-images.githubusercontent.com/3196313/61797850-38eb1000-adf6-11e9-9685-1aa372004f17.png)\r\n\r\n3) extract the windows tarball to a folder on your path, and you're good to go! Its just a single binary file so there is no \"installing\" to do.\r\n\r\n\r\nNOTE: if you don't have something set up on your path, my suggested practice is in your home directory create a folder called `apps` and put the binary there. You can then add apps to your path by following https://www.architectryan.com/2018/03/17/add-to-the-path-on-windows-10/ or https://helpdeskgeek.com/windows-10/add-windows-path-environment-variable/ "
+                },
+                {
+                  "author": {
+                    "login": "billdenney"
+                  },
+                  "createdAt": "2019-07-24T14:18:13Z",
+                  "body": "Thanks!"
+                }
+              ]
+            }
+          },
+          {
+            "number": 134,
+            "comments": {
+              "nodes": [
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-07-24T18:30:02Z",
+                  "body": "2 questions:\r\n\r\n1) do you have R in your path\r\n2) whats you're pkgr.yml look like?\r\n\r\npkgr will, by default, try to launch R by just invoking essentially `R.exe --version` from the shell and then parses the version info returned. If its not in your path, that will fail.\r\n\r\nIf you _don't_ have it in your path you can still define it in your pkgr.yml as RPath: path/to/R or as a flag `--rpath path/to/R.exe`\r\n\r\nso you might try\r\n\r\n```\r\npkgr plan --rpath \"C:\\Program Files\\R\\R-3.6.1\\R.exe\"\r\n```\r\n"
+                },
+                {
+                  "author": {
+                    "login": "billdenney"
+                  },
+                  "createdAt": "2019-07-24T18:56:22Z",
+                  "body": "As an aside, `--rpath` is not documented when you just type `pkgr` at the command prompt.  (And, it doesn't seem to work when I try it with an \"unknown flag\" error.)"
+                },
+                {
+                  "author": {
+                    "login": "billdenney"
+                  },
+                  "createdAt": "2019-07-24T20:45:47Z",
+                  "body": "In the end, what I didn't find was that I needed to provide the RPath setting to my yml file.  The helpful change here would be to indicate how to provide the R version to `pkgr` when it is not obvious.  An error message like the following would help:\r\n\r\n\"Error getting R version.  Please either put R on your PATH or give the setting RPath in your yml file.\"\r\n\r\nAnd, as a check prior to checking the R version, it would help to check if the file that you're looking for exists so that a more specific error could be given.  Rather than indicating the version could not be found, indicate the R executable could not be found."
+                }
+              ]
+            }
+          },
+          {
+            "number": 135,
+            "comments": {
+              "nodes": [
+                {
+                  "author": {
+                    "login": "billdenney"
+                  },
+                  "createdAt": "2019-07-25T13:48:36Z",
+                  "body": "Additional thoughts on the topic:\r\n\r\n* If RPath is found and it is a specific R executable, use that.\r\n* If RPath is not found or it is not a specific R executable:\r\n    * Automatically scan for the version of R in Windows:\r\n        * If a single version is found, use that, and provide a note to the user about what version was selected.\r\n        * If multiple versions are found\r\n            * If \"latest\" is indicated in the `RPath`, choose the maximum version number (ensuring that it's a version numbering sort and not a lexicographic sort), and provide a note to the user about what version was selected.\r\n            * If \"latest\" is not indicated in the `RPath`, show all the options to tell them how to put any of them in the .yml file with an informative error."
+                }
+              ]
+            }
+          },
+          {
+            "number": 140,
+            "comments": {
+              "nodes": [
+                {
+                  "author": {
+                    "login": "Dreznel"
+                  },
+                  "createdAt": "2019-08-05T14:48:58Z",
+                  "body": "Hi Yoni, thanks for submitting an issue.\r\n\r\nIf I understand correctly, there are two things going on here: \r\n1) Your installation of “gert” fails because of a missing system-level dependency, libgit2\r\n2) You want the rest of the packages to install despite the fact that gert was not successfully installed.\r\n\r\nWith regards to the first issue (and issue #130): pkgr does not presently have the ability to install system dependencies. You will need to set up libgit2 (and any other required dependencies) on your system before running pkgr.\r\n\r\nIn response to your followup-request (number 2 above): While it may be useful to have pkgr continue onto other packages after a failed installation, this goes against the overall philosophy that pkgr is intended to support. Pkgr is meant to let you define your R environment in a declarative sense and then set up that environment in full. To think of this a different way, your `pkgr.yml` file should always be an accurate representation of your entire package ecosystem. If we allow pkgr to continue installing packages after a failure, we are violating this principle.\r\n\r\nIn your particular case, if you need the gert package, I please install libgit2 manually and then  re-run pkgr. If you do not yet need gert, then it should be safe to remove it from your pkgr.yml file and re-run. \r\n\r\nLet us know if you run into any more trouble."
+                },
+                {
+                  "author": {
+                    "login": "yonicd"
+                  },
+                  "createdAt": "2019-08-05T14:56:51Z",
+                  "body": "Thank you for the explanation.\r\n\r\nJust a few short followups. \r\n\r\n  - pkgr.yml would behave differently based on the order of the packages? ie if the problem package was listed last, would the others install? Those packages listed are independent of the problem package, so I would expect them to install regardless. If pkgr is deciding on its own the install order than there is a place for logic to install independent dependency structures.\r\n\r\n  - Those packages were already installed and were flagged for update, would it make sense to first update and then install new packages that may have higher probability of failing?\r\n\r\n  - Could there be a function in pkgr that would test to see if a system-level dependency is needed. currently `plan` returns that everything is fine \r\n\r\n"
+                },
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-08-06T02:29:38Z",
+                  "body": "> pkgr.yml would behave differently based on the order of the packages? \r\n\r\nno, it does a full solve of the dependency tree, and installs from the outer edges of the dependency web --> inward. The only (partially) non-deterministic ordering only comes into which packages that get installed in parallel get pushed to which worker. \r\n\r\nWith respect to failure, as soon as _one_ package fails, the installation loop halts _future_ installs, so any existing packages will continue to plug along, but the next package that gets popped on as ready-to-install will get flagged that the system itself should halt, and it the fails. \r\n\r\n@Dreznel this makes me think that it might be worth changing the failure message in such cases to \"failed due to prior package installation failure\" rather than making it seem like all failed equally\r\n\r\n> Those packages were already installed and were flagged for update, would it make sense to first update and then install new packages that may have higher probability of failing?\r\n\r\nthats a bit nuanced, because during the course of an update, you can easily have packages with changed dependency sets. In reality, the current rollback feature is a bit brittle. It really should snapshot the entire state before an install, and do a complete binary rollback on failure, but for now it happens at the package level. After using this a bit, I think this is the incorrect implementation and we will need to change it soon (fyi @Dreznel who implemented the first shot at it)\r\n\r\n> Could there be a function in pkgr that would test to see if a system-level dependency is needed. currently plan returns that everything is fine\r\n\r\nsee #130 for discussion, short answer, yes, longer answer, it won't be high priority until we get more feedback for such a feature"
+                }
+              ]
+            }
+          },
+          {
+            "number": 141,
+            "comments": {
+              "nodes": []
+            }
+          },
+          {
+            "number": 142,
+            "comments": {
+              "nodes": [
+                {
+                  "author": {
+                    "login": "Dreznel"
+                  },
+                  "createdAt": "2019-08-13T18:00:32Z",
+                  "body": "Hi Dan,\r\n\r\nWould it be possible for your to provide your pkgr.yml file?\r\n\r\nThank you,\r\n-John Carlo"
+                },
+                {
+                  "author": {
+                    "login": "dpolhamus"
+                  },
+                  "createdAt": "2019-08-13T18:16:31Z",
+                  "body": "Sure, here you go.\r\n\r\n```yml\r\n# The version number of the config file, used to indicate the API for the config.\r\n# Do not change.\r\nVersion: 1\r\n\r\nPackages:\r\n  - tidyverse\r\n  - pmplots\r\n  - yspec\r\n\r\n# I initially started with \r\n# Repos:\r\n#  - CRAN: https://cran.microsoft.com/\"https://cran.microsoft.com/snapshot/2019-08-01/\"\r\n#  - metrumrg_repo: \"https://metrumresearchgroup.github.io/r_validated\"\r\n# I installed some packages, switched to a different branch, and changed to this:\r\nRepos:\r\n  - CRAN: \"https://cran.microsoft.com\"\r\n  - metrumrg_repo: \"https://metrumresearchgroup.github.io/r_validated\"\r\n# I then added devtools (I think) to the Packages list and installed.\r\n# Then I wanted to update all of the packages that were now listed as \"outdated\" so I ran pkgr install --update and got the error\r\n\r\n# Path the install packages to\r\nLibrary: \"script/lib\"\r\n\r\n# Cache\r\nCache: \"script/pkg\"\r\n\r\nLogging:\r\n    all: pkgr_all.log\r\n    install: pkgr_install.log\r\n    overwrite: true\r\n\r\nCustomizations:\r\n    Repos:\r\n      - metrumrg_repo:\r\n            Type: source\r\n```\r\n\r\n"
+                },
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-08-16T04:26:50Z",
+                  "body": "should be better addressed in #147 as shouldn't have as many open file descriptors. Once feature is merged to v0.5.0 will check back with @dpolhamus to confirm this issue does not present (though I don't think if he ran again it would necessarily be easily reproducible anyway as I expect there were other confounding factors on the system). "
+                },
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-08-21T21:06:58Z",
+                  "body": "confirming that this is fixed in #147 \r\n\r\nSteps to reproduce:\r\n\r\n1) start with and old CRAN-like repo, install\r\n2) update to new Repo\r\n2) run install upgrade - it causes failure\r\n\r\nafter the change, the same steps do not cause failure, and instead succeed.\r\n\r\nMore details about tests now in place to follow"
+                },
+                {
+                  "author": {
+                    "login": "Dreznel"
+                  },
+                  "createdAt": "2019-08-22T22:21:17Z",
+                  "body": "Is there anything left on this issue or can we move it to done on the project board?"
+                },
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-08-23T14:56:32Z",
+                  "body": "we should have an end-to-end test that tests this update, in which we confirm that with the old code the error presents (eg test fails), but in the new code it is fixed, as well as testing the overall upgrade behavior\r\n\r\nI think the way this can be done is to have two pkgr files `pkgr_old.yml` and `pkgr_new.yml`. pkgr new would point to a newer snapshot _and_ would include a new (simple) package to install\r\n\r\n and would have two calls\r\n\r\n```\r\npkgr install --config=pkgr_old.yml\r\n```\r\n\r\npass confirms pkgs exist and have some known old versions\r\n\r\nthen \r\n\r\n```\r\npkgr install --config=pkgr_new.yml\r\n```\r\n\r\nboth passes + confirms new packages exist but old packages not touched\r\n\r\n```\r\npkgr install --update --config=pkgr_new.yml\r\n```\r\n\r\ninstalls new packages\r\n"
+                },
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-08-28T03:56:35Z",
+                  "body": "integration test with guide in integration_tests/rollback. "
+                }
+              ]
+            }
+          },
+          {
+            "number": 143,
+            "comments": {
+              "nodes": [
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-08-13T13:38:21Z",
+                  "body": "Dan,\r\n\r\nWe definitely will _not_ want to track the cache in git, namely binaries are not guaranteed to be portable across systems or changes in a given system, so the cache should only be present locally, and blown away given any changes in system-level dependencies or compilers on said system.\r\n\r\nThe point of the cache is to provide a central place to leverage _across_ projects on a given system, not necessarily a cache to be used across systems.\r\n\r\nThis _is_ something on our general roadmap (being able to cache across systems) but is not how the cache works to-date. For example, having an organization cache in an s3 bucket that is metworx compatible so installing from a known repo on a known system can check against that remote cache and pull pre-compiled binaries from there.\r\n\r\n"
+                },
+                {
+                  "author": {
+                    "login": "dpolhamus"
+                  },
+                  "createdAt": "2019-08-13T14:05:36Z",
+                  "body": "I see, that makes sense in the context of pointing to a set of hosted binaries.  For whatever reason (stuck in the pkgSetup.R world)  I was thinking the cache contained only the source, but I see now it's split in to `src` or `bin`.\r\n\r\nSo really the key takeaway here to ensure consistency across branches within a project is that the `Repo` shouldn't change across the course of a project and we will rely on snapshots of CRAN with other other packages that have been \"validate\" to work alongside that snapshot.\r\n"
+                },
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-08-16T04:29:37Z",
+                  "body": "correct - this strategy (no lockfile or checked in local store) really only works with immutable Repos, which if we use repos we have full control of organizationally, is a good trade-off so we don't check so much in to each repo. "
+                }
+              ]
+            }
+          },
+          {
+            "number": 144,
+            "comments": {
+              "nodes": []
+            }
+          },
+          {
+            "number": 145,
+            "comments": {
+              "nodes": [
+                {
+                  "author": {
+                    "login": "billdenney"
+                  },
+                  "createdAt": "2019-08-14T01:33:51Z",
+                  "body": "I may have just found an error where this hits.  I just ran `pkgr --update install`, and after the update, I no longer had ggplot2 (perhaps among other packages).  This is on Windows 10 with R 3.6.1.\r\n\r\n```\r\nINFO[0000] update argument passed. staging packages for update...\r\nWARN[0002] error when backing up outdated package        package dir=\"c:\\\\Users\\\\Bill Denney\\\\Documents\\\\R\\\\win-library\\\\3.6\\\\ggforce\"\r\nERRO[0002] CreateFile c:\\Users\\Bill Denney\\Documents\\R\\win-library\\3.6\\ggforce\\help\\figures: Access is denied.\r\nWARN[0002] error when backing up outdated package        package dir=\"c:\\\\Users\\\\Bill Denney\\\\Documents\\\\R\\\\win-library\\\\3.6\\\\parsnip\"\r\nERRO[0002] CreateFile c:\\Users\\Bill Denney\\Documents\\R\\win-library\\3.6\\parsnip\\data: Access is denied.\r\nWARN[0002] error when backing up outdated package        package dir=\"c:\\\\Users\\\\Bill Denney\\\\Documents\\\\R\\\\win-library\\\\3.6\\\\ggsignif\"\r\nERRO[0002] CreateFile c:\\Users\\Bill Denney\\Documents\\R\\win-library\\3.6\\ggsignif\\doc: Access is denied.\r\nWARN[0002] error when backing up outdated package        package dir=\"c:\\\\Users\\\\Bill Denney\\\\Documents\\\\R\\\\win-library\\\\3.6\\\\pkgbuild\"\r\nERRO[0002] CreateFile c:\\Users\\Bill Denney\\Documents\\R\\win-library\\3.6\\pkgbuild\\html: Access is denied.\r\nWARN[0003] error when backing up outdated package        package dir=\"c:\\\\Users\\\\Bill Denney\\\\Documents\\\\R\\\\win-library\\\\3.6\\\\ggplot2\"\r\nERRO[0003] CreateFile c:\\Users\\Bill Denney\\Documents\\R\\win-library\\3.6\\ggplot2\\help\\figures: Access is denied.\r\nWARN[0003] error when backing up outdated package        package dir=\"c:\\\\Users\\\\Bill Denney\\\\Documents\\\\R\\\\win-library\\\\3.6\\\\simstudy\"\r\nERRO[0003] CreateFile c:\\Users\\Bill Denney\\Documents\\R\\win-library\\3.6\\simstudy\\libs\\i386: Access is denied.\r\nWARN[0003] error when backing up outdated package        package dir=\"c:\\\\Users\\\\Bill Denney\\\\Documents\\\\R\\\\win-library\\\\3.6\\\\classInt\"\r\nERRO[0003] CreateFile c:\\Users\\Bill Denney\\Documents\\R\\win-library\\3.6\\classInt\\libs\\i386: Access is denied.\r\nWARN[0004] error when backing up outdated package        package dir=\"c:\\\\Users\\\\Bill Denney\\\\Documents\\\\R\\\\win-library\\\\3.6\\\\covr\"\r\nERRO[0004] CreateFile c:\\Users\\Bill Denney\\Documents\\R\\win-library\\3.6\\covr\\www\\shared\\bootstrap\\css: Access is denied.\r\nWARN[0004] error when backing up outdated package        package dir=\"c:\\\\Users\\\\Bill Denney\\\\Documents\\\\R\\\\win-library\\\\3.6\\\\markdown\"\r\nERRO[0004] CreateFile c:\\Users\\Bill Denney\\Documents\\R\\win-library\\3.6\\markdown\\resources: Access is denied.\r\nWARN[0004] error when backing up outdated package        package dir=\"c:\\\\Users\\\\Bill Denney\\\\Documents\\\\R\\\\win-library\\\\3.6\\\\xml2\"\r\nERRO[0004] CreateFile c:\\Users\\Bill Denney\\Documents\\R\\win-library\\3.6\\xml2\\libs\\i386: Access is denied.\r\nWARN[0005] error when backing up outdated package        package dir=\"c:\\\\Users\\\\Bill Denney\\\\Documents\\\\R\\\\win-library\\\\3.6\\\\tinytex\"\r\nERRO[0005] CreateFile c:\\Users\\Bill Denney\\Documents\\R\\win-library\\3.6\\tinytex\\R: Access is denied.\r\nWARN[0005] error when backing up outdated package        package dir=\"c:\\\\Users\\\\Bill Denney\\\\Documents\\\\R\\\\win-library\\\\3.6\\\\modelr\"\r\nERRO[0005] CreateFile c:\\Users\\Bill Denney\\Documents\\R\\win-library\\3.6\\modelr\\help\\figures: Access is denied.\r\nINFO[0005] downloading required packages within directory   dir=\"C:\\\\Users\\\\Bill Denney\\\\AppData\\\\Local\\\\pkgr\"\r\n```\r\n\r\nAs I need to work tonight, I cannot leave my system in a good bug reporting state, and I'm going to figure out how to fix whatever the issue is (even if it means completely reinstalling all my packages).\r\n\r\nI looked in those directories, and most were either empty or nearly empty.  I deleted them all, and retried `pkgr --upgrade install`, and my installation was back in a usable state.  I believe that those were the packages that required updates (and not the new packages to install)."
+                },
+                {
+                  "author": {
+                    "login": "Dreznel"
+                  },
+                  "createdAt": "2019-08-14T02:07:44Z",
+                  "body": "Hi Bill, thank you for reporting this.\r\n\r\nI have an idea what's going on. Currently, when you run pkgr install --update, pkgr attempts to make a backup of any packages that will be updated. It looks like you're having a permissions issue, but only for some of the subdirectories. I suspect that's preventing pkgr from making full backups, and as a side-effect, leaving behind artifacts from the outdated packages that mess up the new installation (or something to that effect).\r\n\r\nI would expect that deleting and re-running would expect to solve this issue, so I'm glad to hear it worked. In the future (and as this issue describes), we're changing the way pkgr handles these situations to basically reset your entire package environment when _any_ package installation/update fails. I still expect pkgr to need read/write permissions in all directories/subdirectories of your library, though. \r\n\r\nWas pkgr running as an admin when it failed?"
+                },
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-08-14T02:24:26Z",
+                  "body": "Bill follow up on this, have you always been running pkgr from a consistent terminal? Especially with things like the rstudio terminal, I personally pop back and forth a good bit. As @Dreznel says, looks like by the error it was a permissions issue, it would be good for us to hunt down how likely it is to occur in the future on windows machines, and though clearly that wouldn't be something that pkgr could directly solve, it could indirectly provide a clearer error message in such a scenario (eg \"PERMISSIONS ERROR WHEN ROLLING BACK PACKAGES, perhaps you had previously run in an elevated state. Try x/y/z\". Getting a sense of what combo of rstudio terminal, cmd/powershell, etc that you _may_ have used to get into that situation would be helpful when you have time to follow up"
+                },
+                {
+                  "author": {
+                    "login": "billdenney"
+                  },
+                  "createdAt": "2019-08-14T12:05:46Z",
+                  "body": "To answer your questions and provide a few thoughts on my particular setup:\r\n\r\n* I was not running as administrator (and I have never run pkgr as administrator)\r\n* I have only used pkgr from a command prompt (cmd.exe) running as my individual user.\r\n* My guess of the issue:  I *have* installed packages from github (notably PKNCA, but others, too), and those have installed additional packages from CRAN outside of the pkgr system (ergo the untracked packages).\r\n\r\nI know that windows locks directories from writing for normal users when the directory contains a .dll file even after the process that was using the .dll has completed (to prevent malicious modification of the .dll).  With R 3.6.0 (or maybe .1), changes were made to `install.packages()` to help overcome this; you may want to look there for some info on how to work around it, too."
+                },
+                {
+                  "author": {
+                    "login": "Dreznel"
+                  },
+                  "createdAt": "2019-08-15T20:43:12Z",
+                  "body": "# Pkgr Rollback Feature\r\n\r\n## Proposal\r\n* Enhance pkgr by giving it the ability to automatically restore a user's package library to it's previous state  after a failed `pkgr install` run.\r\n\r\n## Considerations\r\n* The easiest solution would be to simply backup the entire library to a temp directory. This would, however, introduce a significant amount of file i/o overhead. which could make the process slower for large libraries.\r\n* If installation process is interrupted, either during the backup, the installation, or the backup-restore, it is likely that the Library will become corrupted.\r\n* Our rollback implementation should account for packages or other folders that were not installed by pkgr (though this goes against the intended use-case of pkgr -- the tool should be the only thing managing your Library).\r\n  - What about packages that were not installed by pkgr but exist in the .yml file and could be managed by pkgr? (See Risk and Mitigations)\r\n\r\n## Proposed Implementation\r\n### Changes\r\n* Modify the installPlan to hold a list of pre-installed packages.\r\n* Reset Library to original state using information from the installPlan\r\n\r\n### Process\r\n* Use the plan code to generate an installPlan.\r\n  * InstallPlan contains information about outdated packages and where their backups should be stored.\r\n  * InstallPlan also contains information about which packages were preinstalled, as well as which packages are to be installed.\r\n* Before installing, check for the existence of a file named `pkgr.lock` in the Library directory.\r\n  - If `pkgr.lock` exists, halt the installation and inform the user that their Library is corrupt.\r\n  - If `pkgr.lock` does not exist, create the file and proceed with installation.\r\n* Backup any packages to be updated into a folder named  \\_\\_OLD\\_\\_<package_name> (rename package directory).\r\n* Attempt to install packages.\r\n  - Preinstalled packages that are not being updated will simply be ignored.\r\n  - Extraneous files will not be touched as part of the installation process, so they should remain unchanged.\r\n  - New packages will be installed in their own folders.\r\n* If the installation returns any errors, restore the Library to it's previous state by:\r\n  * Deleting any packages in the installPlan that were not counted among the \"preinstalled\" packages.\r\n  * Restoring the backup-folders for the updated packages by removing the __OLD__ tag (using afero.Fs.Rename)\r\n* If the installation completes successfully, or if the implementation rolls back successfully after a failure, delete the `pkgr.lock` file.\r\n\r\n## Risks and Mitigations\r\n* What if the process gets interrupted part-way through (via brown-out, ctrl+c, etc)?\r\n  - The `pkgr.lock` file will indicate that their environment is corrupted, and the user will be informed on the next run that they'll need to rebuild from scratch.\r\n* What if the user has \\_\\_OLD\\_\\_ directories leftover from a pre-v0.5.0 pkgr run?\r\n  - We will have pkgr error out if it cannot make backups of the packages to be upgraded\r\n* What if the running process does not have write permission to the Library?\r\n  - Pkgr should require read/write permission for all directories and subdirectories of the Library. We will note this in the documentation, but this might be something users have to stay aware of. Again, if any files fail to backup, the entire Library will be flagged as \"corrupt\" with the `pkgr.lock` file.\r\n  - We will write tests to verify that any directories created by pkgr are created with sufficient permissions for pkgr to use.\r\n* How do we handle the question of packages that were not installed by pkgr but are now entries in the .yml file?\r\n  - For now, we treat these packages as if they _were_ installed by pkgr -- let them be updated if it is requested, and don't touch them otherwise (assume they are validly installed).\r\n  - We handle this issue more properly in a future story (see Future Considerations)\r\n\r\n\r\n## Future Considerations\r\n* We will implement an extension of the `pkgr clean` command that attempts to salvage a corrupt Library by removing \\_\\_OLD\\_\\_ directories, deleting the `pkgr.lock` file, and _verifying that all installed packages are properly installed_.\r\n* We will change pkgr to ignore packages in `pkgr.yml` that were already installed by another program, warn the user that they are being ignored, and offer an argument to `pkgr install` that removes & reinstalls such packages.\r\n"
+                },
+                {
+                  "author": {
+                    "login": "Dreznel"
+                  },
+                  "createdAt": "2019-08-15T21:01:31Z",
+                  "body": "Consider bumping implementation of the `pkgr.lock` piece to a future effort."
+                },
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-08-28T03:55:10Z",
+                  "body": "rollback implemented in #147 - the overall risks will need to be re-assessed in the future, however as of now, the \"happy\" failure, (aka just package fails to install) works very well to rollback. "
+                }
+              ]
+            }
+          },
+          {
+            "number": 146,
+            "comments": {
+              "nodes": [
+                {
+                  "author": {
+                    "login": "david-lyder"
+                  },
+                  "createdAt": "2019-08-14T13:24:46Z",
+                  "body": "**Completeness of tests with respect to customization options**\r\n\r\nFor convenience, here is the definition from the SDLC for the Impact assessment: \r\n_The Impact Assessment considers all activities to be implemented in the User Story and assesses the product risk that implementation of this User Story will adversely impact the system/software._\r\n\r\nWe have pretty good \"end-to-end\" test coverage for the customization options, however there are some gaps WRT unit tests.  For clarity, when I say \"end-to-end\" tests, I am referring to the tests in the \"integration_ tests\" folder.\r\n\r\nThe table below lists info for each customization option. \r\n\r\nCustomization   feature | Existing    Integration   (end-to-end)    Test | Unit    test   effort | Risk | Notes\r\n-- | -- | -- | -- | --\r\nPackages\\Type | mixed-source | small | low | Existing   function \"pkgNexus.SetPackageType\" very simple function, can be   unit tested easily\r\nPackages\\Repo | pkgr-multirepo | small | low | Existing   function \"pkgNexus.SetPackageRepo\" very simple function, can be   unit tested easily\r\nPackages\\Env | internal   master | small | low | There is   an existing TODO to create a function. The function looks to be trivial and   unit-testable\r\nPackages\\Suggests | simple-suggests | medium | medium | Medium   effort to create unit test for existing (recursive) function appendToGraph\r\nPackages\\Repos | simple-suggests   pkgrlinkingTo | small | low | Remove   about 8 lines of code from planInstall and create unit test-able function\r\nRepos\\Type | pkgrlinkingTo | large | medium | Requires   refactor of planInstall and creating test-able functions and unit tests.    (planInstall   customization code accesses both the cfg object and uses Viper to read the   cfg tree)\r\n\r\n"
+                },
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-08-14T14:57:40Z",
+                  "body": "@david-lyder fanastic work - I think it definitely makes sense to put some light unit tests around all these. can you please work with @Dreznel to break up the work as appropriate, especially around the planInstall refactor"
+                },
+                {
+                  "author": {
+                    "login": "david-lyder"
+                  },
+                  "createdAt": "2019-08-14T15:00:35Z",
+                  "body": "Sure, I will create a branch and work with @Dreznel "
+                },
+                {
+                  "author": {
+                    "login": "Dreznel"
+                  },
+                  "createdAt": "2019-08-14T22:20:32Z",
+                  "body": "Following a format similar to Dave:\r\n\r\n\r\nTest Case | Existing end-to-end tests | Existing unit tests | Risk | Todo | Note\r\n-- | -- | -- | -- | -- | --\r\nInstall from Local Repositories | None | None | medium | Create a local drat-repo in the integration_tests folder. Create test cases that use this DRAT repo. | I believe there is already a cran_local folder that is supposed to server as this, I am not certain if it is set up correctly, though. We may be able to leverage that, and then revive some old test cases from the \"needs work\" folder.\r\nInstall from Remote Repositories | Covered in multiple integration tests (simple, simple-suggests, the update | None | low | Update integration tests to use Microsoft CRAN snapshots for simple-suggests, outdated-pkgs, outdated-pkgs-no-update, repo-order |  \r\nInstall from Partial CRAN-like Repositories | Covered in mixed-source, but mixed-source itself could use a bit of cleanup | None | low | Document expected results for mixed-source and make sure that test in generally in a runnable state. Swap out mrgsolve for pmplots |  \r\nInstall from Mix of Local and Remote Repositories | Since we don't have tests for local repositories, we have nothing for a mix of local and remote. | None | medium | Once we have a local drat repo we can use, create an integration test that installs both binary and source packages from both a local and a remote repo |  \r\n\r\n\r\nWe don't really have any unit test coverage for these areas specifically. Since pulling a package from a remote or local repository is a higher-level test case, I think it makes sense to let these be covered by integration tests for now, at least until we've refactored more of the internals."
+                },
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-08-15T01:28:03Z",
+                  "body": "@Dreznel thanks - agree with you that these are not really something we need to concern ourselves with unit-testing wise. I think it is a good find that we are lacking in the testing of local repos. Ironically, we should definitely use that a bit in our tests as it will speed up and reduce the dependency on a (good) internet connection to keep tests running smoothly.\r\n\r\nActionably, we should add some local repo tests, we can just use incomplete cranlike repos, no need to do something too drastic. "
+                }
+              ]
+            }
+          },
+          {
+            "number": 150,
+            "comments": {
+              "nodes": [
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-08-15T19:15:52Z",
+                  "body": "Thanks Bill, that is actually how it was originally implemented.\r\n\r\nThe problem that we ran into with that is immediately you run into conflicts if you have two separate projects that both use the name <CRAN> and refer to different url's but use the same cache.\r\n\r\nI think the better situation is really in #24 so we just download what you need, and the cache can still stay pristine. That would result in the same scenario in your case (wouldn't download all those existing packages) while also still keeping the cache unique"
+                },
+                {
+                  "author": {
+                    "login": "billdenney"
+                  },
+                  "createdAt": "2019-08-15T19:23:12Z",
+                  "body": "Yep, I agree that #24 would fix it.  I'll consider this close enough to a duplicate of that and close it."
+                }
+              ]
+            }
+          },
+          {
+            "number": 151,
+            "comments": {
+              "nodes": [
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-08-15T19:34:43Z",
+                  "body": "agreed"
+                },
+                {
+                  "author": {
+                    "login": "Dreznel"
+                  },
+                  "createdAt": "2019-08-22T22:49:21Z",
+                  "body": "Acceptance Criteria:\r\n- `pkgr clean cache ` command no longer leaves empty cache directories."
+                },
+                {
+                  "author": {
+                    "login": "billdenney"
+                  },
+                  "createdAt": "2019-09-03T02:34:31Z",
+                  "body": "Thanks!"
+                }
+              ]
+            }
+          },
+          {
+            "number": 152,
+            "comments": {
+              "nodes": []
+            }
+          },
+          {
+            "number": 155,
+            "comments": {
+              "nodes": [
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-09-03T02:17:14Z",
+                  "body": "@david-lyder you didnt' test the change you'd made this did you?\r\n\r\nERRO[0016] error copying binary                          from=/tmp/PLBBPBTOFIBP/ellipsis_0.2.0.1_R_x86_64-pc-linux-gnu.tar.gz to=/root/.cache/pkgr/CRAN-739227e5b53e/binary/ellipsis_0.2.0.1_R_x86_64-pc-linux-gnu.tar.gz/3.6\r\n\r\n the binary path is constructed incorrectly. I fixed it in #158"
+                },
+                {
+                  "author": {
+                    "login": "david-lyder"
+                  },
+                  "createdAt": "2019-09-03T13:03:27Z",
+                  "body": "correct, sorry about that - I knew this needed to be reviewed, I should have committed as WIP"
+                }
+              ]
+            }
+          },
+          {
+            "number": 159,
+            "comments": {
+              "nodes": [
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-09-04T14:07:12Z",
+                  "body": "hey bill,\r\n\r\nunfortunately cran.microsoft.com is DOWN 😱 \r\n\r\nThe panic error definitely can get cleaned up to communicate more effectively to the user, but as of now, the \"fix\" to this is to point to a repo that actually works - namely cran.rstudio.com or otherwise.\r\n\r\nI'm hoping that this is an azure hiccup or something other than that is now gone forever."
+                },
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-09-04T14:08:04Z",
+                  "body": "to be clear - the error comes from trying to fetch from a repo that is invalid url"
+                },
+                {
+                  "author": {
+                    "login": "billdenney"
+                  },
+                  "createdAt": "2019-09-04T14:10:26Z",
+                  "body": "That makes sense.  I was guessing that it was some issue with the URL, but I didn't assume that cran.microsoft.com would go down, so I didn't check that path.  (When I first was reporting it, I was using the internet from my phone while in the back of a Lyft, so I thought that it could be an unreliable internet issue, too.)\r\n\r\nGiven the above, I guess this is a feature request for the more informative error message that you indicate above."
+                }
+              ]
+            }
+          },
+          {
+            "number": 160,
+            "comments": {
+              "nodes": []
+            }
+          },
+          {
+            "number": 163,
+            "comments": {
+              "nodes": []
+            }
+          },
+          {
+            "number": 164,
+            "comments": {
+              "nodes": [
+                {
+                  "author": {
+                    "login": "Dreznel"
+                  },
+                  "createdAt": "2019-11-06T00:48:15Z",
+                  "body": "## Acceptance Criteria:\r\n* For any package P installed by pkgr, the DESCRIPTION file of P should have a \"Repository\" entry that matches exactly the user-defined name of the repository that pkgr retrieved the package from, with no additional text."
+                }
+              ]
+            }
+          },
+          {
+            "number": 165,
+            "comments": {
+              "nodes": [
+                {
+                  "author": {
+                    "login": "Dreznel"
+                  },
+                  "createdAt": "2019-11-06T00:45:17Z",
+                  "body": "Looks like this is done?"
+                }
+              ]
+            }
+          },
+          {
+            "number": 166,
+            "comments": {
+              "nodes": [
+                {
+                  "author": {
+                    "login": "Dreznel"
+                  },
+                  "createdAt": "2019-11-06T00:38:11Z",
+                  "body": "## Acceptance Critera:\r\n* `pkgr add` command works properly on Windows 10 "
+                },
+                {
+                  "author": {
+                    "login": "Dreznel"
+                  },
+                  "createdAt": "2019-11-06T00:39:29Z",
+                  "body": "Do we have any idea what might be causing this? Or should I try to just set up a Go debugger on my PC and take a crack at it?"
+                },
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-11-06T02:12:11Z",
+                  "body": "pretty sure this is caused by https://github.com/metrumresearchgroup/pkgr/blob/master/configlib/config.go#L147\r\n\r\nwindows line endings are likely the culprit. The proper implementation should be to use a bufio.Scanner() to go through line by line and let the scanner handle the line endings"
+                }
+              ]
+            }
+          },
+          {
+            "number": 167,
+            "comments": {
+              "nodes": []
+            }
+          },
+          {
+            "number": 168,
+            "comments": {
+              "nodes": [
+                {
+                  "author": {
+                    "login": "kylebaron"
+                  },
+                  "createdAt": "2019-10-17T17:22:11Z",
+                  "body": "@billdenney It looks like CRAN hasn't built the windows binary for r-release yet.\r\n\r\nhttps://cran.r-project.org/package=mrgsolve\r\n\r\nNot sure if it has to get checked on windows r-release before they build it?\r\n\r\n\r\n"
+                },
+                {
+                  "author": {
+                    "login": "billdenney"
+                  },
+                  "createdAt": "2019-10-17T17:26:45Z",
+                  "body": "Ahh, I didn't know that pkgr required binaries for windows.  I thought that it would build them if not available.\r\n\r\nPerhaps a notification from `pkgr` that a source package is available which is newer would be a useful message to receive."
+                },
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-10-17T17:55:23Z",
+                  "body": "it doesn't require binaries, it just prefers them on platforms it can (just like install.packages)\r\n\r\nin this case, you can get the newest version easily witht he same tweak as the metrumrg package\r\n\r\n```diff\r\nCustomizations:\r\n  Packages:\r\n  - metrumrg:\r\n      Type: source\r\n+  - mrgsolve:\r\n+      Type: source\r\n```\r\n\r\nthat will install the src version. Inspecting and making decisions around src vs binary latest etc is known but pretty low priority item at the moment. In particular we + many of our clients are now moving to a curated package repo\r\n\r\nFor example: https://mpn.metworx.com/snapshots/stable/2019-10-04\r\n\r\nOur solution has instead been that we build consistent binaries for windows mac R 3.5 + 3.6 as well as src versions, so there are 'never' inconsistencies (unless a new package version is not compatible with old version of R), so that mitigates that pain point for us. I know that isn't what you'd like to hear directly, but to give you some context around how/why the prioritization of this request might sit.\r\n\r\nFor better or worse, the examination and introspection of differences on cran between src and binaries currently sits on other tooling upstream to do that reconciliation as well as other reconciliation like deltas from github releases etc. All that uses a combination of go and R tooling that doesn't really fit in scope for pkgr for now (as I do have a bunch of R plumbing for now that pkgr couldn't use and stay agnostic).\r\n\r\nThat said, we're slowly adding more dev-inspection type functionality to make choices as a user around what things you might want to change in the configuration beyond what is currently presented in the plan, and this will definitely make it in, just is low on the queue until other forces give it the (financial/bandwidth) nudge to push it up the line."
+                },
+                {
+                  "author": {
+                    "login": "billdenney"
+                  },
+                  "createdAt": "2019-10-17T18:30:52Z",
+                  "body": "Whoops, thanks for the reminder of the \"Type: source\" option!\r\n\r\nAnd, thanks for the detailed explanation of the rest of the info.  Everything you say makes sense.  I'll leave the issue open for your consideration to close or not (I'm fine with either).\r\n\r\nTo make the revised potential feature specific:  For packages installed from binaries (not source), check the source version.  If the source version is greater t than the binary version, issue a message that \"The binary version of <pkgname> is being installed, but a newer source version is available.  To install from source, please add the customization 'Type: source' for that package.\""
+                },
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-10-17T20:22:39Z",
+                  "body": "yup, there are also things like - if I update to a different snapshot what would be different, if I switched to different repo (eg on REPO2 mrgsolve is v0.11.0 OMG).\r\n\r\nI'm hoping we can get some support to do a funded \"dev-focused\" push in 2020 that gives more tools to power users around that type of inspection and \"decision-making\""
+                }
+              ]
+            }
+          },
+          {
+            "number": 170,
+            "comments": {
+              "nodes": [
+                {
+                  "author": {
+                    "login": "Dreznel"
+                  },
+                  "createdAt": "2019-11-06T00:33:50Z",
+                  "body": "Note: After some offline discussion, I realize that this acceptance criteria is flawed. See first comment for updated AC.\r\n\r\nLeaving below for posterity.\r\n\r\n## Acceptance Criteria:\r\n\r\n* User can set a 'max_threads' global option in pkgr.yml to limit the number of threads pkgr uses to 8\r\n* Without any option set, pkgr will automatically cap number of threads to 8.\r\n\r\n## Not in scope\r\n* Command line argument to set max threads"
+                },
+                {
+                  "author": {
+                    "login": "Dreznel"
+                  },
+                  "createdAt": "2019-11-06T02:46:19Z",
+                  "body": "There is logic in the code that reduces the worker-count by 1 when the number of threads is two or higher. Given this, if we are \"capping\" the user at 8 threads (unless they request otherwise), should we keep this logic and limit them to 7 workers?"
+                },
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-11-06T02:55:59Z",
+                  "body": "That logic should only kick in if the number of threads was not explicitly set and actually I think we can remove that logic anyway.\r\n\r\nI put that there originally in case the install process pegged the CPU as to not completely saturate and lock up the system. Fact is there is enough non CPU stuff going on during install, so that isn't a concern.\r\n\r\nHence, Let's remove that decrement logic all together"
+                }
+              ]
+            }
+          },
+          {
+            "number": 171,
+            "comments": {
+              "nodes": [
+                {
+                  "author": {
+                    "login": "Dreznel"
+                  },
+                  "createdAt": "2019-11-06T00:36:34Z",
+                  "body": "## Acceptance Criteria\r\n* pkgr lists a \"remaining packages\" count in the logs after each package is successfully installed.\r\n* This information should be logged at an Info level."
+                }
+              ]
+            }
+          },
+          {
+            "number": 173,
+            "comments": {
+              "nodes": [
+                {
+                  "author": {
+                    "login": "Dreznel"
+                  },
+                  "createdAt": "2019-11-06T00:43:25Z",
+                  "body": "Counting the info under \"proposed change\" as Acceptance Criteria."
+                },
+                {
+                  "author": {
+                    "login": "Dreznel"
+                  },
+                  "createdAt": "2019-11-07T16:51:43Z",
+                  "body": "A couple of questions as I'm working on this:\r\n\r\n* Should `pkgr plan` indicate that the library will be created? I'm assuming yes.\r\n* If the Library is created but a package fails to install, should the library be deleted? Assuming yes.\r\n\r\n@dpastoor please confirm. I'm trying to determine whether or not I should store a \"libraryCreated\" variable in installPlan."
+                },
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-11-07T16:58:14Z",
+                  "body": "hmm good questions.\r\n\r\nI think both of these are reasonable choices and would proceed forward as such."
+                }
+              ]
+            }
+          },
+          {
+            "number": 176,
+            "comments": {
+              "nodes": []
+            }
+          },
+          {
+            "number": 177,
+            "comments": {
+              "nodes": []
+            }
+          },
+          {
+            "number": 178,
+            "comments": {
+              "nodes": []
+            }
+          },
+          {
+            "number": 179,
+            "comments": {
+              "nodes": []
+            }
+          },
+          {
+            "number": 180,
+            "comments": {
+              "nodes": []
+            }
+          },
+          {
+            "number": 181,
+            "comments": {
+              "nodes": []
+            }
+          },
+          {
+            "number": 182,
+            "comments": {
+              "nodes": []
+            }
+          },
+          {
+            "number": 183,
+            "comments": {
+              "nodes": []
+            }
+          },
+          {
+            "number": 184,
+            "comments": {
+              "nodes": []
+            }
+          },
+          {
+            "number": 185,
+            "comments": {
+              "nodes": []
+            }
+          },
+          {
+            "number": 186,
+            "comments": {
+              "nodes": []
+            }
+          },
+          {
+            "number": 187,
+            "comments": {
+              "nodes": []
+            }
+          },
+          {
+            "number": 188,
+            "comments": {
+              "nodes": []
+            }
+          },
+          {
+            "number": 189,
+            "comments": {
+              "nodes": []
+            }
+          },
+          {
+            "number": 190,
+            "comments": {
+              "nodes": []
+            }
+          },
+          {
+            "number": 191,
+            "comments": {
+              "nodes": []
+            }
+          },
+          {
+            "number": 192,
+            "comments": {
+              "nodes": []
+            }
+          },
+          {
+            "number": 193,
+            "comments": {
+              "nodes": []
+            }
+          },
+          {
+            "number": 195,
+            "comments": {
+              "nodes": []
+            }
+          },
+          {
+            "number": 197,
+            "comments": {
+              "nodes": []
+            }
+          },
+          {
+            "number": 198,
+            "comments": {
+              "nodes": [
+                {
+                  "author": {
+                    "login": "Dreznel"
+                  },
+                  "createdAt": "2019-12-03T02:13:52Z",
+                  "body": "Marking High Risk due to the fact that a user could configure these logs expecting them to capture all commands, then later find themselves lacking the expected logging in the event of a problem."
+                }
+              ]
+            }
+          },
+          {
+            "number": 200,
+            "comments": {
+              "nodes": [
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-12-04T14:27:22Z",
+                  "body": "Thanks for the idea bill. I think that is very reasonable, where possible. Definitely would make scanning for things easier.\r\n\r\nThe trick in some areas (downloading minorly and definitely for installing) is things happen in parallel across threads so in order to order things alphabetically it would need to cache them until the entire set of operations completes or re-order how things are done in the first place (eg make sure to download in alphabetical order).\r\n\r\nFor installation, that is definitely not possible as there is actually a full event-loop going on internally monitoring when a package can be kicked off to install. In particular, all its dependencies must be satisfied before firing off.\r\n\r\nOne command that I've been thinking about would be to do something along the lines of `pkgr summary` which would summarize the last command taken, in which case we could actually re-order things.\r\n\r\nCan you tell a little more about where the pain currently stands - eg are you interested in the status of a particular package and don't want to hunt and just want to find it alphabetically? I ask as there may be some other alternatives (such as piping into grep/ripgrep) that would allow you to target things. That way we could potentially provide some doc-examples for a broader audience as well that may have the same questions."
+                },
+                {
+                  "author": {
+                    "login": "billdenney"
+                  },
+                  "createdAt": "2019-12-04T14:38:12Z",
+                  "body": "I understand that not everything can be alphabetical.  My pain point was that I was trying to determine if `drake` was updated (it was not) looking at `Packages not installed by pkgr` and `Successfully Installed`.  Within `Packages not installed by pkgr`, grep wouldn't work there since it's all on one line.\r\n\r\nOverall, my preference would be that where possible, logs are alphabetical just for easier reading.  If a new option or command is required, I'd probably just scan the out of order rather than using that other command (so, I don't think that additional command would be used by me)."
+                },
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-12-04T14:41:41Z",
+                  "body": "have you looked at the output of pkgr plan?\r\n\r\nthat should tell you what would happen and would tell you if its detecting drake is out of date?\r\n\r\nare you pointing to an MS snapshot or cran directly? drake windows binaries only came out very recently so if you're even a couple days old, new version wouldn't be up yet (at least as of 12/03 they were still on 7.7 IIRC) Probably will have new binaries today if I had to guess."
+                },
+                {
+                  "author": {
+                    "login": "billdenney"
+                  },
+                  "createdAt": "2019-12-04T14:45:48Z",
+                  "body": "I didn't look at `pkgr plan`.  (I'm a simple person who pretty much only uses `pkgr --update install`.)\r\n\r\nYep, it's on the MS snapshot today."
+                }
+              ]
+            }
+          },
+          {
+            "number": 203,
+            "comments": {
+              "nodes": []
+            }
+          },
+          {
+            "number": 204,
+            "comments": {
+              "nodes": []
+            }
+          },
+          {
+            "number": 205,
+            "comments": {
+              "nodes": []
+            }
+          },
+          {
+            "number": 208,
+            "comments": {
+              "nodes": []
+            }
+          },
+          {
+            "number": 209,
+            "comments": {
+              "nodes": [
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-12-15T19:16:51Z",
+                  "body": "Thanks for the request Bill. The answer is both yes and no.\r\n\r\nYes as you could (today) add any other cranlike repo below your repo's being pointed at and it will then find those just depedencies just fine. **No** in that it doesn't scan and look for additional repositories.\r\n\r\nHere are some off-the-head thoughts:\r\n\r\n* we should definitely support additional_repositories in some capacity\r\n* I do not like that its reasonably hidden from users and would not be clear from looking at the yml file what the external dependencies are.\r\n\r\nSo what are the potential solutions:\r\n\r\n1) provide a helper that would auto-add any additional_repositories detected\r\n\r\na command such as:\r\n\r\n```\r\npkgr sync --additional-respositories\r\n```\r\n\r\nI am already thinking around some other synchronization scenarios, for example @kylebaron brought up the reasonable scenario of in a pinch you do a quick install.packages, but ultimately want to make sure those packages get into the pkgr.yml for future use - having a command to add all packages not detected to have been installed by pkgr to the yml.\r\n\r\n2) Just do this 'magically' but transparently, so it would autoname them something like `pkgname_repo: url` so when planning/installing it becomes clear other repos are getting tapped. This could a default behavior, but also turned off with a new flag we added `Strict: true` (currently this will cause the library path to must-exist in order to install packages, vs creating it for the user)\r\n\r\nThis isn't a intensive ask, and we could get it in early next year with the next dev cycle - I'll slot it for 1.0"
+                },
+                {
+                  "author": {
+                    "login": "billdenney"
+                  },
+                  "createdAt": "2019-12-16T01:51:21Z",
+                  "body": "Of those two options, I'd prefer the magic option 2.  The rationale for 2 is that if I'm asking for a package and the package knows where its additional packages should come from, then go there.  And, those additional repositories should be the lowest priority which assumes that there would not be a conflict between package names in those repositories and the main repositories."
+                },
+                {
+                  "author": {
+                    "login": "mattfidler"
+                  },
+                  "createdAt": "2019-12-16T18:28:10Z",
+                  "body": "@billdenney  you could try bioconductor.  They don't have the package size requirements and fit well in the CRAN system;  I believe that CRAN and bioconductor are both installed in CRAN checks, which means you can \"suggest\" a package on bioconductor (I think)\r\n\r\nThey have a non-tidy style and prefer camelCase and other such things (though I'm unsure if it is a requirement).   I think that STDM being on a cran-friendly repository would be a win.  "
+                },
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-12-16T18:40:08Z",
+                  "body": "@mattfidler yes cran plays nice with bioconductor. I actually don't even think \r\n\r\nI can't find off the top of my head, but the rstudio team is actively discussing this on some of the repos I follow and saw pass through the issue tracker recently. In their context, same thing, machine learning datasets they wanted to pass around and were mulling some sort of caching option.\r\n\r\nThis also begs the question of, is packaging even the right solution. \r\n\r\nIf you make it an additional_repositories + suggests people are already almost certainly going to need to 'intervene' in order to pull the packages down, even if it means doing install.packages(..., deps = TRUE). \r\n\r\nWhat about just hosting them as static assets that can get pulled down by running dl_dataset(...). or the like\r\n\r\nThis would also give the benefit of simple(r) access outside the package context, cross functional use (once we all move to Julia :-p) and allow to cherry pick specific files. Eg if you want to run only one example, not needing to DL all the examples.\r\n\r\nDon't get me wrong, using a package would give some wins as well, but you're really just looking for an easy way to shuttle around data, not really _needing_ to leverage the rest of the goodies an R package gives or some existing codebase you want to slurp in outside cran."
+                },
+                {
+                  "author": {
+                    "login": "billdenney"
+                  },
+                  "createdAt": "2019-12-16T18:41:50Z",
+                  "body": "@mattfidler, good thought!  I just checked, and they seem to suggest <= 5MB for size as well (https://www.bioconductor.org/developers/package-guidelines/#correctness).  I'd guess that they are more flexible, though.\r\n\r\nI have an initial skeleton here: https://github.com/billdenney/Rsdtm/\r\n\r\nMy thought is that I will release a data-generator package on CRAN, store the generated data packages on GitHub in a drat repo (or similar), and release the SDTM package on CRAN.  That way, everything required is on CRAN, but the simpler way to use it will require non-CRAN."
+                },
+                {
+                  "author": {
+                    "login": "billdenney"
+                  },
+                  "createdAt": "2019-12-16T18:52:52Z",
+                  "body": "@dpastoor, We were typing at the same time. :)\r\n\r\nI did consider the \"download a dataset\" with caching, but in this particular case, I don't think it's a great fit.  If you feel otherwise, please let me know!\r\n\r\nThe data I'm working with here is already publicly available (https://evs.nci.nih.gov/ftp1/CDISC/SDTM/Archive/), and the work to be done will both compress it and ready it for use in the specific R package.  Were someone to make another consumer of it (e.g. Julia), they would need to perform many of the same manipulations to convert those data into a form for their language.  So, I don't think that the hosted data set will be of general interest outside of package users.\r\n\r\nThere are some parts that could be of general interest such as simpler mappings to convert from older to newer data names, but overall, I think that those will be minimal."
+                }
+              ]
+            }
+          },
+          {
+            "number": 211,
+            "comments": {
+              "nodes": [
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2019-12-31T16:14:21Z",
+                  "body": "fixed in #212 "
+                }
+              ]
+            }
+          },
+          {
+            "number": 213,
+            "comments": {
+              "nodes": [
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2020-01-08T05:54:07Z",
+                  "body": "Nope order does not matter. Pkgr inspects your entire dependency graph and solves it to figure out the correct order to only install a package once. So like first all packages with no dependencies, then ones that only depend on those with 0 on upward so a package will only attempt be be installed after all it's dependencies are installed"
+                },
+                {
+                  "author": {
+                    "login": "janelleh"
+                  },
+                  "createdAt": "2020-01-08T14:52:51Z",
+                  "body": "Excellent, thanks. @kyleb also gave a nice explanation of the old issues with pkgSetup in the thread here: \r\n\r\nhttps://metrumrg.slack.com/archives/C5WLDHR0W/p1578433540012000"
+                }
+              ]
+            }
+          },
+          {
+            "number": 214,
+            "comments": {
+              "nodes": [
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2020-01-08T01:36:51Z",
+                  "body": "renv automatically drops the relevant _git_ ignore files to ignore all libraries. Since you should only be using MPN snapshots, there is no need to check in any source tarballs since you can reproduce your results from said snapshots as they are immutable.\r\n\r\nWhat I am _not_ sure of is whether it drops the proper svn ignore? equivalents. I know there is such a think but am not too familiar with it.\r\n\r\nLets move this convo to the project template repo as this isn't really a pkgr question, rather than the msproject template question. These are very salient questions that we need to address via SVN as well for people that aren't yet able to migrate to ghe for project work internally"
+                }
+              ]
+            }
+          },
+          {
+            "number": 215,
+            "comments": {
+              "nodes": [
+                {
+                  "author": {
+                    "login": "dpastoor"
+                  },
+                  "createdAt": "2020-01-08T15:31:47Z",
+                  "body": "Yes looks like we need to cut a new template for release. Those changes are I'm the master branch. You can add those two deps and re run pkgr install and that will add them!"
+                },
+                {
+                  "author": {
+                    "login": "janelleh"
+                  },
+                  "createdAt": "2020-01-08T15:33:23Z",
+                  "body": "Yes, I did that. Just want to make sure its put into the new template.\nThanks!\n\n\nJanelle Lennie, MS | Research Associate\n\nMetrum Research Group\n\n2 Tunxis Road | Tariffville, CT 06081\n\np: 978-886-4462 | e: janelleh@metrumrg.com\n\n<https://info.metrumrg.com/contact>\n<https://www.linkedin.com/company/metrum-research-group/>\n<https://twitter.com/MetrumRG>\n\n\nOn Wed, Jan 8, 2020 at 10:31 AM Devin Pastoor <notifications@github.com>\nwrote:\n\n> Yes looks like we need to cut a new template for release. Those changes\n> are I'm the master branch. You can add those two deps and re run pkgr\n> install and that will add them!\n>\n> —\n> You are receiving this because you authored the thread.\n> Reply to this email directly, view it on GitHub\n> <https://github.com/metrumresearchgroup/pkgr/issues/215?email_source=notifications&email_token=AEOW7SDNS6QSM7A5LZMPVSLQ4XWWJA5CNFSM4KEKCYS2YY3PNVWWK3TUL52HS4DFVREXG43VMVBW63LNMVXHJKTDN5WW2ZLOORPWSZGOEIM6KNA#issuecomment-572122420>,\n> or unsubscribe\n> <https://github.com/notifications/unsubscribe-auth/AEOW7SGSXRT5IJO2EOWH6P3Q4XWWJANCNFSM4KEKCYSQ>\n> .\n>\n"
+                }
+              ]
+            }
+          }
+        ],
+        "pageInfo": {
+          "hasPreviousPage": false,
+          "startCursor": "Y3Vyc29yOnYyOpHOGSVHRg=="
+        }
+      }
+    }
+  }
 }

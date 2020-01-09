@@ -1,6 +1,6 @@
-query issue_comments($org: String!, $repo: String!) {
+query issue_comments($org: String!, $repo: String!, $cursor: String) {
   repository(owner: $org, name: $repo) {
-    issues(last: 100){
+    issues(last: 100, before: $cursor){
       nodes{
         number
         comments(first: 50){
@@ -12,6 +12,10 @@ query issue_comments($org: String!, $repo: String!) {
             body
           }
         }
+      }
+      pageInfo {
+        hasPreviousPage
+        startCursor
       }
     }
   }

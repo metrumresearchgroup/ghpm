@@ -1,6 +1,6 @@
-query all_pull_requests($org: String!, $repo: String!) {
+query all_pull_requests($org: String!, $repo: String!, $cursor: String) {
   repository(owner: $org, name: $repo) {
-    pullRequests(last: 100) {
+    pullRequests(last: 100, before: $cursor) {
       nodes {
         number
         title
@@ -19,6 +19,10 @@ query all_pull_requests($org: String!, $repo: String!) {
         mergedAt
         baseRefName
         state
+      }
+      pageInfo {
+        hasPreviousPage
+        startCursor
       }
     }
   }

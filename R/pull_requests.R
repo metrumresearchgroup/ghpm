@@ -46,7 +46,13 @@ create_pull_request <- function(org, repo, base, head, title, body = "", reviewe
 #' @importFrom readr parse_datetime
 #' @export
 get_all_pull_requests <- function(org, repo, .api_url = api_url()){
-	data <- sanitize_response(graphql_query("pullrequests/all_pull_requests.graphql", org = org, repo = repo, .api_url = .api_url))$repository$pullRequests$nodes
+	response <- sanitize_response(graphql_query("pullrequests/all_pull_requests.graphql", org = org, repo = repo, .api_url = .api_url))$repository$pullRequests
+	data <- response$nodes
+
+	while(response$pageInfo$hasPreviousPage){
+		response <- sanitize_response(graphql_query("pullrequests/all_pull_requests.graphql", org = org, repo = repo, cursor = response$pageInfo$startCursor, .api_url = .api_url))$repository$pullRequests
+		data <- c(data, response$nodes)
+	}
 
 	prs <- reduce(data, function(.acc, .cv){
 		.acc <- .acc %>% add_row("pullrequest" = .cv$number,

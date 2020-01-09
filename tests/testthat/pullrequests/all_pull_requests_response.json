@@ -1,182 +1,389 @@
 {
-	"data": {
-		"repository": {
-			"pullRequests": {
-				"nodes": [
-					{
-						"number": 6,
-						"title": "Feature/multisource",
-						"author": {
-							"login": "dpastoor"
-						},
-						"body": "",
-						"bodyText": "",
-						"milestone": null,
-						"createdAt": "2018-11-28T14:09:21Z",
-						"mergedBy": {
-							"login": "dpastoor"
-						},
-						"mergedAt": "2018-11-29T15:48:27Z",
-						"baseRefName": "master",
-						"state": "MERGED"
-					},
-					{
-						"number": 12,
-						"title": "refactor: new repository url",
-						"author": {
-							"login": "dpastoor"
-						},
-						"body": "",
-						"bodyText": "",
-						"milestone": null,
-						"createdAt": "2018-11-29T15:52:31Z",
-						"mergedBy": {
-							"login": "dpastoor"
-						},
-						"mergedAt": "2018-11-29T15:54:23Z",
-						"baseRefName": "master",
-						"state": "MERGED"
-					},
-					{
-						"number": 14,
-						"title": "Refactor/isolation",
-						"author": {
-							"login": "dpastoor"
-						},
-						"body": "enforce deeper isolation during R CMDs to keep the pkgr.yml self contained\r\n\r\nprevents conflicts against env vars or other settings in user/site level Renv/profiles.\r\n\r\nThis will likely need more iteration to allow opt-in of certain globally set information.",
-						"bodyText": "enforce deeper isolation during R CMDs to keep the pkgr.yml self contained\nprevents conflicts against env vars or other settings in user/site level Renv/profiles.\nThis will likely need more iteration to allow opt-in of certain globally set information.",
-						"milestone": null,
-						"createdAt": "2018-12-01T21:42:42Z",
-						"mergedBy": {
-							"login": "dpastoor"
-						},
-						"mergedAt": "2018-12-09T15:50:13Z",
-						"baseRefName": "release/v0.1.0",
-						"state": "MERGED"
-					},
-					{
-						"number": 19,
-						"title": "implement Rscripting so can run arbitrary R code to get necessary metadata",
-						"author": {
-							"login": "dpastoor"
-						},
-						"body": "Useful for things like inspecting which version of R is running",
-						"bodyText": "Useful for things like inspecting which version of R is running",
-						"milestone": null,
-						"createdAt": "2018-12-09T15:49:17Z",
-						"mergedBy": {
-							"login": "dpastoor"
-						},
-						"mergedAt": "2018-12-10T23:15:59Z",
-						"baseRefName": "release/v0.1.0",
-						"state": "MERGED"
-					},
-					{
-						"number": 20,
-						"title": "release/v0.1.0",
-						"author": {
-							"login": "dpastoor"
-						},
-						"body": "initial general release",
-						"bodyText": "initial general release",
-						"milestone": {
-							"title": "v0.1.0"
-						},
-						"createdAt": "2018-12-09T15:51:42Z",
-						"mergedBy": {
-							"login": "dpastoor"
-						},
-						"mergedAt": "2019-02-09T20:05:46Z",
-						"baseRefName": "master",
-						"state": "MERGED"
-					},
-					{
-						"number": 22,
-						"title": "Feat/parallel cran dls",
-						"author": {
-							"login": "dpastoor"
-						},
-						"body": "",
-						"bodyText": "",
-						"milestone": null,
-						"createdAt": "2018-12-09T17:00:36Z",
-						"mergedBy": {
-							"login": "dpastoor"
-						},
-						"mergedAt": "2018-12-10T23:16:09Z",
-						"baseRefName": "release/v0.1.0",
-						"state": "MERGED"
-					},
-					{
-						"number": 26,
-						"title": "fix: error if non-200 result returns with html instead of PACKAGES",
-						"author": {
-							"login": "dpastoor"
-						},
-						"body": "also catch goroutine panic on closed channel as if the first repo failed\r\nthe func would return and close the channel before the\r\nother goroutine could send\r\n\r\nfixes #25",
-						"bodyText": "also catch goroutine panic on closed channel as if the first repo failed\nthe func would return and close the channel before the\nother goroutine could send\nfixes #25",
-						"milestone": null,
-						"createdAt": "2018-12-11T01:02:34Z",
-						"mergedBy": {
-							"login": "dpastoor"
-						},
-						"mergedAt": "2018-12-12T03:13:27Z",
-						"baseRefName": "release/v0.1.0",
-						"state": "MERGED"
-					},
-					{
-						"number": 30,
-						"title": "feat: environment variable expansion",
-						"author": {
-							"login": "dpastoor"
-						},
-						"body": "example of use in multirepo-source shows replacing a url with an environment variable\r\n\r\nthis will also help when using pkgr within matrix builds, such as installing iteratively where a single config file can be used.\r\n\r\nThis compliments viper's ability to detect environment variables with the prefix `PKGR`\r\n\r\nso could still do `PKGR_Library` instead of `Library: path/to/lib`, however viper could not directly support configuration files themselves, where situations such as: `Library: some/path/with/${somevar}` are reasonable.",
-						"bodyText": "example of use in multirepo-source shows replacing a url with an environment variable\nthis will also help when using pkgr within matrix builds, such as installing iteratively where a single config file can be used.\nThis compliments viper's ability to detect environment variables with the prefix PKGR\nso could still do PKGR_Library instead of Library: path/to/lib, however viper could not directly support configuration files themselves, where situations such as: Library: some/path/with/${somevar} are reasonable.",
-						"milestone": null,
-						"createdAt": "2018-12-12T04:24:43Z",
-						"mergedBy": {
-							"login": "dpastoor"
-						},
-						"mergedAt": "2018-12-12T04:24:49Z",
-						"baseRefName": "release/v0.1.0",
-						"state": "MERGED"
-					},
-					{
-						"number": 31,
-						"title": "Cleanup/dl messages",
-						"author": {
-							"login": "dpastoor"
-						},
-						"body": "goal to clean up and refactor the logging to reduce message clutter, especially at the info level, as well as simplify the logging interface",
-						"bodyText": "goal to clean up and refactor the logging to reduce message clutter, especially at the info level, as well as simplify the logging interface",
-						"milestone": null,
-						"createdAt": "2019-01-18T03:48:12Z",
-						"mergedBy": {
-							"login": "dpastoor"
-						},
-						"mergedAt": "2019-01-20T02:36:08Z",
-						"baseRefName": "release/v0.1.0",
-						"state": "MERGED"
-					},
-					{
-						"number": 32,
-						"title": "Feat/env",
-						"author": {
-							"login": "dpastoor"
-						},
-						"body": "add the capability to set environment variables during installation of packages. \r\n\r\nThe overall internal representation is to now store two sets of env variables - global ones that should be applied to every package during install, as well as local ones per package.",
-						"bodyText": "add the capability to set environment variables during installation of packages.\nThe overall internal representation is to now store two sets of env variables - global ones that should be applied to every package during install, as well as local ones per package.",
-						"milestone": null,
-						"createdAt": "2019-01-20T21:47:26Z",
-						"mergedBy": {
-							"login": "dpastoor"
-						},
-						"mergedAt": "2019-02-04T17:59:43Z",
-						"baseRefName": "release/v0.1.0",
-						"state": "MERGED"
-					}
-				]
-			}
-		}
-	}
+  "data": {
+    "repository": {
+      "pullRequests": {
+        "nodes": [
+          {
+            "number": 6,
+            "title": "Feature/multisource",
+            "author": {
+              "login": "dpastoor"
+            },
+            "body": "",
+            "bodyText": "",
+            "milestone": null,
+            "createdAt": "2018-11-28T14:09:21Z",
+            "mergedBy": {
+              "login": "dpastoor"
+            },
+            "mergedAt": "2018-11-29T15:48:27Z",
+            "baseRefName": "master",
+            "state": "MERGED"
+          },
+          {
+            "number": 12,
+            "title": "refactor: new repository url",
+            "author": {
+              "login": "dpastoor"
+            },
+            "body": "",
+            "bodyText": "",
+            "milestone": null,
+            "createdAt": "2018-11-29T15:52:31Z",
+            "mergedBy": {
+              "login": "dpastoor"
+            },
+            "mergedAt": "2018-11-29T15:54:23Z",
+            "baseRefName": "master",
+            "state": "MERGED"
+          },
+          {
+            "number": 14,
+            "title": "Refactor/isolation",
+            "author": {
+              "login": "dpastoor"
+            },
+            "body": "enforce deeper isolation during R CMDs to keep the pkgr.yml self contained\r\n\r\nprevents conflicts against env vars or other settings in user/site level Renv/profiles.\r\n\r\nThis will likely need more iteration to allow opt-in of certain globally set information.",
+            "bodyText": "enforce deeper isolation during R CMDs to keep the pkgr.yml self contained\nprevents conflicts against env vars or other settings in user/site level Renv/profiles.\nThis will likely need more iteration to allow opt-in of certain globally set information.",
+            "milestone": null,
+            "createdAt": "2018-12-01T21:42:42Z",
+            "mergedBy": {
+              "login": "dpastoor"
+            },
+            "mergedAt": "2018-12-09T15:50:13Z",
+            "baseRefName": "release/v0.1.0",
+            "state": "MERGED"
+          },
+          {
+            "number": 19,
+            "title": "implement Rscripting so can run arbitrary R code to get necessary metadata",
+            "author": {
+              "login": "dpastoor"
+            },
+            "body": "Useful for things like inspecting which version of R is running",
+            "bodyText": "Useful for things like inspecting which version of R is running",
+            "milestone": null,
+            "createdAt": "2018-12-09T15:49:17Z",
+            "mergedBy": {
+              "login": "dpastoor"
+            },
+            "mergedAt": "2018-12-10T23:15:59Z",
+            "baseRefName": "release/v0.1.0",
+            "state": "MERGED"
+          },
+          {
+            "number": 20,
+            "title": "release/v0.1.0",
+            "author": {
+              "login": "dpastoor"
+            },
+            "body": "initial general release",
+            "bodyText": "initial general release",
+            "milestone": {
+              "title": "v0.1.0"
+            },
+            "createdAt": "2018-12-09T15:51:42Z",
+            "mergedBy": {
+              "login": "dpastoor"
+            },
+            "mergedAt": "2019-02-09T20:05:46Z",
+            "baseRefName": "master",
+            "state": "MERGED"
+          },
+          {
+            "number": 22,
+            "title": "Feat/parallel cran dls",
+            "author": {
+              "login": "dpastoor"
+            },
+            "body": "",
+            "bodyText": "",
+            "milestone": null,
+            "createdAt": "2018-12-09T17:00:36Z",
+            "mergedBy": {
+              "login": "dpastoor"
+            },
+            "mergedAt": "2018-12-10T23:16:09Z",
+            "baseRefName": "release/v0.1.0",
+            "state": "MERGED"
+          },
+          {
+            "number": 26,
+            "title": "fix: error if non-200 result returns with html instead of PACKAGES",
+            "author": {
+              "login": "dpastoor"
+            },
+            "body": "also catch goroutine panic on closed channel as if the first repo failed\r\nthe func would return and close the channel before the\r\nother goroutine could send\r\n\r\nfixes #25",
+            "bodyText": "also catch goroutine panic on closed channel as if the first repo failed\nthe func would return and close the channel before the\nother goroutine could send\nfixes #25",
+            "milestone": null,
+            "createdAt": "2018-12-11T01:02:34Z",
+            "mergedBy": {
+              "login": "dpastoor"
+            },
+            "mergedAt": "2018-12-12T03:13:27Z",
+            "baseRefName": "release/v0.1.0",
+            "state": "MERGED"
+          },
+          {
+            "number": 30,
+            "title": "feat: environment variable expansion",
+            "author": {
+              "login": "dpastoor"
+            },
+            "body": "example of use in multirepo-source shows replacing a url with an environment variable\r\n\r\nthis will also help when using pkgr within matrix builds, such as installing iteratively where a single config file can be used.\r\n\r\nThis compliments viper's ability to detect environment variables with the prefix `PKGR`\r\n\r\nso could still do `PKGR_Library` instead of `Library: path/to/lib`, however viper could not directly support configuration files themselves, where situations such as: `Library: some/path/with/${somevar}` are reasonable.",
+            "bodyText": "example of use in multirepo-source shows replacing a url with an environment variable\nthis will also help when using pkgr within matrix builds, such as installing iteratively where a single config file can be used.\nThis compliments viper's ability to detect environment variables with the prefix PKGR\nso could still do PKGR_Library instead of Library: path/to/lib, however viper could not directly support configuration files themselves, where situations such as: Library: some/path/with/${somevar} are reasonable.",
+            "milestone": null,
+            "createdAt": "2018-12-12T04:24:43Z",
+            "mergedBy": {
+              "login": "dpastoor"
+            },
+            "mergedAt": "2018-12-12T04:24:49Z",
+            "baseRefName": "release/v0.1.0",
+            "state": "MERGED"
+          },
+          {
+            "number": 31,
+            "title": "Cleanup/dl messages",
+            "author": {
+              "login": "dpastoor"
+            },
+            "body": "goal to clean up and refactor the logging to reduce message clutter, especially at the info level, as well as simplify the logging interface",
+            "bodyText": "goal to clean up and refactor the logging to reduce message clutter, especially at the info level, as well as simplify the logging interface",
+            "milestone": null,
+            "createdAt": "2019-01-18T03:48:12Z",
+            "mergedBy": {
+              "login": "dpastoor"
+            },
+            "mergedAt": "2019-01-20T02:36:08Z",
+            "baseRefName": "release/v0.1.0",
+            "state": "MERGED"
+          },
+          {
+            "number": 32,
+            "title": "Feat/env",
+            "author": {
+              "login": "dpastoor"
+            },
+            "body": "add the capability to set environment variables during installation of packages. \r\n\r\nThe overall internal representation is to now store two sets of env variables - global ones that should be applied to every package during install, as well as local ones per package.",
+            "bodyText": "add the capability to set environment variables during installation of packages.\nThe overall internal representation is to now store two sets of env variables - global ones that should be applied to every package during install, as well as local ones per package.",
+            "milestone": null,
+            "createdAt": "2019-01-20T21:47:26Z",
+            "mergedBy": {
+              "login": "dpastoor"
+            },
+            "mergedAt": "2019-02-04T17:59:43Z",
+            "baseRefName": "release/v0.1.0",
+            "state": "MERGED"
+          },
+          {
+            "number": 37,
+            "title": "show dependency tree information",
+            "author": {
+              "login": "dpastoor"
+            },
+            "body": "",
+            "bodyText": "",
+            "milestone": null,
+            "createdAt": "2019-02-16T13:37:02Z",
+            "mergedBy": {
+              "login": "dpastoor"
+            },
+            "mergedAt": "2019-02-18T14:34:03Z",
+            "baseRefName": "release/v0.2.0",
+            "state": "MERGED"
+          },
+          {
+            "number": 42,
+            "title": "Release/v0.2.0",
+            "author": {
+              "login": "dpastoor"
+            },
+            "body": "",
+            "bodyText": "",
+            "milestone": {
+              "title": "v0.2.0"
+            },
+            "createdAt": "2019-02-18T14:34:29Z",
+            "mergedBy": {
+              "login": "dpastoor"
+            },
+            "mergedAt": "2019-04-16T17:43:26Z",
+            "baseRefName": "master",
+            "state": "MERGED"
+          },
+          {
+            "number": 45,
+            "title": "Refactor/caching",
+            "author": {
+              "login": "dpastoor"
+            },
+            "body": "",
+            "bodyText": "",
+            "milestone": null,
+            "createdAt": "2019-02-25T02:44:11Z",
+            "mergedBy": {
+              "login": "dpastoor"
+            },
+            "mergedAt": "2019-03-17T17:38:53Z",
+            "baseRefName": "release/v0.2.0",
+            "state": "MERGED"
+          },
+          {
+            "number": 46,
+            "title": "wip: Explore/jc",
+            "author": {
+              "login": "Dreznel"
+            },
+            "body": "Not necessarily meant to be merged, but I'm setting up a branch to let myself learn this repo and I thought this would be a good way to get feedback on anything I might try.",
+            "bodyText": "Not necessarily meant to be merged, but I'm setting up a branch to let myself learn this repo and I thought this would be a good way to get feedback on anything I might try.",
+            "milestone": null,
+            "createdAt": "2019-03-15T14:10:50Z",
+            "mergedBy": null,
+            "mergedAt": null,
+            "baseRefName": "release/v0.2.0",
+            "state": "CLOSED"
+          },
+          {
+            "number": 50,
+            "title": "wip: first pass at adding package-download logs. Needs refinement.",
+            "author": {
+              "login": "Dreznel"
+            },
+            "body": "#47 ",
+            "bodyText": "#47",
+            "milestone": null,
+            "createdAt": "2019-03-18T17:00:18Z",
+            "mergedBy": {
+              "login": "dpastoor"
+            },
+            "mergedAt": "2019-03-28T17:29:37Z",
+            "baseRefName": "release/v0.2.0",
+            "state": "MERGED"
+          },
+          {
+            "number": 52,
+            "title": "Feature/invalidate caches",
+            "author": {
+              "login": "Dreznel"
+            },
+            "body": "Working on #40 and #49 ",
+            "bodyText": "Working on #40 and #49",
+            "milestone": null,
+            "createdAt": "2019-03-21T19:47:22Z",
+            "mergedBy": {
+              "login": "dpastoor"
+            },
+            "mergedAt": "2019-03-28T17:29:35Z",
+            "baseRefName": "release/v0.2.0",
+            "state": "MERGED"
+          },
+          {
+            "number": 57,
+            "title": "Fix/repo order",
+            "author": {
+              "login": "dpastoor"
+            },
+            "body": "",
+            "bodyText": "",
+            "milestone": null,
+            "createdAt": "2019-03-26T22:08:35Z",
+            "mergedBy": {
+              "login": "dpastoor"
+            },
+            "mergedAt": "2019-04-01T13:40:14Z",
+            "baseRefName": "release/v0.2.0",
+            "state": "MERGED"
+          },
+          {
+            "number": 58,
+            "title": "Feature/logging config",
+            "author": {
+              "login": "Dreznel"
+            },
+            "body": "Setting this pull request base as the branch I branched off of. We'll have to either merge this into that branch when it's done, or set up a new pull request to go straight into the feature branch.\r\n\r\nThis pull request addresses #18 ",
+            "bodyText": "Setting this pull request base as the branch I branched off of. We'll have to either merge this into that branch when it's done, or set up a new pull request to go straight into the feature branch.\nThis pull request addresses #18",
+            "milestone": null,
+            "createdAt": "2019-03-27T18:46:59Z",
+            "mergedBy": {
+              "login": "dpastoor"
+            },
+            "mergedAt": "2019-04-01T13:36:51Z",
+            "baseRefName": "release/v0.2.0",
+            "state": "MERGED"
+          },
+          {
+            "number": 60,
+            "title": "feature/v0.2.0-doc",
+            "author": {
+              "login": "Dreznel"
+            },
+            "body": "references #39",
+            "bodyText": "references #39",
+            "milestone": null,
+            "createdAt": "2019-03-28T19:27:26Z",
+            "mergedBy": {
+              "login": "dpastoor"
+            },
+            "mergedAt": "2019-04-01T13:37:03Z",
+            "baseRefName": "feature/logging-config",
+            "state": "MERGED"
+          },
+          {
+            "number": 63,
+            "title": "Feature/version detection",
+            "author": {
+              "login": "Dreznel"
+            },
+            "body": "We don't have a release 3.0 branch yet, so I'm just creating a merge request to 2.0 so that we can start reviewing.",
+            "bodyText": "We don't have a release 3.0 branch yet, so I'm just creating a merge request to 2.0 so that we can start reviewing.",
+            "milestone": null,
+            "createdAt": "2019-04-02T22:50:25Z",
+            "mergedBy": {
+              "login": "dpastoor"
+            },
+            "mergedAt": "2019-04-25T13:36:22Z",
+            "baseRefName": "release/v0.3.0",
+            "state": "MERGED"
+          },
+          {
+            "number": 64,
+            "title": "Feature/logging config",
+            "author": {
+              "login": "dpastoor"
+            },
+            "body": "",
+            "bodyText": "",
+            "milestone": null,
+            "createdAt": "2019-04-02T23:20:11Z",
+            "mergedBy": {
+              "login": "dpastoor"
+            },
+            "mergedAt": "2019-04-04T20:52:08Z",
+            "baseRefName": "release/v0.2.0",
+            "state": "MERGED"
+          },
+          {
+            "number": 66,
+            "title": "Fix/rpath",
+            "author": {
+              "login": "dpastoor"
+            },
+            "body": "in response to #65 this fixes setting non-default R paths as for the execution of R. \r\n\r\nPrimarily focused on environments with multiple versions of R present",
+            "bodyText": "in response to #65 this fixes setting non-default R paths as for the execution of R.\nPrimarily focused on environments with multiple versions of R present",
+            "milestone": null,
+            "createdAt": "2019-04-03T02:40:47Z",
+            "mergedBy": {
+              "login": "dpastoor"
+            },
+            "mergedAt": "2019-04-04T20:57:08Z",
+            "baseRefName": "release/v0.2.0",
+            "state": "MERGED"
+          }  ],
+        "pageInfo": {
+          "hasPreviousPage": false,
+          "startCursor": "Y3Vyc29yOnYyOpHODfb6PQ=="
+        }
+      }
+    }
+  }
 }

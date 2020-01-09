@@ -8,7 +8,7 @@ assert_url <- function(.url) {
 sanitize_response <- function(response, stop = TRUE){
 	if("errors" %in% names(response)){
 		if(stop){
-			stop(reponse$errors$message)
+			stop(response$errors$message)
 		}
 		warning(response$errors$message)
 	}
