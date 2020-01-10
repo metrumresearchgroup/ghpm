@@ -6,7 +6,9 @@ query pull_request_commits($org: String!, $repo: String!, $number: Int!, $cursor
           commit {
             oid
             author {
-              name
+              user {
+                login
+              }
             }
             messageHeadline
             message

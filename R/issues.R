@@ -106,7 +106,7 @@ get_issue_assignees <- function(org, repo, .api_url = api_url()){
 #' @importFrom readr parse_datetime
 #' @export
 get_issue_events <- function(org, repo, .api_url = api_url()){
-	response <- sanitize_response(graphql_query("issues/issue_events.graphql", org = org, repo = repo, .api_url = api_url(), .header = c("Accept" = "application/vnd.github.starfox-preview+json")))$repository$issues
+	response <- sanitize_response(graphql_query("issues/issue_events.graphql", org = org, repo = repo, .api_url = .api_url, .header = c("Accept" = "application/vnd.github.starfox-preview+json")))$repository$issues
 	data <- response$nodes
 
 	while(response$pageInfo$hasPreviousPage){
@@ -155,7 +155,7 @@ get_issue_events <- function(org, repo, .api_url = api_url()){
 #' @importFrom readr parse_datetime
 #' @export
 get_issue_comments <- function(org, repo, .api_url = api_url()){
-	response <- sanitize_response(graphql_query("issues/issue_comments.graphql", org = org, repo = repo))$repository$issues
+	response <- sanitize_response(graphql_query("issues/issue_comments.graphql", org = org, repo = repo, .api_url = .api_url))$repository$issues
 	data <- response$nodes
 
 	while(response$pageInfo$hasPreviousPage){

@@ -13,7 +13,7 @@ get_pull_request_commits <- function(org, repo, number, .cc = FALSE, .api_url = 
 	data <- response$nodes
 
 	while(response$pageInfo$hasPreviousPage){
-		response <- sanitize_response(graphql_query("pullrequests/pull_request_commits.graphql", org = org, repo = repo, number = number, .api_url = .api_url))$repository$pullRequest$commits
+		response <- sanitize_response(graphql_query("pullrequests/pull_request_commits.graphql", org = org, repo = repo, number = number, cursor = response$pageInfo$startCursor, .api_url = .api_url))$repository$pullRequest$commits
 		data <- c(data, response$nodes)
 	}
 
@@ -21,7 +21,7 @@ get_pull_request_commits <- function(org, repo, number, .cc = FALSE, .api_url = 
 		return(.acc %>% add_row("oid" = .cv$commit$oid,
 								"summary" = .cv$commit$messageHeadline,
 								"message" = .cv$commit$message,
-								"author" = ifelse(is.null(.cv$commit$author), NA_character_, .cv$commit$author$name),
+								"author" = ifelse(is.null(.cv$commit$author$user$login), NA_character_, .cv$commit$author$user$login),
 								"date" = .cv$commit$authoredDate))
 	}, .init = tibble("oid" = character(), "summary" = character(), "message" = character(), "author" = character(), "date" = character(), .rows = 0)) %>% mutate("date" = parse_datetime(date))
 

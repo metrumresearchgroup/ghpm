@@ -8,7 +8,7 @@ get_milestones <- function(org, repo, .api_url = api_url()){
 	data <- sanitize_response(graphql_query("milestones.graphql", org = org, repo = repo, .api_url = .api_url))$repository$milestones$nodes
 	milestones <- reduce(data, function(.acc, .cv){
 		return(.acc %>% add_row("title" = .cv$title,
-								"description" = .cv$description,
+								"description" = ifelse(is.null(.cv$description), NA_character_, .cv$description),
 								"state" = .cv$state,
 								"author" = ifelse(is.null(.cv$author), NA_character_, .cv$author$login),
 								"url" = .cv$url))
