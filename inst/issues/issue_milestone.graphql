@@ -1,4 +1,4 @@
-query issues($org: String!, $repo: String!, $milestone: Int!, $cursor: String) {
+query issue_milestone($org: String!, $repo: String!, $milestone: Int!, $cursor: String) {
   repository(owner: $org, name: $repo) {
     milestone(number: $milestone){
       issues(last: 100, before: $cursor){
