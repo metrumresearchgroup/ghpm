@@ -189,3 +189,37 @@ get_issue_comments <- function(org, repo, .api_url = api_url()){
 
 	return(comments %>% select("issue", everything()))
 }
+
+#' Gets a data frame of the issues of a specific milestone
+#' @param milestone The milestone number to query issues from
+#' @inheritParams ghpm
+#' @return A data frame containing the issue | title | author | body | state of each issue. Returns an empty dataframe if none are found.
+#' @importFrom purrr reduce
+#' @importFrom tibble tibble add_row
+#' @export
+get_issues_from_milestone <- function(org, repo, milestone, .api_url = api_url()){
+	response <- sanitize_response(graphql_query("issues/issue_milestone.graphql", org = org, repo = repo, milestone = milestone, .api_url = .api_url))$repository$milestone$issues
+	data <- response$nodes
+
+	while(response$pageInfo$hasPreviousPage){
+		response <- sanitize_response(graphql_query("issues/issue_milestone.graphql", org = org, repo = repo, milestone = milestone, cursor = response$pageInfo$startCursor, .api_url = .api_url))$repository$milestone$issues
+		data <- c(data, response$nodes)
+	}
+
+	issues <- reduce(data, function(.acc, .cv){
+		.acc <- .acc %>% add_row("issue" = .cv$number,
+								 "title" = .cv$title,
+								 "body" = .cv$body,
+								 "creator" = ifelse(is.null(.cv$author), NA_character_, .cv$author$login),
+								 "state" = .cv$state)
+
+		return(.acc)
+	}, .init = tibble("issue" = numeric(),
+					  "title" = character(),
+					  "body" = character(),
+					  "creator" = character(),
+					  "state" = character(),
+					  .rows = 0))
+
+	return(issues)
+}

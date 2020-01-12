@@ -55,4 +55,15 @@ describe("issue functions", {
 		expect_equal(names(result), c("issue", "comment", "author", "date"))
 		expect_true((is.data.frame(result)))
 	})
+
+	it("can get issues by a specific milestone", {
+		mockery::stub(
+			get_issues_from_milestone,
+			"graphql_query",
+			jsonlite::read_json("issues/issue_milestone_response.json")
+		)
+		result <- get_issues_from_milestone("test", "test", 5)
+		expect_equal(names(result), c("issue", "title", "body", "creator", "state"))
+		expect_true((is.data.frame(result)))
+	})
 })
