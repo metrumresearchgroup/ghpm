@@ -14,3 +14,33 @@ sanitize_response <- function(response, stop = TRUE){
 	}
 	return(response$data)
 }
+
+
+#' Wrapper around the get_ functions to page through results and extract the data from the response
+#' @param gql_file The .graphql (with path) for the query
+#' @param param_list List of strings, in order, specifying the property to extract from the response. For example c(c("repository","pullRequest","commits"))
+#' @param ... pass through all args (named) that will be passed to graphql_query()
+get_query_results <- function(gql_file, param_list, ...) {
+	# fetch response and extract data
+	response <- sanitize_response(
+			graphql_query(
+				gql_file,
+				...
+			)
+		)[[param_list]]
+	data <- response$nodes
+
+	# page through if necessary
+	while(response$pageInfo$hasPreviousPage){
+		response <- sanitize_response(
+			graphql_query(
+				gql_file,
+				cursor = response$pageInfo$startCursor,
+				...
+			)
+		)[[param_list]]
+		data <- c(data, response$nodes)
+	}
+
+	return(data)
+}

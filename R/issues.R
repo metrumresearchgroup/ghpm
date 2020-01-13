@@ -5,13 +5,13 @@
 #' @importFrom tibble tibble add_row
 #' @export
 get_repo_issues <- function(org, repo, .api_url = api_url()){
-	response <- sanitize_response(graphql_query("issues/issues.graphql", org = org, repo = repo, .api_url = .api_url))$repository$issues
-	data <- response$nodes
-
-	while(response$pageInfo$hasPreviousPage){
-		response <- sanitize_response(graphql_query("issues/issues.graphql", org = org, repo = repo, cursor = response$pageInfo$startCursor, .api_url = .api_url))$repository$issues
-		data <- c(data, response$nodes)
-	}
+	data <- get_query_results(
+		gql_file="issues/issues.graphql",
+		param_list = c("repository", "issues"),
+		org = org,
+		repo = repo,
+		.api_url = .api_url
+	)
 
 	issues <- reduce(data, function(.acc, .cv){
 		.acc <- .acc %>% add_row("issue" = .cv$number,
@@ -41,13 +41,13 @@ get_repo_issues <- function(org, repo, .api_url = api_url()){
 #' @importFrom dplyr mutate select everything
 #' @export
 get_repo_issue_labels <- function(org, repo, .api_url = api_url()){
-	response <- sanitize_response(graphql_query("issues/issue_labels.graphql", org = org, repo = repo, .api_url = .api_url))$repository$issues
-	data <- response$nodes
-
-	while(response$pageInfo$hasPreviousPage){
-		response <- sanitize_response(graphql_query("issues/issue_labels.graphql", org = org, repo = repo, cursor = response$pageInfo$startCursor, .api_url = .api_url))$repository$issues
-		data <- c(data, response$nodes)
-	}
+	data <- get_query_results(
+		gql_file="issues/issue_labels.graphql",
+		param_list = c("repository", "issues"),
+		org = org,
+		repo = repo,
+		.api_url = .api_url
+	)
 
 	data <- keep(data, ~length(.x$labels$nodes) > 0)
 
@@ -73,13 +73,13 @@ get_repo_issue_labels <- function(org, repo, .api_url = api_url()){
 #' @importFrom dplyr mutate select everything
 #' @export
 get_issue_assignees <- function(org, repo, .api_url = api_url()){
-	response <- sanitize_response(graphql_query("issues/issue_assignees.graphql", org = org, repo = repo, .api_url = .api_url))$repository$issues
-	data <- response$nodes
-
-	while(response$pageInfo$hasPreviousPage){
-		response <- sanitize_response(graphql_query("issues/issue_assignees.graphql", org = org, repo = repo, cursor = response$pageInfo$startCursor, .api_url = .api_url))$repository$issues
-		data <- c(data, response$nodes)
-	}
+	data <- get_query_results(
+		gql_file="issues/issue_assignees.graphql",
+		param_list = c("repository", "issues"),
+		org = org,
+		repo = repo,
+		.api_url = .api_url
+	)
 
 	data <- keep(data, ~length(.x$assignees$nodes) > 0)
 
