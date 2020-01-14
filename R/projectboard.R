@@ -85,5 +85,5 @@ clone_projectboard <- function(org, repo_from, number, repo_to, .api_url = api_u
 	project_from <- get_projectboard_info(org, repo = repo_from, number, .api_url)$repository$project
 	repo_id <- sanitize_response(graphql_query("repo_info.graphql", org = org, repo = repo_to, .api_url = .api_url))$repository$id
 
-	return(sanitize_respone(graphql_query("projects/clone_project.graphql", owner = repo_id, source = project_from$id, name = project_from$name, body = project_from$body, .api_url = .api_url))$project$id)
+	return(sanitize_response(graphql_query("projects/clone_project.graphql", owner = repo_id, source = project_from$id, name = project_from$name, body = project_from$body, .api_url = .api_url))$project$id)
 }
