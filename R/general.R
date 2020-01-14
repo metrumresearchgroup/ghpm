@@ -4,8 +4,16 @@
 #' @importFrom purrr reduce
 #' @importFrom tibble tibble add_row
 #' @export
-get_milestones <- function(org, repo, .api_url = api_url()){
-	data <- sanitize_response(graphql_query("milestones.graphql", org = org, repo = repo, .api_url = .api_url))$repository$milestones$nodes
+get_milestones <- function(org, repo, .api_url = api_url(), pagination_limit = NULL){
+	data <- get_query_results(
+		gql_file="milestones.graphql",
+		param_list = c("repository", "milestones", "nodes"),
+		pagination_limit = pagination_limit,
+		org = org,
+		repo = repo,
+		.api_url = .api_url
+	)
+
 	milestones <- reduce(data, function(.acc, .cv){
 		return(.acc %>% add_row("title" = .cv$title,
 								"description" = ifelse(is.null(.cv$description), NA_character_, .cv$description),
