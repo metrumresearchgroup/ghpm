@@ -8,6 +8,7 @@ globalVariables(c("board", "column", "created_at", "issue", "merged_at", "projec
 #' @param org Name of organization to query
 #' @param repo Name of repository to query
 #' @param .api_url Optional API url to query. Defaults to "https://api.github.com/graphql"
+#' @param pagination_limit Upper limit on number of rows to return. Function will paginate through results as long as this limit is not exceeded. Generally defaults to NULL for no limit.
 NULL
 
 #' Parses a specified GraphQL Query from the project directory.
