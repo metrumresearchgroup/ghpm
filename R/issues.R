@@ -4,10 +4,11 @@
 #' @importFrom purrr reduce
 #' @importFrom tibble tibble add_row
 #' @export
-get_repo_issues <- function(org, repo, .api_url = api_url()){
+get_repo_issues <- function(org, repo, .api_url = api_url(), pagination_limit=NULL){
 	data <- get_query_results(
 		gql_file="issues/issues.graphql",
 		param_list = c("repository", "issues"),
+		pagination_limit = pagination_limit,
 		org = org,
 		repo = repo,
 		.api_url = .api_url
