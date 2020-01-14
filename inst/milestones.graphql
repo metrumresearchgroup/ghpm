@@ -3,6 +3,7 @@ query milestones($org: String!, $repo: String!) {
     milestones(last: 100) {
       nodes {
         title
+        number
         description
         creator {
           login
