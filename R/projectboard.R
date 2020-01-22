@@ -15,7 +15,13 @@ get_projectboard_info <- function(org, repo, number, .api_url = api_url()){
 #' @importFrom dplyr mutate select
 #' @export
 get_projectboard <- function(org, repo, .api_url = api_url()){
-	data <- sanitize_response(graphql_query("projects/projects.graphql", org = org, repo = repo, .api_url = .api_url))$repository$projects$nodes
+	data <- get_query_results(
+		gql_file="projects/projects.graphql",
+		param_list = c("repository", "projects"),
+		org = org,
+		repo = repo,
+		.api_url = .api_url
+	)
 
 	projects <- map_df(data, function(x){
 		result <- reduce(x$columns$nodes, get_projectboard_columns,

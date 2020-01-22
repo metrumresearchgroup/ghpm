@@ -28,9 +28,9 @@ sanitize_response <- function(response, stop = TRUE){
 #' Wrapper around the get_ functions to page through results and extract the data from the response
 #' @param gql_file The .graphql (with path) for the query
 #' @param param_list List of strings, in order, specifying the property to extract from the response. For example c("repository","pullRequest","commits")
-#' @param pagination_limit Upper limit on number of rows to return. Function will paginate through results as long as this limit is not exceeded. Defaults to NULL for no limit.
+#' @param pages Number of pages to paginate and pull data from. Each page will contain upto 100 issues/pullrequests. Defaults to 1 page.
 #' @param ... pass through all args (named) that will be passed to graphql_query()
-get_query_results <- function(gql_file, param_list, pagination_limit=NULL, ...) {
+get_query_results <- function(gql_file, param_list, pages=1, ...) {
 	# fetch initial response
 	response <- sanitize_response(
 			graphql_query(
@@ -55,8 +55,7 @@ get_query_results <- function(gql_file, param_list, pagination_limit=NULL, ...) 
 	data <- response$nodes
 
 	# page through if necessary
-	page_through <- check_page_through(pagination_limit, data)
-	while((response$pageInfo$hasPreviousPage) & page_through) {
+	while(pages > 1 && (response$pageInfo$hasPreviousPage)) {
 		response <- sanitize_response(
 			graphql_query(
 				gql_file,
@@ -67,22 +66,8 @@ get_query_results <- function(gql_file, param_list, pagination_limit=NULL, ...) 
 		data <- c(data, response$nodes)
 
 		# check whether to continue paging
-		page_through <- check_page_through(pagination_limit, data)
+		pages <- pages - 1
 	}
 	return(data)
-}
-
-# Private helper function to parse whether or not get_query_results() should continue paging through results
-# @param pagination_limit Upper limit on number of rows to return. Function will return TRUE as long as this limit is not exceeded.
-# @param data The results from the API that will be measured against the pagination_limit
-check_page_through <- function(pagination_limit, data) {
-	if (is.null(pagination_limit)) {
-		page_through = TRUE
-	} else if (length(data) < pagination_limit) {
-		page_through = TRUE
-	} else {
-		page_through = FALSE
-	}
-	return (page_through)
 }
 

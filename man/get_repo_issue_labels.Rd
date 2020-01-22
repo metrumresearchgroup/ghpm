@@ -4,7 +4,8 @@
 \alias{get_repo_issue_labels}
 \title{Gets a data frame of the labels of each issue}
 \usage{
-get_repo_issue_labels(org, repo, .api_url = api_url())
+get_repo_issue_labels(org, repo, .api_url = api_url(),
+  pagination_limit = NULL)
 }
 \arguments{
 \item{org}{Name of organization to query}

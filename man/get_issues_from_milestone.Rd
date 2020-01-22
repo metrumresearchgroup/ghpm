@@ -4,7 +4,8 @@
 \alias{get_issues_from_milestone}
 \title{Gets a data frame of the issues of a specific milestone}
 \usage{
-get_issues_from_milestone(org, repo, milestone, .api_url = api_url())
+get_issues_from_milestone(org, repo, milestone, .api_url = api_url(),
+  pages = 1)
 }
 \arguments{
 \item{org}{Name of organization to query}
@@ -14,6 +15,8 @@ get_issues_from_milestone(org, repo, milestone, .api_url = api_url())
 \item{milestone}{The milestone number to query issues from}
 
 \item{.api_url}{Optional API url to query. Defaults to "https://api.github.com/graphql"}
+
+\item{pages}{Number of pages to paginate and pull data from. Each page will contain upto 100 issues/pullrequests. Defaults to 1 page.}
 }
 \value{
 A data frame containing the issue | title | author | body | state of each issue. Returns an empty dataframe if none are found.

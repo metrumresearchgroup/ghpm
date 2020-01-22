@@ -4,7 +4,8 @@
 \alias{get_repo_issues}
 \title{Gets a data frame of the issues associated with a given repo}
 \usage{
-get_repo_issues(org, repo, .api_url = api_url())
+get_repo_issues(org, repo, .api_url = api_url(),
+  pagination_limit = NULL)
 }
 \arguments{
 \item{org}{Name of organization to query}

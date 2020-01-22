@@ -4,7 +4,7 @@
 \alias{get_milestones}
 \title{Gets a data frame of the milestones associated with a given repo.}
 \usage{
-get_milestones(org, repo, .api_url = api_url())
+get_milestones(org, repo, .api_url = api_url(), pages = 1)
 }
 \arguments{
 \item{org}{Name of organization to query}
@@ -12,6 +12,8 @@ get_milestones(org, repo, .api_url = api_url())
 \item{repo}{Name of repository to query}
 
 \item{.api_url}{Optional API url to query. Defaults to "https://api.github.com/graphql"}
+
+\item{pages}{Number of pages to paginate and pull data from. Each page will contain upto 100 issues/pullrequests. Defaults to 1 page.}
 }
 \value{
 A data frame containing the title | description | state | author | url of each milestone

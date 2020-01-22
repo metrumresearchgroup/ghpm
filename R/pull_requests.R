@@ -8,7 +8,7 @@
 #' @param assignees List of usernames to assign to the pull request.
 #' @return A list containing the title, creation date, author, reviewers, and assignees of the pull request
 #' @export
-create_pull_request <- function(org, repo, base, head, title, body = "", reviewers = NULL, assignees = NULL, .api_url = api_url(), pagination_limit=NULL){
+create_pull_request <- function(org, repo, base, head, title, body = "", reviewers = NULL, assignees = NULL, .api_url = api_url()){
 	repo_id <- sanitize_response(graphql_query("repo_info.graphql", org = org, repo = repo, .api_url = .api_url))$repository$id
 
 	data <- sanitize_response(
@@ -19,15 +19,6 @@ create_pull_request <- function(org, repo, base, head, title, body = "", reviewe
 					  title = title,
 					  body = body,
 					  .api_url = .api_url))$createPullRequest$pullRequest
-
-	data <- get_query_results(
-		gql_file="pullrequests/create_pull_request.graphql",
-		param_list = c("createPullRequest", "pullRequest"),
-		pagination_limit = pagination_limit,
-		org = org,
-		repo = repo,
-		.api_url = .api_url
-	)
 
 	if(!is.null(reviewers) && length(reviewers) > 0){
 		userIDs <- lapply(reviewers, function(user){
@@ -54,11 +45,11 @@ create_pull_request <- function(org, repo, base, head, title, body = "", reviewe
 #' @importFrom dplyr mutate
 #' @importFrom readr parse_datetime
 #' @export
-get_all_pull_requests <- function(org, repo, .api_url = api_url(), pagination_limit=NULL){
+get_all_pull_requests <- function(org, repo, .api_url = api_url(), pages = 1){
 	data <- get_query_results(
 		gql_file="pullrequests/all_pull_requests.graphql",
 		param_list = c("repository", "pullRequests"),
-		pagination_limit = pagination_limit,
+		pages = pages,
 		org = org,
 		repo = repo,
 		.api_url = .api_url
@@ -95,11 +86,10 @@ get_all_pull_requests <- function(org, repo, .api_url = api_url(), pagination_li
 #' @importFrom dplyr mutate
 #' @importFrom readr parse_datetime
 #' @export
-get_pull_request_comments <- function(org, repo, number, .api_url = api_url(), pagination_limit = NULL){
+get_pull_request_comments <- function(org, repo, number, .api_url = api_url()){
 	data <- get_query_results(
 		gql_file="pullrequests/pull_request_comments.graphql",
 		param_list = c("repository", "pullRequests", "comments", "nodes"),
-		pagination_limit = pagination_limit,
 		org = org,
 		repo = repo,
 		.api_url = .api_url
