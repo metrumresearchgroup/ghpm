@@ -4,14 +4,14 @@
 \alias{get_query_results}
 \title{Wrapper around the get_ functions to page through results and extract the data from the response}
 \usage{
-get_query_results(gql_file, param_list, pages = 1, ...)
+get_query_results(gql_file, param_list, pages = NULL, ...)
 }
 \arguments{
 \item{gql_file}{The .graphql (with path) for the query}
 
 \item{param_list}{List of strings, in order, specifying the property to extract from the response. For example c("repository","pullRequest","commits")}
 
-\item{pages}{Number of pages to paginate and pull data from. Each page will contain upto 100 issues/pullrequests. Defaults to 1 page.}
+\item{pages}{Number of pages to paginate and pull data from. Each page will contain upto 100 issues/pullrequests. Defaults to NULL for all pages.}
 
 \item{...}{pass through all args (named) that will be passed to graphql_query()}
 }

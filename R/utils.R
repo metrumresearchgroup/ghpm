@@ -28,9 +28,9 @@ sanitize_response <- function(response, stop = TRUE){
 #' Wrapper around the get_ functions to page through results and extract the data from the response
 #' @param gql_file The .graphql (with path) for the query
 #' @param param_list List of strings, in order, specifying the property to extract from the response. For example c("repository","pullRequest","commits")
-#' @param pages Number of pages to paginate and pull data from. Each page will contain upto 100 issues/pullrequests. Defaults to 1 page.
+#' @param pages Number of pages to paginate and pull data from. Each page will contain upto 100 issues/pullrequests. Defaults to NULL for all pages.
 #' @param ... pass through all args (named) that will be passed to graphql_query()
-get_query_results <- function(gql_file, param_list, pages=1, ...) {
+get_query_results <- function(gql_file, param_list, pages = NULL, ...) {
 	# fetch initial response
 	response <- sanitize_response(
 			graphql_query(
@@ -55,7 +55,7 @@ get_query_results <- function(gql_file, param_list, pages=1, ...) {
 	data <- response$nodes
 
 	# page through if necessary
-	while(pages > 1 && (response$pageInfo$hasPreviousPage)) {
+	while((is.null(pages) || pages > 1) && ("pageInfo" %in% names(response) && response$pageInfo$hasPreviousPage)) {
 		response <- sanitize_response(
 			graphql_query(
 				gql_file,
@@ -66,7 +66,9 @@ get_query_results <- function(gql_file, param_list, pages=1, ...) {
 		data <- c(data, response$nodes)
 
 		# check whether to continue paging
-		pages <- pages - 1
+		if(!is.null(pages)){
+			pages <- pages - 1
+		}
 	}
 	return(data)
 }

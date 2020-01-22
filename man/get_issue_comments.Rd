@@ -4,7 +4,7 @@
 \alias{get_issue_comments}
 \title{Gets a data frame of the comments of each issue}
 \usage{
-get_issue_comments(org, repo, .api_url = api_url(), pages = 1)
+get_issue_comments(org, repo, .api_url = api_url(), pages = NULL)
 }
 \arguments{
 \item{org}{Name of organization to query}
@@ -13,7 +13,7 @@ get_issue_comments(org, repo, .api_url = api_url(), pages = 1)
 
 \item{.api_url}{Optional API url to query. Defaults to "https://api.github.com/graphql"}
 
-\item{pages}{Number of pages to paginate and pull data from. Each page will contain upto 100 issues/pullrequests. Defaults to 1 page.}
+\item{pages}{Number of pages to paginate and pull data from. Each page will contain upto 100 issues/pullrequests. Defaults to NULL for all pages.}
 }
 \value{
 A data frame containing the issue | date | author | comment of each issue. Returns an empty dataframe if none are found.

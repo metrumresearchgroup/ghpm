@@ -8,11 +8,12 @@
 #' @importFrom dplyr mutate select slice bind_cols
 #' @importFrom readr parse_datetime
 #' @export
-get_pull_request_commits <- function(org, repo, number, pages = 1, .cc = FALSE, .api_url = api_url()){
+get_pull_request_commits <- function(org, repo, number, pages = NULL, .cc = FALSE, .api_url = api_url()){
 	data <- get_query_results(
 		gql_file="pullrequests/pull_request_commits.graphql",
 		param_list = c("repository", "pullRequest", "commits"),
 		pages = pages,
+		number = number,
 		org = org,
 		repo = repo,
 		.api_url = .api_url

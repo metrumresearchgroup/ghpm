@@ -4,11 +4,11 @@
 #' @importFrom purrr reduce
 #' @importFrom tibble tibble add_row
 #' @export
-get_repo_issues <- function(org, repo, .api_url = api_url(), pagination_limit=NULL){
+get_repo_issues <- function(org, repo, .api_url = api_url(), pages = NULL){
 	data <- get_query_results(
 		gql_file="issues/issues.graphql",
 		param_list = c("repository", "issues"),
-		pagination_limit = pagination_limit,
+		pages = pages,
 		org = org,
 		repo = repo,
 		.api_url = .api_url
@@ -41,11 +41,11 @@ get_repo_issues <- function(org, repo, .api_url = api_url(), pagination_limit=NU
 #' @importFrom tibble tibble add_row
 #' @importFrom dplyr mutate select everything
 #' @export
-get_repo_issue_labels <- function(org, repo, .api_url = api_url(), pagination_limit=NULL){
+get_repo_issue_labels <- function(org, repo, .api_url = api_url(), pages = NULL){
 	data <- get_query_results(
 		gql_file="issues/issue_labels.graphql",
 		param_list = c("repository", "issues"),
-		pagination_limit = pagination_limit,
+		pages = pages,
 		org = org,
 		repo = repo,
 		.api_url = .api_url
@@ -74,7 +74,7 @@ get_repo_issue_labels <- function(org, repo, .api_url = api_url(), pagination_li
 #' @importFrom tibble tibble add_row
 #' @importFrom dplyr mutate select everything
 #' @export
-get_issue_assignees <- function(org, repo, .api_url = api_url(), pages = 1){
+get_issue_assignees <- function(org, repo, .api_url = api_url(), pages = NULL){
 	data <- get_query_results(
 		gql_file="issues/issue_assignees.graphql",
 		param_list = c("repository", "issues"),
@@ -108,13 +108,14 @@ get_issue_assignees <- function(org, repo, .api_url = api_url(), pages = 1){
 #' @importFrom dplyr mutate arrange select everything
 #' @importFrom readr parse_datetime
 #' @export
-get_issue_events <- function(org, repo, .api_url = api_url(), pages = 1){
+get_issue_events <- function(org, repo, .api_url = api_url(), pages = NULL){
 	data <- get_query_results(
 		gql_file="issues/issue_events.graphql",
 		param_list = c("repository", "issues"),
 		pages = pages,
 		org = org,
 		repo = repo,
+		.header = c("Accept" = "application/vnd.github.starfox-preview+json"),
 		.api_url = .api_url
 	)
 
@@ -158,7 +159,7 @@ get_issue_events <- function(org, repo, .api_url = api_url(), pages = 1){
 #' @importFrom dplyr mutate select everything
 #' @importFrom readr parse_datetime
 #' @export
-get_issue_comments <- function(org, repo, .api_url = api_url(), pages = 1){
+get_issue_comments <- function(org, repo, .api_url = api_url(), pages = NULL){
 	data <- get_query_results(
 		gql_file="issues/issue_comments.graphql",
 		param_list = c("repository", "issues"),
@@ -202,10 +203,11 @@ get_issue_comments <- function(org, repo, .api_url = api_url(), pages = 1){
 #' @importFrom purrr reduce
 #' @importFrom tibble tibble add_row
 #' @export
-get_issues_from_milestone <- function(org, repo, milestone, .api_url = api_url(), pages = 1){
+get_issues_from_milestone <- function(org, repo, milestone, .api_url = api_url(), pages = NULL){
 	data <- get_query_results(
 		gql_file="issues/issue_milestone.graphql",
 		param_list = c("repository", "milestone", "issues"),
+		milestone = milestone,
 		pages = pages,
 		org = org,
 		repo = repo,

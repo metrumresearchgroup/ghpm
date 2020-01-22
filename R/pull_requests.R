@@ -45,7 +45,7 @@ create_pull_request <- function(org, repo, base, head, title, body = "", reviewe
 #' @importFrom dplyr mutate
 #' @importFrom readr parse_datetime
 #' @export
-get_all_pull_requests <- function(org, repo, .api_url = api_url(), pages = 1){
+get_all_pull_requests <- function(org, repo, .api_url = api_url(), pages = NULL){
 	data <- get_query_results(
 		gql_file="pullrequests/all_pull_requests.graphql",
 		param_list = c("repository", "pullRequests"),
@@ -89,7 +89,8 @@ get_all_pull_requests <- function(org, repo, .api_url = api_url(), pages = 1){
 get_pull_request_comments <- function(org, repo, number, .api_url = api_url()){
 	data <- get_query_results(
 		gql_file="pullrequests/pull_request_comments.graphql",
-		param_list = c("repository", "pullRequests", "comments", "nodes"),
+		param_list = c("repository", "pullRequest", "comments"),
+		number = number,
 		org = org,
 		repo = repo,
 		.api_url = .api_url
@@ -131,7 +132,7 @@ add_pull_request_reviewers <- function(id, users, .api_url = api_url()){
 get_pull_request_reviewers <- function(org, repo, .api_url = api_url()){
 	data <- get_query_results(
 		gql_file="pullrequests/pull_request_reviewers.graphql",
-		param_list = c("repository", "pullRequests", "nodes"),
+		param_list = c("repository", "pullRequests"),
 		org = org,
 		repo = repo,
 		.api_url = .api_url

@@ -10,7 +10,7 @@
 
 \item{.api_url}{Optional API url to query. Defaults to "https://api.github.com/graphql"}
 
-\item{pages}{Number of pages to paginate and pull data from. Each page will contain upto 100 issues/pullrequests. Defaults to 1 page.}
+\item{pages}{Number of pages to paginate and pull data from. Each page will contain upto 100 issues/pullrequests. Defaults to NULL for all pages.}
 }
 \description{
 GHPM is a library written in R that grabs and parses data from a github repository making it easier for users to perform analytics.
