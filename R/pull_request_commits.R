@@ -8,14 +8,16 @@
 #' @importFrom dplyr mutate select slice bind_cols
 #' @importFrom readr parse_datetime
 #' @export
-get_pull_request_commits <- function(org, repo, number, .cc = FALSE, .api_url = api_url()){
-	response <- sanitize_response(graphql_query("pullrequests/pull_request_commits.graphql", org = org, repo = repo, number = number, .api_url = .api_url))$repository$pullRequest$commits
-	data <- response$nodes
-
-	while(response$pageInfo$hasPreviousPage){
-		response <- sanitize_response(graphql_query("pullrequests/pull_request_commits.graphql", org = org, repo = repo, number = number, cursor = response$pageInfo$startCursor, .api_url = .api_url))$repository$pullRequest$commits
-		data <- c(data, response$nodes)
-	}
+get_pull_request_commits <- function(org, repo, number, pages = NULL, .cc = FALSE, .api_url = api_url()){
+	data <- get_query_results(
+		gql_file="pullrequests/pull_request_commits.graphql",
+		param_list = c("repository", "pullRequest", "commits"),
+		pages = pages,
+		number = number,
+		org = org,
+		repo = repo,
+		.api_url = .api_url
+	)
 
 	commits <- reduce(data, function(.acc, .cv){
 		return(.acc %>% add_row("oid" = .cv$commit$oid,

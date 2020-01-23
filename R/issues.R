@@ -4,14 +4,15 @@
 #' @importFrom purrr reduce
 #' @importFrom tibble tibble add_row
 #' @export
-get_repo_issues <- function(org, repo, .api_url = api_url()){
-	response <- sanitize_response(graphql_query("issues/issues.graphql", org = org, repo = repo, .api_url = .api_url))$repository$issues
-	data <- response$nodes
-
-	while(response$pageInfo$hasPreviousPage){
-		response <- sanitize_response(graphql_query("issues/issues.graphql", org = org, repo = repo, cursor = response$pageInfo$startCursor, .api_url = .api_url))$repository$issues
-		data <- c(data, response$nodes)
-	}
+get_repo_issues <- function(org, repo, .api_url = api_url(), pages = NULL){
+	data <- get_query_results(
+		gql_file="issues/issues.graphql",
+		param_list = c("repository", "issues"),
+		pages = pages,
+		org = org,
+		repo = repo,
+		.api_url = .api_url
+	)
 
 	issues <- reduce(data, function(.acc, .cv){
 		.acc <- .acc %>% add_row("issue" = .cv$number,
@@ -40,14 +41,15 @@ get_repo_issues <- function(org, repo, .api_url = api_url()){
 #' @importFrom tibble tibble add_row
 #' @importFrom dplyr mutate select everything
 #' @export
-get_repo_issue_labels <- function(org, repo, .api_url = api_url()){
-	response <- sanitize_response(graphql_query("issues/issue_labels.graphql", org = org, repo = repo, .api_url = .api_url))$repository$issues
-	data <- response$nodes
-
-	while(response$pageInfo$hasPreviousPage){
-		response <- sanitize_response(graphql_query("issues/issue_labels.graphql", org = org, repo = repo, cursor = response$pageInfo$startCursor, .api_url = .api_url))$repository$issues
-		data <- c(data, response$nodes)
-	}
+get_repo_issue_labels <- function(org, repo, .api_url = api_url(), pages = NULL){
+	data <- get_query_results(
+		gql_file="issues/issue_labels.graphql",
+		param_list = c("repository", "issues"),
+		pages = pages,
+		org = org,
+		repo = repo,
+		.api_url = .api_url
+	)
 
 	data <- keep(data, ~length(.x$labels$nodes) > 0)
 
@@ -72,14 +74,15 @@ get_repo_issue_labels <- function(org, repo, .api_url = api_url()){
 #' @importFrom tibble tibble add_row
 #' @importFrom dplyr mutate select everything
 #' @export
-get_issue_assignees <- function(org, repo, .api_url = api_url()){
-	response <- sanitize_response(graphql_query("issues/issue_assignees.graphql", org = org, repo = repo, .api_url = .api_url))$repository$issues
-	data <- response$nodes
-
-	while(response$pageInfo$hasPreviousPage){
-		response <- sanitize_response(graphql_query("issues/issue_assignees.graphql", org = org, repo = repo, cursor = response$pageInfo$startCursor, .api_url = .api_url))$repository$issues
-		data <- c(data, response$nodes)
-	}
+get_issue_assignees <- function(org, repo, .api_url = api_url(), pages = NULL){
+	data <- get_query_results(
+		gql_file="issues/issue_assignees.graphql",
+		param_list = c("repository", "issues"),
+		pages = pages,
+		org = org,
+		repo = repo,
+		.api_url = .api_url
+	)
 
 	data <- keep(data, ~length(.x$assignees$nodes) > 0)
 
@@ -105,14 +108,16 @@ get_issue_assignees <- function(org, repo, .api_url = api_url()){
 #' @importFrom dplyr mutate arrange select everything
 #' @importFrom readr parse_datetime
 #' @export
-get_issue_events <- function(org, repo, .api_url = api_url()){
-	response <- sanitize_response(graphql_query("issues/issue_events.graphql", org = org, repo = repo, .api_url = .api_url, .header = c("Accept" = "application/vnd.github.starfox-preview+json")))$repository$issues
-	data <- response$nodes
-
-	while(response$pageInfo$hasPreviousPage){
-		response <- sanitize_response(graphql_query("issues/issue_events.graphql", org = org, repo = repo, cursor = response$pageInfo$startCursor, .api_url = .api_url, .header = c("Accept" = "application/vnd.github.starfox-preview+json")))$repository$issues
-		data <- c(data, response$nodes)
-	}
+get_issue_events <- function(org, repo, .api_url = api_url(), pages = NULL){
+	data <- get_query_results(
+		gql_file="issues/issue_events.graphql",
+		param_list = c("repository", "issues"),
+		pages = pages,
+		org = org,
+		repo = repo,
+		.header = c("Accept" = "application/vnd.github.starfox-preview+json"),
+		.api_url = .api_url
+	)
 
 	data <- keep(data, ~length(.x$timelineItems$nodes) > 0)
 
@@ -154,14 +159,15 @@ get_issue_events <- function(org, repo, .api_url = api_url()){
 #' @importFrom dplyr mutate select everything
 #' @importFrom readr parse_datetime
 #' @export
-get_issue_comments <- function(org, repo, .api_url = api_url()){
-	response <- sanitize_response(graphql_query("issues/issue_comments.graphql", org = org, repo = repo, .api_url = .api_url))$repository$issues
-	data <- response$nodes
-
-	while(response$pageInfo$hasPreviousPage){
-		response <- sanitize_response(graphql_query("issues/issue_comments.graphql", org = org, repo = repo, cursor = response$pageInfo$startCursor, .api_url = .api_url))$repository$issues
-		data <- c(data, response$nodes)
-	}
+get_issue_comments <- function(org, repo, .api_url = api_url(), pages = NULL){
+	data <- get_query_results(
+		gql_file="issues/issue_comments.graphql",
+		param_list = c("repository", "issues"),
+		pages = pages,
+		org = org,
+		repo = repo,
+		.api_url = .api_url
+	)
 
 	data <- keep(data, ~length(.x$comments$nodes) > 0)
 
@@ -197,14 +203,16 @@ get_issue_comments <- function(org, repo, .api_url = api_url()){
 #' @importFrom purrr reduce
 #' @importFrom tibble tibble add_row
 #' @export
-get_issues_from_milestone <- function(org, repo, milestone, .api_url = api_url()){
-	response <- sanitize_response(graphql_query("issues/issue_milestone.graphql", org = org, repo = repo, milestone = milestone, .api_url = .api_url))$repository$milestone$issues
-	data <- response$nodes
-
-	while(response$pageInfo$hasPreviousPage){
-		response <- sanitize_response(graphql_query("issues/issue_milestone.graphql", org = org, repo = repo, milestone = milestone, cursor = response$pageInfo$startCursor, .api_url = .api_url))$repository$milestone$issues
-		data <- c(data, response$nodes)
-	}
+get_issues_from_milestone <- function(org, repo, milestone, .api_url = api_url(), pages = NULL){
+	data <- get_query_results(
+		gql_file="issues/issue_milestone.graphql",
+		param_list = c("repository", "milestone", "issues"),
+		milestone = milestone,
+		pages = pages,
+		org = org,
+		repo = repo,
+		.api_url = .api_url
+	)
 
 	issues <- reduce(data, function(.acc, .cv){
 		.acc <- .acc %>% add_row("issue" = .cv$number,

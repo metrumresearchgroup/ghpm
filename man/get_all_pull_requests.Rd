@@ -4,7 +4,7 @@
 \alias{get_all_pull_requests}
 \title{Gets a data frame of the pull requests associated with a given repo}
 \usage{
-get_all_pull_requests(org, repo, .api_url = api_url())
+get_all_pull_requests(org, repo, .api_url = api_url(), pages = NULL)
 }
 \arguments{
 \item{org}{Name of organization to query}
@@ -12,6 +12,8 @@ get_all_pull_requests(org, repo, .api_url = api_url())
 \item{repo}{Name of repository to query}
 
 \item{.api_url}{Optional API url to query. Defaults to "https://api.github.com/graphql"}
+
+\item{pages}{Number of pages to paginate and pull data from. Each page will contain upto 100 issues/pullrequests. Defaults to NULL for all pages.}
 }
 \value{
 A data frame containing the pullrequest | title | author | body | milestone | created_at | merged_by | merged_at | merged_to | state of each issue

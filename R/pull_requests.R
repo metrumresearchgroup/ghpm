@@ -45,14 +45,15 @@ create_pull_request <- function(org, repo, base, head, title, body = "", reviewe
 #' @importFrom dplyr mutate
 #' @importFrom readr parse_datetime
 #' @export
-get_all_pull_requests <- function(org, repo, .api_url = api_url()){
-	response <- sanitize_response(graphql_query("pullrequests/all_pull_requests.graphql", org = org, repo = repo, .api_url = .api_url))$repository$pullRequests
-	data <- response$nodes
-
-	while(response$pageInfo$hasPreviousPage){
-		response <- sanitize_response(graphql_query("pullrequests/all_pull_requests.graphql", org = org, repo = repo, cursor = response$pageInfo$startCursor, .api_url = .api_url))$repository$pullRequests
-		data <- c(data, response$nodes)
-	}
+get_all_pull_requests <- function(org, repo, .api_url = api_url(), pages = NULL){
+	data <- get_query_results(
+		gql_file="pullrequests/all_pull_requests.graphql",
+		param_list = c("repository", "pullRequests"),
+		pages = pages,
+		org = org,
+		repo = repo,
+		.api_url = .api_url
+	)
 
 	prs <- reduce(data, function(.acc, .cv){
 		.acc <- .acc %>% add_row("pullrequest" = .cv$number,
@@ -86,7 +87,14 @@ get_all_pull_requests <- function(org, repo, .api_url = api_url()){
 #' @importFrom readr parse_datetime
 #' @export
 get_pull_request_comments <- function(org, repo, number, .api_url = api_url()){
-	data <- sanitize_response(graphql_query("pullrequests/pull_request_comments.graphql", org = org, repo = repo, number = number, .api_url = .api_url))$repository$pullRequest$comments$nodes
+	data <- get_query_results(
+		gql_file="pullrequests/pull_request_comments.graphql",
+		param_list = c("repository", "pullRequest", "comments"),
+		number = number,
+		org = org,
+		repo = repo,
+		.api_url = .api_url
+	)
 
 	if(!length(data)){
 		return(tibble("pullrequest" = number, "author" = character(), "body" = character(), "created_at" = character(), .rows = 0))
@@ -122,7 +130,14 @@ add_pull_request_reviewers <- function(id, users, .api_url = api_url()){
 #' @importFrom dplyr mutate select everything
 #' @export
 get_pull_request_reviewers <- function(org, repo, .api_url = api_url()){
-	data <- sanitize_response(graphql_query("pullrequests/pull_request_reviewers.graphql", org = org, repo = repo, .api_url = .api_url))$repository$pullRequests$nodes
+	data <- get_query_results(
+		gql_file="pullrequests/pull_request_reviewers.graphql",
+		param_list = c("repository", "pullRequests"),
+		org = org,
+		repo = repo,
+		.api_url = .api_url
+	)
+
 	data <- keep(data, ~length(.x$reviewRequests$nodes) > 0)
 
 	if(!length(data)){

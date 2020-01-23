@@ -4,7 +4,7 @@
 \alias{get_issue_assignees}
 \title{Gets a data frame of the assignees of each issue}
 \usage{
-get_issue_assignees(org, repo, .api_url = api_url())
+get_issue_assignees(org, repo, .api_url = api_url(), pages = NULL)
 }
 \arguments{
 \item{org}{Name of organization to query}
@@ -12,6 +12,8 @@ get_issue_assignees(org, repo, .api_url = api_url())
 \item{repo}{Name of repository to query}
 
 \item{.api_url}{Optional API url to query. Defaults to "https://api.github.com/graphql"}
+
+\item{pages}{Number of pages to paginate and pull data from. Each page will contain upto 100 issues/pullrequests. Defaults to NULL for all pages.}
 }
 \value{
 A data frame containing issue | assignedTo of each issue. Returns an empty dataframe if none are found.

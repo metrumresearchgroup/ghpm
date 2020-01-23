@@ -5,7 +5,14 @@
 #' @importFrom tibble tibble add_row
 #' @export
 get_milestones <- function(org, repo, .api_url = api_url()){
-	data <- sanitize_response(graphql_query("milestones.graphql", org = org, repo = repo, .api_url = .api_url))$repository$milestones$nodes
+	data <- get_query_results(
+		gql_file="milestones.graphql",
+		param_list = c("repository", "milestones"),
+		org = org,
+		repo = repo,
+		.api_url = .api_url
+	)
+
 	milestones <- reduce(data, function(.acc, .cv){
 		return(.acc %>% add_row("title" = .cv$title,
 								"number" = .cv$number,
