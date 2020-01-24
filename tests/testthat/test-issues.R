@@ -1,9 +1,9 @@
 context("test-issues")
 
 describe("issue functions", {
-	it("can get repo issues", {
+	test_that("can get repo issues", {
 		mockery::stub(
-			get_repo_issues,
+			get_query_results,
 			"graphql_query",
 			jsonlite::read_json("issues/issues_response.json")
 		)
@@ -12,7 +12,7 @@ describe("issue functions", {
 		expect_true(is.data.frame(result))
 	})
 
-	it("can get repo issue labels", {
+	test_that("can get repo issue labels", {
 		mockery::stub(
 			get_repo_issue_labels,
 			"graphql_query",
@@ -23,7 +23,7 @@ describe("issue functions", {
 		expect_true((is.data.frame(result)))
 	})
 
-	it("can get repo issue assignees", {
+	test_that("can get repo issue assignees", {
 		mockery::stub(
 			get_issue_assignees,
 			"graphql_query",
@@ -34,7 +34,7 @@ describe("issue functions", {
 		expect_true((is.data.frame(result)))
 	})
 
-	it("can get issue events", {
+	test_that("can get issue events", {
 		mockery::stub(
 			get_issue_events,
 			"graphql_query",
@@ -45,7 +45,7 @@ describe("issue functions", {
 		expect_true((is.data.frame(result)))
 	})
 
-	it("can get issue comments", {
+	test_that("can get issue comments", {
 		mockery::stub(
 			get_issue_comments,
 			"graphql_query",
@@ -56,7 +56,7 @@ describe("issue functions", {
 		expect_true((is.data.frame(result)))
 	})
 
-	it("can get issues by a specific milestone", {
+	test_that("can get issues by a specific milestone", {
 		mockery::stub(
 			get_issues_from_milestone,
 			"graphql_query",
