@@ -40,8 +40,6 @@ get_query_results <- function(gql_file, param_list, pages = NULL, ...) {
 			)
 		)
 
-	browser()
-
 	# attempt to extract requested data
 	response <- tryCatch(
 		response[[param_list]],
