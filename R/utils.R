@@ -31,7 +31,6 @@ sanitize_response <- function(response, stop = TRUE){
 #' @param pages Number of pages to paginate and pull data from. Each page will contain upto 100 issues/pullrequests. Defaults to NULL for all pages.
 #' @param ... pass through all args (named) that will be passed to graphql_query()
 get_query_results <- function(gql_file, param_list, pages = NULL, ...) {
-
 	# fetch initial response
 	response <- sanitize_response(
 			graphql_query(
