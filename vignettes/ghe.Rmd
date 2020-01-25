@@ -11,7 +11,7 @@ vignette: >
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  eval = FALSE
+  eval = TRUE
 )
 library(ghpm)
 library(dplyr)
@@ -25,6 +25,7 @@ Lets start with grabbing issues from shiny repo using the following command.
 # A different hostname can be set to reference issues/pullrequests/repos from enterprise github instances.
 # ie: options("ghpm.hostname" = "ghe.metrumrg.com")
 
+options("ghpm.hostname" = "api.github.com")
 ghpm_issues <- get_repo_issues("metrumresearchgroup", "pkgr")
 ```
 
