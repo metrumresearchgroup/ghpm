@@ -12,11 +12,13 @@ get_pull_request_commits(org, repo, number, pages = NULL, .cc = FALSE,
 
 \item{repo}{Name of repository to query}
 
-\item{number}{The number of the pullrequest to grab data from.}
+\item{number}{Pull Request number}
+
+\item{pages}{Number of pages to paginate and pull data from. Each page will contain upto 100 issues/pullrequests. Defaults to NULL for all pages.}
 
 \item{.cc}{Parse the commits as conventional commits. Defaults to FALSE.}
 
-\item{.api_url}{Optional API url to query. Defaults to "https://api.github.com/graphql"}
+\item{.api_url}{Optional API url to query. Defaults to the value set by `api_url()`. Usually it's "https://api.github.com/graphql"}
 }
 \value{
 A data frame containing the oid | message | author | date of each commit of a pull request.

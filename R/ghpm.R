@@ -1,4 +1,4 @@
-globalVariables(c("board", "column", "created_at", "issue", "merged_at", "project", "title"))
+globalVariables(c("board", "column", "created_at", "issue", "merged_at", "project", "title", "user"))
 
 #' @name ghpm
 #' @title GitHub Project Management
@@ -7,7 +7,7 @@ globalVariables(c("board", "column", "created_at", "issue", "merged_at", "projec
 #' pull requests which can be melded together to identify useful analytical information.
 #' @param org Name of organization to query
 #' @param repo Name of repository to query
-#' @param .api_url Optional API url to query. Defaults to "https://api.github.com/graphql"
+#' @param .api_url Optional API url to query. Defaults to the value set by `api_url()`. Usually it's "https://api.github.com/graphql"
 #' @param pages Number of pages to paginate and pull data from. Each page will contain upto 100 issues/pullrequests. Defaults to NULL for all pages.
 NULL
 

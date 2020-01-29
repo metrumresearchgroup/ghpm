@@ -10,6 +10,8 @@ assign_to_object(id, users, .api_url = api_url())
 \item{id}{The id of the object}
 
 \item{users}{A list of user IDs}
+
+\item{.api_url}{Optional API url to query. Defaults to the value set by `api_url()`. Usually it's "https://api.github.com/graphql"}
 }
 \description{
 Assigns a list of users to an object (usually an issue or pull request)

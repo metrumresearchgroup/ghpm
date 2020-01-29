@@ -26,6 +26,7 @@ get_milestones <- function(org, repo, .api_url = api_url()){
 
 #' Gets data about a user based on their login name.
 #' @param username The user's login name
+#' @param .api_url Optional API url to query. Defaults to the value set by `api_url()`. Usually it's "https://api.github.com/graphql"
 #' @return A list containing data about the user
 get_user_info <- function(username, .api_url = api_url()){
 	return(sanitize_response(graphql_query("user_info.graphql", username = username, .api_url = .api_url))$user)
@@ -34,6 +35,7 @@ get_user_info <- function(username, .api_url = api_url()){
 #' Assigns a list of users to an object (usually an issue or pull request)
 #' @param id The id of the object
 #' @param users A list of user IDs
+#' @param .api_url Optional API url to query. Defaults to the value set by `api_url()`. Usually it's "https://api.github.com/graphql"
 assign_to_object <- function(id, users, .api_url = api_url()){
 	return(sanitize_response(graphql_query("user_info.graphql", id = id, userIDs = users , .api_url = .api_url)))
 }

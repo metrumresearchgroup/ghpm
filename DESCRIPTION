@@ -26,6 +26,8 @@ Suggests:
     mockery,
     knitr,
     rmarkdown,
-    sessioninfo
+    sessioninfo,
+    jsonlite,
+    withr
 RoxygenNote: 6.1.1
 VignetteBuilder: knitr

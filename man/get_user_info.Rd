@@ -8,6 +8,8 @@ get_user_info(username, .api_url = api_url())
 }
 \arguments{
 \item{username}{The user's login name}
+
+\item{.api_url}{Optional API url to query. Defaults to the value set by `api_url()`. Usually it's "https://api.github.com/graphql"}
 }
 \value{
 A list containing data about the user

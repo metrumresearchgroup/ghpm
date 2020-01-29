@@ -1,5 +1,6 @@
 #' Gets a data frame of the commits of a pull request
-#' @inheritParams get_pull_request_comments
+#' @inheritParams ghpm
+#' @param number Pull Request number
 #' @param .cc Parse the commits as conventional commits. Defaults to FALSE.
 #' @return A data frame containing the oid | message | author | date of each commit of a pull request.
 #' If .cc = TRUE, the data frame will contain oid | type | description | body | footer | author | date

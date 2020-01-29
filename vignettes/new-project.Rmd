@@ -2,7 +2,7 @@
 title: "Starting a Github Project"
 author: "Harsh Baid"
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{Starting a Github Project}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -15,7 +15,8 @@ knitr::opts_chunk$set(
 )
 
 library(ghpm)
-library(tidyverse)
+library(dplyr)
+library(stringr)
 ```
 
 ## Create project boards
@@ -77,7 +78,7 @@ label_df <- tibble::tribble(
   "ctx: ci", "#005B96", "continuous integration",
   "icebox", "#ADCBE3", "icebox",
   "triage", "#973999", "to triage"
-) %>% mutate(color = stringr::str_replace(color, "#", ""))
+) %>% mutate(color = str_replace(color, "#", ""))
 ```
 
 ```{r}

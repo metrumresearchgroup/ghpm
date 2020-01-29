@@ -13,7 +13,7 @@ get_projectboard_info(org, repo, number, .api_url = api_url())
 
 \item{number}{The number of the projectboard to query}
 
-\item{.api_url}{Optional API url to query. Defaults to "https://api.github.com/graphql"}
+\item{.api_url}{Optional API url to query. Defaults to the value set by `api_url()`. Usually it's "https://api.github.com/graphql"}
 }
 \value{
 A list containing information about the projectboard
