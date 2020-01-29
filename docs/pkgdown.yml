@@ -1,0 +1,12 @@
+pandoc: 2.3.1
+pkgdown: 1.4.1
+pkgdown_sha: ~
+articles:
+  ghe: ghe.html
+  ghpm: ghpm.html
+  new-project: new-project.html
+  projectboard: projectboard.html
+urls:
+  reference: https://ghe.metrumrg.com/pages/tech-solutions/ghpm/reference
+  article: https://ghe.metrumrg.com/pages/tech-solutions/ghpm/articles
+
