@@ -1,5 +1,5 @@
 ---
-title: "Using GitHub Project Boards"
+title: "Starting a Github Project"
 author: "Harsh Baid"
 vignette: >
   %\VignetteIndexEntry{Vignette Title}
@@ -10,7 +10,8 @@ vignette: >
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  eval = FALSE
 )
 
 library(ghpm)
