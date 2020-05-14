@@ -1,0 +1,95 @@
+---
+title: "Using GitHub Project Boards"
+author: "Harsh Baid"
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+library(ghpm)
+library(tidyverse)
+```
+
+## Create project boards
+
+```{r}
+options("ghpm.hostname" = "ghe.metrumrg.com")
+org <- "are0301h"
+repo <- "shiny-app"
+```
+
+```{r}
+dev_lanes <- c(
+  "backlog", 
+  "scope", 
+  "scope-complete", 
+  "implement",
+  "implement-complete",
+  "accept",
+  "accept-complete",
+  "done")
+res <- create_projectboard(org, repo, "active", 
+                    columns = dev_lanes)
+res
+```
+
+```{r}
+create_projectboard(org, repo, "roadmap", 
+                    columns = c("triage", "high-priority", "medium-priority", "low-priority", "icebox"))
+```
+
+
+
+## Create labels
+
+```{r}
+label_df <- tibble::tribble(
+  ~ name, ~ color, ~ description,
+  "risk: low", "#FFB900", "low risk",
+  "risk: medium", "#F78200", "medium risk",
+  "risk: high", "#E23838", "high risk",
+  "risk: critical", "#EE0701", "critical risk",
+  "priority: low", "#FFFAC9", "low priority",
+  "priority: medium", "#FFE7C9", "medium priority",
+  "priority: high", "#FDC9C9", "high priority",
+  "priority: critical", "#EE0701", "critical priority",
+  "status: blocked", "#E99695", "blocked",
+  "status: on-hold", "#FBCA04", "on hold",
+  "status: abandoned", "#FEF2C0", "abandoned",
+  "feedback", "#0E8A16", "feedback",
+  "rfc", "#CC317C", "request for consideration",
+  "wip", "#FF7619", "work in progress",
+  "ctx: doc", "#173F5F", "documentation",
+  "ctx: test", "#20639B", "testing-related",
+  "ctx: fix", "#ED553B", "fix",
+  "ctx: feature", "#3CAEA3", "feature",
+  "ctx: cleanup", "#B3CDE0", "cleanup",
+  "ctx: refactor", "#6497B1", "refactor",
+  "ctx: chore", "#4A4E4D", "chore item",
+  "ctx: ci", "#005B96", "continuous integration",
+  "icebox", "#ADCBE3", "icebox",
+  "triage", "#973999", "to triage"
+) %>% mutate(color = stringr::str_replace(color, "#", ""))
+```
+
+```{r}
+label_df
+```
+
+all user story issues should have:
+  * ctx
+  * priority
+  * risk
+  
+```{r}
+create_labels(org, repo, label_df)
+```
+
+

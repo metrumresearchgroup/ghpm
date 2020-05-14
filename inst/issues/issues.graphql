@@ -5,7 +5,7 @@ query issues($org: String!, $repo: String!) {
         id
         databaseId
         title
-        bodyText
+        body
         author {
           login
         }
