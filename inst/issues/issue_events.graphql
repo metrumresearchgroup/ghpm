@@ -1,10 +1,8 @@
-query issue_events($org: String!, $repo: String!) {
+query issue_events($org: String!, $repo: String!, $cursor: String) {
   repository(owner: $org, name: $repo) {
-    issues(last: 100){
+    issues(last: 100, before: $cursor){
       nodes{
         number
-        id
-        databaseId
         timelineItems(itemTypes:[ ADDED_TO_PROJECT_EVENT, MOVED_COLUMNS_IN_PROJECT_EVENT], first: 30){
           nodes {
             __typename
@@ -30,6 +28,10 @@ query issue_events($org: String!, $repo: String!) {
             }
           }
         }
+      }
+      pageInfo {
+        hasPreviousPage
+        startCursor
       }
     }
   }

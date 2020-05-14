@@ -1,5 +1,5 @@
-url:
-title: GHPM
+url: https://ghe.metrumrg.com/pages/tech-solutions/ghpm
+title: Github Project Manager
 template:
   params:
     bootswatch: flatly
@@ -11,22 +11,37 @@ navbar:
 reference:
 - title: Issue Queries
   contents:
-  - get_issues
-  - get_issue_labels
+  - get_repo_issues
+  - get_repo_issue_labels
   - get_issue_assignees
   - get_issue_events
   - get_issue_comments
+  - get_issues_from_milestone
 - title: Pull Request Queries
   contents:
+  - create_pull_request
+  - add_pull_request_reviewers
   - get_all_pull_requests
   - get_pull_request_comments
   - get_pull_request_reviewers
   - get_pull_request_commits
-- title: Miscellaneous Queries
+- title: Label Queries
   contents:
-  - graphql_query
+  - create_labels
+  - delete_all_labels
+- title: Project Board Queries
+  contents:
+  - get_projectboard_info
   - get_projectboard
+  - create_projectboard
+  - clone_projectboard
+- title: Other Queries
+  contents:
   - get_milestones
+- title: Miscellaneous Functions
+  contents:
+    - api_url
+    - graphql_query
 articles:
 - title: "Intro to GHPM"
   desc: ~

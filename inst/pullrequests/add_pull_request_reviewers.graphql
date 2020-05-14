@@ -1,0 +1,11 @@
+mutation add_pull_request_reviewers($id: ID!, $userIDs: [ID!]) {
+  requestReviews(input:{
+    pullRequestId: $id,
+    userIds: $userIDs
+  }){
+    pullRequest {
+      title
+      id
+    }
+  }
+}

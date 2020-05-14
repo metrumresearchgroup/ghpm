@@ -1,7 +1,7 @@
 query pull_request_comments($org: String!, $repo: String!, $number: Int!) {
   repository(owner: $org, name: $repo) {
     pullRequest(number: $number) {
-        comments(first: 100){
+        comments(last: 100){
           nodes {
             author {
               login

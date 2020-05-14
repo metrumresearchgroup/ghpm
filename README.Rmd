@@ -29,5 +29,10 @@ issue_features <- issues_v1 %>% left_join(features, by = issue)
 ## Issues/Bugs
 If you encounter an issue/bug, please create a new issue within the Github Issues Page including as much detail as possible.
 
+## Tests
+Unit tests are written for most GHPM functions to verify that the json response being fed into the function is parsed correctly. To do this, known/common json responses for a specific query are mimicked via the `mockery::stub` function when the function being tested is called. The response is tested for known values to verify that it was parsed correctly and to prevent any breaking changes from taking place.
+
+To regenerate a test json response after changing a function, simply rerun the query with known good parameters and copy the exact response into the appropriate json file. 
+
 ## License 
 Released under the [BSD License](https://ghe.metrumrg.com/tech-experiments/ghpm/blob/master/LICENSE)
