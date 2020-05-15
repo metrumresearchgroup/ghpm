@@ -4,9 +4,11 @@
 \alias{api_url}
 \title{construct an api_url}
 \usage{
-api_url(scheme = getOption("ghpm.scheme", "https"),
+api_url(
+  scheme = getOption("ghpm.scheme", "https"),
   hostname = getOption("ghpm.hostname", "api.github.com"),
-  graphql = TRUE)
+  graphql = TRUE
+)
 }
 \arguments{
 \item{scheme}{https or http}
