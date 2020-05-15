@@ -22,11 +22,12 @@ Imports:
     glue,
     checkmate
 Suggests: 
-    testthat (>= 2.1.0),
-    mockery,
+    jsonlite,
     knitr,
+    mockery,
     rmarkdown,
     sessioninfo,
+    testthat (>= 2.1.0),
     withr
 RoxygenNote: 7.0.2
 VignetteBuilder: knitr

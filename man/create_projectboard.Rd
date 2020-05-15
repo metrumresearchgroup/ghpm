@@ -24,7 +24,7 @@ create_projectboard(
 
 \item{columns}{Optional parameter to specify a vector of projectboard columns to create. (ie: `column = c('column1', 'column2', 'column3', 'column4')`). Defaults to NULL}
 
-\item{.api_url}{Optional API url to query. Defaults to "https://api.github.com/graphql"}
+\item{.api_url}{Optional API url to query. Defaults to the value set by `api_url()`. Usually it's "https://api.github.com/graphql"}
 }
 \value{
 Boolean value if creation was successful.

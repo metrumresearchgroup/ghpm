@@ -12,8 +12,6 @@ query projects($org: String!, $repo: String!) {
                   ... on Issue {
                     title
                     number
-                    id
-                    databaseId
                   }
                 }
               }

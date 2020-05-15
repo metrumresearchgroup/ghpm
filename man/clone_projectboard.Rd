@@ -15,7 +15,7 @@ clone_projectboard(org, repo_from, number, repo_to, .api_url = api_url())
 
 \item{repo_to}{Name of repo to clone the projectboard to}
 
-\item{.api_url}{Optional API url to query. Defaults to "https://api.github.com/graphql"}
+\item{.api_url}{Optional API url to query. Defaults to the value set by `api_url()`. Usually it's "https://api.github.com/graphql"}
 }
 \value{
 The ID of the projectboard that was cloned

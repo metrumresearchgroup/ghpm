@@ -4,4 +4,4 @@
 _pkgdown.yaml
 docs
 .drone.yml
-.github/
+.github

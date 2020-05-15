@@ -1,0 +1,8 @@
+mutation assign_to_object($id: ID!, $userIDs: [ID!]!) {
+  addAssigneesToAssignable(input: {
+    assignableId: $id,
+    assigneeIds: $userIDs
+  }){
+    clientMutationId
+  }
+}

@@ -2,7 +2,7 @@
 title: "Using GitHub Project Boards"
 author: "Harsh Baid"
 vignette: >
-  %\VignetteIndexEntry{projectboard}
+  %\VignetteIndexEntry{Using GitHub Project Boards}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -10,7 +10,8 @@ vignette: >
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  eval = FALSE
 )
 
 library(ghpm)
@@ -28,7 +29,7 @@ get_projectboard("metrumresearchgroup", "pkgr")
 ```
 
 The library also has ability to create project boards on the fly using the following command:
-```{r, eval=FALSE}
+```{r}
 create_projectboard("<Org Name>", "<Repo Name>", "<Project Board Title>", "<Project Board Body">)
 
 # an optional field of columns can be specified to automatically create columns

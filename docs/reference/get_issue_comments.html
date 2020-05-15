@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Gets a data frame of the comments of each issue — get_issue_comments • GHPM</title>
+<title>Gets a data frame of the comments of each issue — get_issue_comments • Github Project Manager</title>
 
 
 <!-- jquery -->
@@ -68,7 +68,7 @@
         <span class="icon-bar"></span>
       </button>
       <span class="navbar-brand">
-        <a class="navbar-link" href="../index.html">GHPM</a>
+        <a class="navbar-link" href="../index.html">Github Project Manager</a>
         <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
       </span>
     </div>
@@ -96,6 +96,9 @@
   <ul class="dropdown-menu" role="menu">
     <li>
       <a href="../articles/ghe.html">Using github enterprise</a>
+    </li>
+    <li>
+      <a href="../articles/new-project.html">Starting a Github Project</a>
     </li>
     <li>
       <a href="../articles/projectboard.html">Using GitHub Project Boards</a>
@@ -132,7 +135,7 @@
     <p>Gets a data frame of the comments of each issue</p>
     </div>
 
-    <pre class="usage"><span class='fu'>get_issue_comments</span>(<span class='no'>org</span>, <span class='no'>repo</span>, <span class='kw'>.api_url</span> <span class='kw'>=</span> <span class='fu'><a href='api_url.html'>api_url</a></span>())</pre>
+    <pre class="usage"><span class='fu'>get_issue_comments</span>(<span class='no'>org</span>, <span class='no'>repo</span>, <span class='kw'>.api_url</span> <span class='kw'>=</span> <span class='fu'><a href='api_url.html'>api_url</a></span>(), <span class='kw'>pages</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -147,7 +150,11 @@
     </tr>
     <tr>
       <th>.api_url</th>
-      <td><p>Optional API url to query. Defaults to "https://api.github.com/graphql"</p></td>
+      <td><p>Optional API url to query. Defaults to the value set by `api_url()`. Usually it's "https://api.github.com/graphql"</p></td>
+    </tr>
+    <tr>
+      <th>pages</th>
+      <td><p>Number of pages to paginate and pull data from. Each page will contain upto 100 issues/pullrequests. Defaults to NULL for all pages.</p></td>
     </tr>
     </table>
 

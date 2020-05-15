@@ -1,17 +1,23 @@
-query pull_request_commits($org: String!, $repo: String!, $number: Int!) {
+query pull_request_commits($org: String!, $repo: String!, $number: Int!, $cursor: String) {
   repository(owner: $org, name: $repo) {
     pullRequest(number: $number) {
-      commits(first: 100) {
+      commits(last: 100, before: $cursor) {
         nodes {
           commit {
             oid
             author {
-              name
+              user {
+                login
+              }
             }
             messageHeadline
             message
             authoredDate
           }
+        }
+        pageInfo {
+          hasPreviousPage
+          startCursor
         }
       }
     }

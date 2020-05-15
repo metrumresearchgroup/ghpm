@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function reference • GHPM</title>
+<title>Function reference • Github Project Manager</title>
 
 
 <!-- jquery -->
@@ -66,7 +66,7 @@
         <span class="icon-bar"></span>
       </button>
       <span class="navbar-brand">
-        <a class="navbar-link" href="../index.html">GHPM</a>
+        <a class="navbar-link" href="../index.html">Github Project Manager</a>
         <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
       </span>
     </div>
@@ -94,6 +94,9 @@
   <ul class="dropdown-menu" role="menu">
     <li>
       <a href="../articles/ghe.html">Using github enterprise</a>
+    </li>
+    <li>
+      <a href="../articles/new-project.html">Starting a Github Project</a>
     </li>
     <li>
       <a href="../articles/projectboard.html">Using GitHub Project Boards</a>
@@ -142,13 +145,13 @@
       <tr>
         
         <td>
-          <p><code><a href="get_issues.html">get_issues()</a></code> </p>
+          <p><code><a href="get_repo_issues.html">get_repo_issues()</a></code> </p>
         </td>
         <td><p>Gets a data frame of the issues associated with a given repo</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="get_issue_labels.html">get_issue_labels()</a></code> </p>
+          <p><code><a href="get_repo_issue_labels.html">get_repo_issue_labels()</a></code> </p>
         </td>
         <td><p>Gets a data frame of the labels of each issue</p></td>
       </tr><tr>
@@ -169,6 +172,12 @@
           <p><code><a href="get_issue_comments.html">get_issue_comments()</a></code> </p>
         </td>
         <td><p>Gets a data frame of the comments of each issue</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="get_issues_from_milestone.html">get_issues_from_milestone()</a></code> </p>
+        </td>
+        <td><p>Gets a data frame of the issues of a specific milestone</p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -178,6 +187,18 @@
         </th>
       </tr>
       <tr>
+        
+        <td>
+          <p><code><a href="create_pull_request.html">create_pull_request()</a></code> </p>
+        </td>
+        <td><p>Creates a pull request</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="add_pull_request_reviewers.html">add_pull_request_reviewers()</a></code> </p>
+        </td>
+        <td><p>Sets review requests from a specified list of users to a pull request</p></td>
+      </tr><tr>
         
         <td>
           <p><code><a href="get_all_pull_requests.html">get_all_pull_requests()</a></code> </p>
@@ -205,16 +226,36 @@
     </tbody><tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-miscellaneous-queries" class="hasAnchor"><a href="#section-miscellaneous-queries" class="anchor"></a>Miscellaneous Queries</h2>
+          <h2 id="section-label-queries" class="hasAnchor"><a href="#section-label-queries" class="anchor"></a>Label Queries</h2>
           <p class="section-desc"></p>
         </th>
       </tr>
       <tr>
         
         <td>
-          <p><code><a href="graphql_query.html">graphql_query()</a></code> </p>
+          <p><code><a href="create_labels.html">create_labels()</a></code> </p>
         </td>
-        <td><p>Parses a specified GraphQL Query from the project directory.</p></td>
+        <td><p>Adds labels from a dataframe to a repository</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="delete_all_labels.html">delete_all_labels()</a></code> </p>
+        </td>
+        <td><p>Deletes all the labels from a given repository.</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-project-board-queries" class="hasAnchor"><a href="#section-project-board-queries" class="anchor"></a>Project Board Queries</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="get_projectboard_info.html">get_projectboard_info()</a></code> </p>
+        </td>
+        <td><p>Gets info about a projectboard</p></td>
       </tr><tr>
         
         <td>
@@ -224,9 +265,49 @@
       </tr><tr>
         
         <td>
+          <p><code><a href="create_projectboard.html">create_projectboard()</a></code> </p>
+        </td>
+        <td><p>Creates a projectboard</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="clone_projectboard.html">clone_projectboard()</a></code> </p>
+        </td>
+        <td><p>Clones a projectboard</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-other-queries" class="hasAnchor"><a href="#section-other-queries" class="anchor"></a>Other Queries</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
           <p><code><a href="get_milestones.html">get_milestones()</a></code> </p>
         </td>
         <td><p>Gets a data frame of the milestones associated with a given repo.</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-miscellaneous-functions" class="hasAnchor"><a href="#section-miscellaneous-functions" class="anchor"></a>Miscellaneous Functions</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="api_url.html">api_url()</a></code> </p>
+        </td>
+        <td><p>construct an api_url</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="graphql_query.html">graphql_query()</a></code> </p>
+        </td>
+        <td><p>Parses a specified GraphQL Query from the project directory.</p></td>
       </tr>
     </tbody>
     </table>
@@ -237,7 +318,10 @@
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#section-issue-queries">Issue Queries</a></li>
       <li><a href="#section-pull-request-queries">Pull Request Queries</a></li>
-      <li><a href="#section-miscellaneous-queries">Miscellaneous Queries</a></li>
+      <li><a href="#section-label-queries">Label Queries</a></li>
+      <li><a href="#section-project-board-queries">Project Board Queries</a></li>
+      <li><a href="#section-other-queries">Other Queries</a></li>
+      <li><a href="#section-miscellaneous-functions">Miscellaneous Functions</a></li>
     </ul>
   </div>
 </div>

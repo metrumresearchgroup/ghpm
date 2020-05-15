@@ -1,0 +1,6 @@
+query user_info($username: String!){
+  user(login: $username){
+    id
+    name
+  }
+}

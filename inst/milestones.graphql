@@ -1,8 +1,9 @@
 query milestones($org: String!, $repo: String!) {
   repository(owner: $org, name: $repo) {
-    milestones(first: 100) {
+    milestones(last: 100) {
       nodes {
         title
+        number
         description
         creator {
           login

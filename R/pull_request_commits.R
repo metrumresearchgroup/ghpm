@@ -1,5 +1,6 @@
 #' Gets a data frame of the commits of a pull request
-#' @inheritParams get_pull_request_comments
+#' @inheritParams ghpm
+#' @param number Pull Request number
 #' @param .cc Parse the commits as conventional commits. Defaults to FALSE.
 #' @return A data frame containing the oid | message | author | date of each commit of a pull request.
 #' If .cc = TRUE, the data frame will contain oid | type | description | body | footer | author | date
@@ -8,14 +9,22 @@
 #' @importFrom dplyr mutate select slice bind_cols
 #' @importFrom readr parse_datetime
 #' @export
-get_pull_request_commits <- function(org, repo, number, .cc = FALSE, .api_url = api_url()){
-	data <- graphql_query("pullrequests/pull_request_commits.graphql", org = org, repo = repo, number = number, .api_url = .api_url)$repository$pullRequest$commits$nodes
+get_pull_request_commits <- function(org, repo, number, pages = NULL, .cc = FALSE, .api_url = api_url()){
+	data <- get_query_results(
+		gql_file="pullrequests/pull_request_commits.graphql",
+		param_list = c("repository", "pullRequest", "commits"),
+		pages = pages,
+		number = number,
+		org = org,
+		repo = repo,
+		.api_url = .api_url
+	)
 
 	commits <- reduce(data, function(.acc, .cv){
 		return(.acc %>% add_row("oid" = .cv$commit$oid,
 								"summary" = .cv$commit$messageHeadline,
 								"message" = .cv$commit$message,
-								"author" = ifelse(is.null(.cv$commit$author), NA_character_, .cv$commit$author$name),
+								"author" = ifelse(is.null(.cv$commit$author$user$login), NA_character_, .cv$commit$author$user$login),
 								"date" = .cv$commit$authoredDate))
 	}, .init = tibble("oid" = character(), "summary" = character(), "message" = character(), "author" = character(), "date" = character(), .rows = 0)) %>% mutate("date" = parse_datetime(date))
 

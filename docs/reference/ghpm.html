@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>GitHub Project Management — ghpm • GHPM</title>
+<title>GitHub Project Management — ghpm • Github Project Manager</title>
 
 
 <!-- jquery -->
@@ -70,7 +70,7 @@ pull requests which can be melded together to identify useful analytical informa
         <span class="icon-bar"></span>
       </button>
       <span class="navbar-brand">
-        <a class="navbar-link" href="../index.html">GHPM</a>
+        <a class="navbar-link" href="../index.html">Github Project Manager</a>
         <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
       </span>
     </div>
@@ -98,6 +98,9 @@ pull requests which can be melded together to identify useful analytical informa
   <ul class="dropdown-menu" role="menu">
     <li>
       <a href="../articles/ghe.html">Using github enterprise</a>
+    </li>
+    <li>
+      <a href="../articles/new-project.html">Starting a Github Project</a>
     </li>
     <li>
       <a href="../articles/projectboard.html">Using GitHub Project Boards</a>
@@ -150,7 +153,11 @@ pull requests which can be melded together to identify useful analytical informa
     </tr>
     <tr>
       <th>.api_url</th>
-      <td><p>Optional API url to query. Defaults to "https://api.github.com/graphql"</p></td>
+      <td><p>Optional API url to query. Defaults to the value set by `api_url()`. Usually it's "https://api.github.com/graphql"</p></td>
+    </tr>
+    <tr>
+      <th>pages</th>
+      <td><p>Number of pages to paginate and pull data from. Each page will contain upto 100 issues/pullrequests. Defaults to NULL for all pages.</p></td>
     </tr>
     </table>
 

@@ -2,7 +2,7 @@
 title: "Using github enterprise"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{ghe}
+  %\VignetteIndexEntry{Using github enterprise}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -22,12 +22,19 @@ library(dplyr)
 
 Lets start with grabbing issues from shiny repo using the following command.
 ```{r}
-options("ghpm.hostname" = "ghe.metrumrg.com")
-ghpm_issues <- get_issues("tech-solutions", "ghpm")
+# A different hostname can be set to reference issues/pullrequests/repos from enterprise github instances.
+# ie: options("ghpm.hostname" = "ghe.metrumrg.com")
+
+options("ghpm.hostname" = "api.github.com")
+ghpm_issues <- get_repo_issues("metrumresearchgroup", "pkgr")
 ```
 
 ```{r}
-ghpm_issues_labels <- get_issue_labels("tech-solutions", "ghpm")
+ghpm_issues %>% filter(milestone == "v0.5.0")
+```
+
+```{r}
+ghpm_issues_labels <- get_repo_issue_labels("metrumresearchgroup", "pkgr")
 ```
 
 ```{r}
