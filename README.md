@@ -1,3 +1,5 @@
+[![Build Status](https://github-drone.metrumrg.com/api/badges/metrumresearchgroup/ghpm/status.svg)](https://github-drone.metrumrg.com/metrumresearchgroup/ghpm)
+
 GHPM
 ================
 
