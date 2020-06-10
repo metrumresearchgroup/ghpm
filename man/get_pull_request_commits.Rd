@@ -4,8 +4,14 @@
 \alias{get_pull_request_commits}
 \title{Gets a data frame of the commits of a pull request}
 \usage{
-get_pull_request_commits(org, repo, number, pages = NULL, .cc = FALSE,
-  .api_url = api_url())
+get_pull_request_commits(
+  org,
+  repo,
+  number,
+  pages = NULL,
+  .cc = FALSE,
+  .api_url = api_url()
+)
 }
 \arguments{
 \item{org}{Name of organization to query}

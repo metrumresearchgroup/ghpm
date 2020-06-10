@@ -3,4 +3,5 @@
 ^README\.Rmd$
 _pkgdown.yaml
 docs
+.drone.yml
 .github

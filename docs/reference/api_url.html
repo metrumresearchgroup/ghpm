@@ -69,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Github Project Manager</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
       </span>
     </div>
 
@@ -135,9 +135,11 @@
     <p>construct an api_url</p>
     </div>
 
-    <pre class="usage"><span class='fu'>api_url</span>(<span class='kw'>scheme</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span>(<span class='st'>"ghpm.scheme"</span>, <span class='st'>"https"</span>),
+    <pre class="usage"><span class='fu'>api_url</span>(
+  <span class='kw'>scheme</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span>(<span class='st'>"ghpm.scheme"</span>, <span class='st'>"https"</span>),
   <span class='kw'>hostname</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span>(<span class='st'>"ghpm.hostname"</span>, <span class='st'>"api.github.com"</span>),
-  <span class='kw'>graphql</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+  <span class='kw'>graphql</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">

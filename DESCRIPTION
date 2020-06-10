@@ -2,7 +2,7 @@ Package: ghpm
 Type: Package
 Title: GHPM
 Description: Grabs data about a repository from the Github API via GraphQL. 
-Version: 0.2.0.9000
+Version: 0.3.0
 Authors@R: 
 	person( given = "Harsh",
 			family = "Baid",
@@ -22,12 +22,12 @@ Imports:
     glue,
     checkmate
 Suggests: 
-    testthat (>= 2.1.0),
-    mockery,
+    jsonlite,
     knitr,
+    mockery,
     rmarkdown,
     sessioninfo,
-    jsonlite,
+    testthat (>= 2.1.0),
     withr
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2
 VignetteBuilder: knitr

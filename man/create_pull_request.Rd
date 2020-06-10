@@ -4,8 +4,17 @@
 \alias{create_pull_request}
 \title{Creates a pull request}
 \usage{
-create_pull_request(org, repo, base, head, title, body = "",
-  reviewers = NULL, assignees = NULL, .api_url = api_url())
+create_pull_request(
+  org,
+  repo,
+  base,
+  head,
+  title,
+  body = "",
+  reviewers = NULL,
+  assignees = NULL,
+  .api_url = api_url()
+)
 }
 \arguments{
 \item{org}{Name of organization to query}

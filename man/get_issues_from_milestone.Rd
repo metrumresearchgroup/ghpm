@@ -4,8 +4,13 @@
 \alias{get_issues_from_milestone}
 \title{Gets a data frame of the issues of a specific milestone}
 \usage{
-get_issues_from_milestone(org, repo, milestone, .api_url = api_url(),
-  pages = NULL)
+get_issues_from_milestone(
+  org,
+  repo,
+  milestone,
+  .api_url = api_url(),
+  pages = NULL
+)
 }
 \arguments{
 \item{org}{Name of organization to query}

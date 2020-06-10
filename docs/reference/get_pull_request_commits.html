@@ -69,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Github Project Manager</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
       </span>
     </div>
 
@@ -135,8 +135,14 @@
     <p>Gets a data frame of the commits of a pull request</p>
     </div>
 
-    <pre class="usage"><span class='fu'>get_pull_request_commits</span>(<span class='no'>org</span>, <span class='no'>repo</span>, <span class='no'>number</span>, <span class='kw'>pages</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>.cc</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>.api_url</span> <span class='kw'>=</span> <span class='fu'><a href='api_url.html'>api_url</a></span>())</pre>
+    <pre class="usage"><span class='fu'>get_pull_request_commits</span>(
+  <span class='no'>org</span>,
+  <span class='no'>repo</span>,
+  <span class='no'>number</span>,
+  <span class='kw'>pages</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>.cc</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>.api_url</span> <span class='kw'>=</span> <span class='fu'><a href='api_url.html'>api_url</a></span>()
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
