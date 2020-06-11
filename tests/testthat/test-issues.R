@@ -4,7 +4,7 @@ describe("issue functions", {
 
 	test_that("it can get repo issues", {
 		result <- with_mock(
-			graphql_query = function(file, ..., .api_url, .header) {
+			"ghpm::graphql_query" = function(file, ..., .api_url, .header) {
 				return(jsonlite::read_json("issues/issues_response.json"))
 			},
 			get_repo_issues("test", "test")
@@ -17,7 +17,7 @@ describe("issue functions", {
 
 	test_that("it can get repo issue labels", {
 		result <- with_mock(
-			graphql_query = function(file, ..., .api_url, .header) {
+			"ghpm::graphql_query" = function(file, ..., .api_url, .header) {
 				return(jsonlite::read_json("issues/issue_labels_response.json"))
 			},
 			get_repo_issue_labels("test", "test")
@@ -30,7 +30,7 @@ describe("issue functions", {
 
 	test_that("it can get repo issue assignees", {
 		result <- with_mock(
-			graphql_query = function(file, ..., .api_url, .header) {
+			"ghpm::graphql_query" = function(file, ..., .api_url, .header) {
 				return(jsonlite::read_json("issues/issue_assignees_response.json"))
 			},
 			get_issue_assignees("test", "test")
@@ -43,7 +43,7 @@ describe("issue functions", {
 
 	test_that("it can get issue events", {
 		result <- with_mock(
-			graphql_query = function(file, ..., .api_url, .header) {
+			"ghpm::graphql_query" = function(file, ..., .api_url, .header) {
 				return(jsonlite::read_json("issues/issue_events_response.json"))
 			},
 			get_issue_events("test", "test")
@@ -56,7 +56,7 @@ describe("issue functions", {
 
 	test_that("it can get issue comments", {
 		result <- with_mock(
-			graphql_query = function(file, ..., .api_url, .header) {
+			"ghpm::graphql_query" = function(file, ..., .api_url, .header) {
 				return(jsonlite::read_json("issues/issue_comments_response.json"))
 			},
 			get_issue_comments("test", "test")
@@ -69,7 +69,7 @@ describe("issue functions", {
 
 	test_that("it can get issues by a specific milestone", {
 		result <- with_mock(
-			graphql_query = function(file, ..., .api_url, .header) {
+			"ghpm::graphql_query" = function(file, ..., .api_url, .header) {
 				return(jsonlite::read_json("issues/issue_milestone_response.json"))
 			},
 			get_issues_from_milestone("test", "test", 5)

@@ -4,7 +4,7 @@ describe("projectboard functions", {
 
 	test_that("it can get projectboard info", {
 		result <- with_mock(
-			graphql_query = function(file, ..., .api_url, .header) {
+			"ghpm::graphql_query" = function(file, ..., .api_url, .header) {
 				return(jsonlite::read_json("projectboard/projectboard_info_response.json"))
 			},
 			get_projectboard_info("test", "test")
@@ -17,7 +17,7 @@ describe("projectboard functions", {
 
 	test_that("it can get projectboard data", {
 		result <- with_mock(
-			graphql_query = function(file, ..., .api_url, .header) {
+			"ghpm::graphql_query" = function(file, ..., .api_url, .header) {
 				return(jsonlite::read_json("projectboard/projectboard_response.json"))
 			},
 			get_projectboard("test", "test")
