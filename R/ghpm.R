@@ -9,6 +9,7 @@ globalVariables(c("board", "column", "created_at", "issue", "merged_at", "projec
 #' @param repo Name of repository to query
 #' @param .api_url Optional API url to query. Defaults to the value set by `api_url()`. Usually it's "https://api.github.com/graphql"
 #' @param pages Number of pages to paginate and pull data from. Each page will contain upto 100 issues/pullrequests. Defaults to NULL for all pages.
+#' @importFrom magrittr %>%
 NULL
 
 #' Parses a specified GraphQL Query from the project directory.
