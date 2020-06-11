@@ -4,7 +4,7 @@ describe("pull request functions", {
 
 	test_that("it can get pull request commits", {
 		result <- with_mock(
-			graphql_query = function(file, ..., .api_url, .header) {
+			"ghpm::graphql_query" = function(file, ..., .api_url, .header) {
 				return(jsonlite::read_json("pullrequests/pull_request_commits_response.json"))
 			},
 			get_pull_request_commits("test", "test")
@@ -17,7 +17,7 @@ describe("pull request functions", {
 
 	test_that("it can get all pull requests", {
 		result <- with_mock(
-			graphql_query = function(file, ..., .api_url, .header) {
+			"ghpm::graphql_query" = function(file, ..., .api_url, .header) {
 				return(jsonlite::read_json("pullrequests/all_pull_requests_response.json"))
 			},
 			get_all_pull_requests("test", "test")
@@ -30,7 +30,7 @@ describe("pull request functions", {
 
 	test_that("it can get all pull request reviewers", {
 		result <- with_mock(
-			graphql_query = function(file, ..., .api_url, .header) {
+			"ghpm::graphql_query" = function(file, ..., .api_url, .header) {
 				return(jsonlite::read_json("pullrequests/pull_request_reviewers_response.json"))
 			},
 			get_pull_request_reviewers("test", "test")
@@ -43,7 +43,7 @@ describe("pull request functions", {
 
 	test_that("it can get all pull request comments", {
 		result <- with_mock(
-			graphql_query = function(file, ..., .api_url, .header) {
+			"ghpm::graphql_query" = function(file, ..., .api_url, .header) {
 				return(jsonlite::read_json("pullrequests/pull_request_comments_response.json"))
 			},
 			get_pull_request_comments("test", "test", 111)
