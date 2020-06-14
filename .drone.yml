@@ -47,7 +47,6 @@ steps:
   environment:
     R_LIBS_USER: "/opt/rpkgs/4.0/"
   commands:
-    - apt-get install -y awscli
     - git config --global user.email "drone@metrumrg.com"
     - git config --global user.name "Drony"
     - git fetch --tags
