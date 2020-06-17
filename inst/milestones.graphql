@@ -1,6 +1,6 @@
 query milestones($org: String!, $repo: String!) {
-  repository(owner: $org, name: $repo) {
-    milestones(last: 100) {
+   repository(owner: $org, name: $repo) {
+    milestones(last: 10) {
       nodes {
         title
         number
@@ -10,6 +10,10 @@ query milestones($org: String!, $repo: String!) {
         }
         state
         url
+        createdAt
+        closed
+        closedAt
+        dueOn
       }
     }
   }

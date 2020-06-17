@@ -10,6 +10,7 @@ query issues($org: String!, $repo: String!, $cursor: String) {
         number
         milestone {
           title
+          number
         }
         state
       }
