@@ -20,6 +20,7 @@ get_repo_issues <- function(org, repo, .api_url = api_url(), pages = NULL){
 								 "body" = .cv$body,
 								 "creator" = ifelse(is.null(.cv$author), NA_character_, .cv$author$login),
 								 "milestone" = ifelse(is.null(.cv$milestone), NA_character_, .cv$milestone$title),
+								 "milestone_number" = ifelse(is.null(.cv$milestone), NA_integer_, .cv$milestone$number),
 								 "state" = .cv$state)
 
 		return(.acc)
@@ -28,6 +29,7 @@ get_repo_issues <- function(org, repo, .api_url = api_url(), pages = NULL){
 					  "body" = character(),
 					  "creator" = character(),
 					  "milestone" = character(),
+					  "milestone_number" = integer(),
 					  "state" = character(),
 					  .rows = 0))
 
@@ -62,9 +64,9 @@ get_repo_issue_labels <- function(org, repo, .api_url = api_url(), pages = NULL)
 			return(.acc %>% add_row("label" = .cv$name))
 		}, .init = tibble("label" = character(), .rows = 0))
 
-		return(label_data %>% mutate("issue" = x$number))
+		return(mutate(label_data, "issue" = x$number))
 	})
-	return(labels %>% select(issue, everything()))
+	return(select(labels, issue, everything()))
 }
 
 #' Gets a data frame of the assignees of each issue
@@ -181,7 +183,7 @@ get_issue_comments <- function(org, repo, .api_url = api_url(), pages = NULL){
 
 	comments <- map_df(data, function(x){
 		comment_data <- reduce(x$comments$nodes, function(.acc, .cv){
-			return(.acc %>% add_row("comment" = .cv$body,
+			return(add_row(.acc, "comment" = .cv$body,
 									"author" = ifelse(is.null(.cv$author), NA_character_, .cv$author$login),
 									"date" = .cv$createdAt))
 		}, .init = tibble("issue" = numeric(),
@@ -190,10 +192,12 @@ get_issue_comments <- function(org, repo, .api_url = api_url(), pages = NULL){
 						  "date" = character(),
 						  .rows = 0))
 
-		return(comment_data %>% mutate("issue" = x$number))
-	}) %>% mutate("date" = parse_datetime(date))
+		return(mutate(comment_data, "issue" = x$number))
+	})
 
-	return(comments %>% select("issue", everything()))
+	comments <- mutate(comments, "date" = parse_datetime(date))
+
+	return(select(comments, "issue", everything()))
 }
 
 #' Gets a data frame of the issues of a specific milestone
@@ -215,7 +219,7 @@ get_issues_from_milestone <- function(org, repo, milestone, .api_url = api_url()
 	)
 
 	issues <- reduce(data, function(.acc, .cv){
-		.acc <- .acc %>% add_row("issue" = .cv$number,
+		.acc <- add_row(.acc, "issue" = .cv$number,
 								 "title" = .cv$title,
 								 "body" = .cv$body,
 								 "creator" = ifelse(is.null(.cv$author), NA_character_, .cv$author$login),

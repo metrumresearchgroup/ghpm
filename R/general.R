@@ -14,13 +14,36 @@ get_milestones <- function(org, repo, .api_url = api_url()){
 	)
 
 	milestones <- reduce(data, function(.acc, .cv){
-		return(.acc %>% add_row("title" = .cv$title,
-								"number" = .cv$number,
-								"description" = ifelse(is.null(.cv$description), NA_character_, .cv$description),
-								"state" = .cv$state,
-								"author" = ifelse(is.null(.cv$author), NA_character_, .cv$author$login),
-								"url" = .cv$url))
-	}, .init = tibble("title" = character(), "number" = numeric(), "description" = character(), "state" = character(), "author" = character(), "url" = character(), .rows = 0))
+		# dueOn is a datetime object: 2020-06-10T00:00:00Z
+		return(.acc %>%
+			   	add_row("title" = .cv$title,
+						"number" = .cv$number,
+						"description" = ifelse(is.null(.cv$description), NA_character_, .cv$description),
+						"creator" = ifelse(is.null(.cv$creator), NA_character_, .cv$creator$login),
+						"state" = .cv$state,
+						"url" = .cv$url,
+						"createdAt" = .cv$createdAt,
+						"closed" = .cv$closed,
+						"closedAt" = .cv$closedAt,
+						"dueOn" = .cv$dueOn
+				)
+			   )
+	}, .init = tibble(
+		"title" = character(),
+		"number" = numeric(),
+		"description" = character(),
+		"creator" = character(),
+		"state" = character(),
+		"url" = character(),
+		"createdAt" = character(),
+		"closed" = logical(),
+		"closedAt" = character(),
+		"dueOn" = character(),
+		.rows = 0)
+	)
+	if (nrow(milestones)) {
+		milestones <- mutate_at(milestones, c("createdAt", "closedAt", "dueOn"), readr::parse_datetime)
+	}
 	return(milestones)
 }
 
