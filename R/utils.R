@@ -73,3 +73,10 @@ get_query_results <- function(gql_file, param_list, pages = NULL, ...) {
 	return(data)
 }
 
+`%||%` <- function(x, y) {
+	if (!is.null(x)) {
+		x
+	} else {
+		y
+	}
+}

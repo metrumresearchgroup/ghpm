@@ -18,6 +18,13 @@ get_repo_issues <- function(org, repo, .api_url = api_url(), pages = NULL){
 		.acc <- .acc %>% add_row("issue" = .cv$number,
 								 "title" = .cv$title,
 								 "body" = .cv$body,
+								 "closed" = .cv$closed,
+								 "closed_at" = .cv$closedAt  %||% NA_character_,
+								 "resource_path" = .cv$resourcePath,
+								 "url" = .cv$url,
+								 "last_edited_at" = .cv$lastEditedAt %||% NA_character_,
+								 "editor" = ifelse(is.null(.cv$editor), NA_character_, .cv$editor$login),
+								 "published_at" = .cv$publishedAt,
 								 "creator" = ifelse(is.null(.cv$author), NA_character_, .cv$author$login),
 								 "milestone" = ifelse(is.null(.cv$milestone), NA_character_, .cv$milestone$title),
 								 "milestone_number" = ifelse(is.null(.cv$milestone), NA_integer_, .cv$milestone$number),
@@ -27,13 +34,20 @@ get_repo_issues <- function(org, repo, .api_url = api_url(), pages = NULL){
 	}, .init = tibble("issue" = numeric(),
 					  "title" = character(),
 					  "body" = character(),
+					  "closed" = logical(),
+					  "closed_at" = character(),
+					  "resource_path" = character(),
+					  "url" = character(),
+					  "last_edited_at" = character(),
+					  "editor" = character(),
+					  "published_at" = character(),
 					  "creator" = character(),
 					  "milestone" = character(),
 					  "milestone_number" = integer(),
 					  "state" = character(),
 					  .rows = 0))
 
-	return(issues)
+	return(dplyr::mutate_at(issues, dplyr::vars(closed_at, last_edited_at, published_at), readr::parse_datetime))
 }
 
 #' Gets a data frame of the labels of each issue

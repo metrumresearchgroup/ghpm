@@ -13,6 +13,15 @@ query issues($org: String!, $repo: String!, $cursor: String) {
           number
         }
         state
+        closed
+        closedAt
+        resourcePath
+        url
+        lastEditedAt
+        editor {
+          login
+        }
+        publishedAt
       }
       pageInfo {
         hasPreviousPage
