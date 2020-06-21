@@ -1,0 +1,20 @@
+query milestones($org: String!, $repo: String!) {
+   repository(owner: $org, name: $repo) {
+    milestones(last: 10) {
+      nodes {
+        title
+        number
+        description
+        creator {
+          login
+        }
+        state
+        url
+        createdAt
+        closed
+        closedAt
+        dueOn
+      }
+    }
+  }
+}
