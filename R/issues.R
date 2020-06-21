@@ -90,7 +90,7 @@ get_repo_issue_labels <- function(org, repo, .api_url = api_url(), pages = NULL)
 #' @importFrom tibble tibble add_row
 #' @importFrom dplyr mutate select everything
 #' @export
-get_issue_assignees <- function(org, repo, .api_url = api_url(), pages = NULL){
+get_issues_assignees <- function(org, repo, .api_url = api_url(), pages = NULL){
 	data <- get_query_results(
 		gql_file="issues/issue_assignees.graphql",
 		param_list = c("repository", "issues"),
@@ -115,6 +115,51 @@ get_issue_assignees <- function(org, repo, .api_url = api_url(), pages = NULL){
 	})
 	return(assignees %>% select(issue, everything()))
 }
+
+#' Gets a data frame of the assignees and participants for issues
+#' @inheritParams ghpm
+#' @return A data frame containing issue | assignedTo of each issue. Returns an empty dataframe if none are found.
+#' @importFrom purrr reduce map_df keep
+#' @importFrom tibble tibble add_row
+#' @importFrom dplyr mutate select everything bind_rows
+#' @export
+get_issues_assignees_participants <- function(org, repo, .api_url = api_url(), pages = NULL){
+	data <- get_query_results(
+		gql_file="issues/issues_assignees_participants.graphql",
+		param_list = c("repository", "issues"),
+		pages = pages,
+		org = org,
+		repo = repo,
+		.api_url = .api_url
+	)
+
+	data <- keep(data, ~ (.x$assignees$total_count > 0 || .x$participants$total_count > 0))
+
+	if(!length(data)){
+		return(tibble("issue" = numeric(), "type" = character(), "name" = character(),"login" = character(), .rows = 0))
+	}
+	assignees <- map_df(data, function(x){
+		assigndat <- reduce(x$assignees$nodes, function(.acc, .cv){
+			if (is.null(.cv)) {
+				return(.acc)
+			}
+			# names are not required and may be null
+			return(add_row(.acc, "type" = "assignee", "name" = .cv$name %||% NA_character_, "login" = .cv$login))
+		}, .init = tibble("type" = character(), "name" = character(),"login" = character(), .rows = 0))
+		assigndat$total_count <- x$assignees$total_count
+
+		pardat <- reduce(x$participants$nodes, function(.acc, .cv){
+			if (is.null(.cv)) {
+				return(.acc)
+			}
+			return(add_row(.acc, "type" = "participant", "name" = .cv$name %||% NA_character_, "login" = .cv$login))
+		}, .init = tibble("type" = character(), "name" = character(),"login" = character(), .rows = 0))
+		pardat$total_count <- x$participants$total_count
+		return(mutate(bind_rows(assigndat, pardat), issue = x$number))
+	})
+	return(select(assignees, issue, everything()))
+}
+
 
 #' Gets a data frame of the project board events of each issue
 #' @inheritParams ghpm
