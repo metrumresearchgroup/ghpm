@@ -85,7 +85,7 @@ get_repo_issue_labels <- function(org, repo, .api_url = api_url(), pages = NULL)
 
 #' Gets a data frame of the assignees and participants for issues
 #' @inheritParams ghpm
-#' @return A data frame containing issue | assignedTo of each issue. Returns an empty dataframe if none are found.
+#' @return A data frame containing issue number | type (particpant or assignee) | name | login | total count of users of each issue. Returns an empty dataframe if none are found.
 #' @importFrom purrr reduce map_df keep
 #' @importFrom tibble tibble add_row
 #' @importFrom dplyr mutate select everything bind_rows
