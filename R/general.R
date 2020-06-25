@@ -2,6 +2,7 @@
 #' @inheritParams ghpm
 #' @return A data frame containing the title | description | state | author | url of each milestone
 #' @importFrom purrr reduce
+#' @importFrom dplyr mutate_at
 #' @importFrom tibble tibble add_row
 #' @export
 get_milestones <- function(org, repo, .api_url = api_url()){

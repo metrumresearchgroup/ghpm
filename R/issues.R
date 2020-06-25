@@ -83,39 +83,6 @@ get_repo_issue_labels <- function(org, repo, .api_url = api_url(), pages = NULL)
 	return(select(labels, issue, everything()))
 }
 
-#' Gets a data frame of the assignees of each issue
-#' @inheritParams ghpm
-#' @return A data frame containing issue | assignedTo of each issue. Returns an empty dataframe if none are found.
-#' @importFrom purrr reduce map_df keep
-#' @importFrom tibble tibble add_row
-#' @importFrom dplyr mutate select everything
-#' @export
-get_issues_assignees <- function(org, repo, .api_url = api_url(), pages = NULL){
-	data <- get_query_results(
-		gql_file="issues/issue_assignees.graphql",
-		param_list = c("repository", "issues"),
-		pages = pages,
-		org = org,
-		repo = repo,
-		.api_url = .api_url
-	)
-
-	data <- keep(data, ~length(.x$assignees$nodes) > 0)
-
-	if(!length(data)){
-		return(tibble("issue" = numeric(), "assigned_to" = character(), .rows = 0))
-	}
-
-	assignees <- map_df(data, function(x){
-		assignee_data <- reduce(x$assignees$nodes, function(.acc, .cv){
-			return(.acc %>% add_row("assigned_to" = .cv$login))
-		}, .init = tibble("assigned_to" = character(), .rows = 0))
-
-		return(assignee_data %>% mutate(issue = x$number))
-	})
-	return(assignees %>% select(issue, everything()))
-}
-
 #' Gets a data frame of the assignees and participants for issues
 #' @inheritParams ghpm
 #' @return A data frame containing issue | assignedTo of each issue. Returns an empty dataframe if none are found.
