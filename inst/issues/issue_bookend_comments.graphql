@@ -12,15 +12,11 @@ query issues_bookend_comments($org: String!, $repo: String!, $cursor: String) {
               login
             }
             publishedAt
-            author {
-              login
-            }
             lastEditedAt
             editor {
               login
             }
             url
-            body
             bodyText
           }
         }
@@ -30,15 +26,11 @@ query issues_bookend_comments($org: String!, $repo: String!, $cursor: String) {
               login
             }
             publishedAt
-            author {
-              login
-            }
             lastEditedAt
             editor {
               login
             }
             url
-            body
             bodyText
           }
         }

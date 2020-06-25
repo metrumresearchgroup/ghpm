@@ -3,7 +3,7 @@
 #' @return A data frame containing the issue | title | body | creator | milestone | state of each issue
 #' @importFrom purrr reduce
 #' @importFrom dplyr mutate_at vars arrange
-#' @importFrom reader parse_datetime
+#' @importFrom readr parse_datetime
 #' @importFrom tibble tibble add_row
 #' @export
 get_repo_issues <- function(org, repo, .api_url = api_url(), pages = NULL){
@@ -181,17 +181,17 @@ get_issue_events <- function(org, repo, .api_url = api_url(), pages = NULL){
 	return(timeline %>% arrange(project) %>% select("issue", everything()))
 }
 
-#' Gets a data frame of the comments of each issue
+#' Gets a data frame of the first comment and the last 3 comments of each issue. Removes duplicate comments
 #' @inheritParams ghpm
-#' @return A data frame containing the issue | date | author | comment of each issue. Returns an empty dataframe if none are found.
+#' @return A data frame containing the issue | n_comments | author | publishedAt | lastEditedAt | editor | url | bodyText | of each issue. Returns an empty dataframe if none are found.
 #' @importFrom purrr reduce map_df keep
 #' @importFrom tibble tibble add_row
-#' @importFrom dplyr mutate select everything
+#' @importFrom dplyr mutate_at vars arrange distinct
 #' @importFrom readr parse_datetime
 #' @export
-get_issue_comments <- function(org, repo, .api_url = api_url(), pages = NULL){
+get_issue_bookend_comments <- function(org, repo, .api_url = api_url(), pages = NULL){
 	data <- get_query_results(
-		gql_file="issues/issue_comments.graphql",
+		gql_file="issues/issue_bookend_comments.graphql",
 		param_list = c("repository", "issues"),
 		pages = pages,
 		org = org,
@@ -199,7 +199,7 @@ get_issue_comments <- function(org, repo, .api_url = api_url(), pages = NULL){
 		.api_url = .api_url
 	)
 
-	data <- keep(data, ~length(.x$comments$nodes) > 0)
+	data <- keep(data, ~.x$comments$n_comments > 0)
 
 	if(!length(data)){
 		return(tibble("issue" = numeric(),
@@ -210,22 +210,30 @@ get_issue_comments <- function(org, repo, .api_url = api_url(), pages = NULL){
 	}
 
 	comments <- map_df(data, function(x){
-		comment_data <- reduce(x$comments$nodes, function(.acc, .cv){
-			return(add_row(.acc, "comment" = .cv$body,
-									"author" = ifelse(is.null(.cv$author), NA_character_, .cv$author$login),
-									"date" = .cv$createdAt))
-		}, .init = tibble("issue" = numeric(),
-						  "comment" = character(),
-						  "author" = character(),
-						  "date" = character(),
-						  .rows = 0))
+		comments <- reduce(c(x$first$nodes, x$last$nodes), function(.acc, .cv){
+			return(add_row(.acc,
+						   "issue" = x$number,
+						   "n_comments" = x$comments$n_comments,
+						   "author" = .cv$author$login,
+						   "publishedAt" = .cv$publishedAt %||% NA_character_,
+						   "lastEditedAt" = .cv$lastEditedAt %||% NA_character_,
+						   "editor" = .cv$editor$login %||% NA_character_,
+						   "url" = .cv$url,
+						   "bodyText" = .cv$bodyText
+			))
 
-		return(mutate(comment_data, "issue" = x$number))
+		}, .init = tibble("issue" = numeric(),
+						  "n_comments" = numeric(),
+						  "author" = character(),
+						  "publishedAt" = character(),
+						  "lastEditedAt" = character(),
+						  "editor" = character(),
+						  "url" = character(),
+						  "bodyText" = character()
+		))
 	})
 
-	comments <- mutate(comments, "date" = parse_datetime(date))
-
-	return(select(comments, "issue", everything()))
+	return(distinct(arrange(mutate_at(comments, vars(publishedAt, lastEditedAt), parse_datetime), issue)), .keep_all = TRUE)
 }
 
 #' Gets a data frame of the issues of a specific milestone
