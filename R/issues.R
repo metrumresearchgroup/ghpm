@@ -2,6 +2,8 @@
 #' @inheritParams ghpm
 #' @return A data frame containing the issue | title | body | creator | milestone | state of each issue
 #' @importFrom purrr reduce
+#' @importFrom dplyr mutate_at vars arrange
+#' @importFrom reader parse_datetime
 #' @importFrom tibble tibble add_row
 #' @export
 get_repo_issues <- function(org, repo, .api_url = api_url(), pages = NULL){
@@ -47,7 +49,7 @@ get_repo_issues <- function(org, repo, .api_url = api_url(), pages = NULL){
 					  "state" = character(),
 					  .rows = 0))
 
-	return(dplyr::mutate_at(issues, dplyr::vars(closed_at, last_edited_at, published_at), readr::parse_datetime))
+	return(arrange(mutate_at(issues, vars(closed_at, last_edited_at, published_at), parse_datetime), issue))
 }
 
 #' Gets a data frame of the labels of each issue
