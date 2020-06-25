@@ -1,0 +1,22 @@
+Version: 1
+
+Packages:
+  - gh
+  - dplyr
+  - tibble
+  - glue
+  - tidyverse
+  - purrr
+  - readr
+  - magrittr
+  - checkmate
+  - stringr
+  - mockery
+  - testthat
+  - withr
+
+Repos:
+  - MPN: https://mpn.metworx.com/snapshots/stable/2020-06-08/
+
+Lockfile:
+    Type: renv
