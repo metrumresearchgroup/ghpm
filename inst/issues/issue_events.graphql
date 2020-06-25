@@ -1,34 +1,30 @@
-query issues_connections($org: String!, $repo: String!, $cursor: String) {
+query issue_events($org: String!, $repo: String!, $cursor: String) {
   repository(owner: $org, name: $repo) {
-    issues(last: 100, before: $cursor) {
-      nodes {
+    issues(last: 100, before: $cursor){
+      nodes{
         number
-        timelineItems(itemTypes: [CONNECTED_EVENT, DISCONNECTED_EVENT], first: 30) {
+        timelineItems(itemTypes:[ ADDED_TO_PROJECT_EVENT, MOVED_COLUMNS_IN_PROJECT_EVENT], first: 30){
           nodes {
             __typename
-            ... on ConnectedEvent {
-              id
-              createdAt
+            ... on AddedToProjectEvent{
               actor {
                 login
               }
-              subject {
-                ... on PullRequest {
-                  pull_request: number
-                }
+              project {
+                name
               }
+              projectColumnName
+              createdAt
             }
-            ... on ConnectedEvent {
-              id
-              createdAt
+            ... on MovedColumnsInProjectEvent {
               actor {
                 login
               }
-              subject {
-                ... on PullRequest {
-                  pull_request: number
-                }
+              project {
+                name
               }
+              projectColumnName
+              createdAt
             }
           }
         }
