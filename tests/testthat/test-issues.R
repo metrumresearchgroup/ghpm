@@ -2,81 +2,52 @@ context("test-issues")
 
 describe("issue functions", {
 
-	test_that("it can get repo issues", {
-		result <- with_mock(
-			"ghpm::graphql_query" = function(file, ..., .api_url, .header) {
-				return(jsonlite::read_json("issues/issues_response.json"))
-			},
-			get_repo_issues("test", "test")
-		)
+	is_nonempty_df <- function(data, rows){
+		return(is.data.frame(data) && nrow(data) > 0)
+	}
 
-		expect_true(nrow(result) > 0)
-		expect_equal(names(result), c("issue", "title", "body", "creator", "milestone", "state"))
-		expect_true(is.data.frame(result))
+	test_that("can get repo issues", {
+		result <- ghpm::get_repo_issues("metrumresearchgroup", "rbabylon")
+
+
+		expect_true(is_nonempty_df(result))
+		expect_true(names(result), 	c("issue", "title", "body", "closed", "closed_at", "resource_path",
+									  "url", "last_edited_at", "editor", "published_at", "creator",
+									  "milestone", "milestone_number", "state"))
 	})
 
-	test_that("it can get repo issue labels", {
-		result <- with_mock(
-			"ghpm::graphql_query" = function(file, ..., .api_url, .header) {
-				return(jsonlite::read_json("issues/issue_labels_response.json"))
-			},
-			get_repo_issue_labels("test", "test")
-		)
+	test_that("can get repo issue labels", {
+		result <- ghpm::get_repo_issue_labels("metrumresearchgroup", "rbabylon")
 
-		expect_true(nrow(result) > 0)
+		expect_true(is_nonempty_df(result))
 		expect_equal(names(result), c("issue", "label"))
-		expect_true((is.data.frame(result)))
 	})
 
-	test_that("it can get repo issue assignees", {
-		result <- with_mock(
-			"ghpm::graphql_query" = function(file, ..., .api_url, .header) {
-				return(jsonlite::read_json("issues/issue_assignees_response.json"))
-			},
-			get_issue_assignees("test", "test")
-		)
+	test_that("can get repo issue assignees and particpants", {
+		result <- ghpm::get_issues_assignees_participants("metrumresearchgroup", "rbabylon")
 
-		expect_true(nrow(result) > 0)
-		expect_equal(names(result), c("issue", "assigned_to"))
-		expect_true((is.data.frame(result)))
+		expect_true(is_nonempty_df(result))
+		expect_true(names(result), c("issue", "type", "name", "login", "total_count"))
 	})
 
-	test_that("it can get issue events", {
-		result <- with_mock(
-			"ghpm::graphql_query" = function(file, ..., .api_url, .header) {
-				return(jsonlite::read_json("issues/issue_events_response.json"))
-			},
-			get_issue_events("test", "test")
-		)
+	test_that("can get issue events", {
+		result <- ghpm::get_issue_events("metrumresearchgroup", "rbabylon")
 
-		expect_true(nrow(result) > 0)
+		expect_true(is_nonempty_df(result))
 		expect_equal(names(result), c("issue", "project", "type", "column", "author", "date"))
-		expect_true((is.data.frame(result)))
 	})
 
-	test_that("it can get issue comments", {
-		result <- with_mock(
-			"ghpm::graphql_query" = function(file, ..., .api_url, .header) {
-				return(jsonlite::read_json("issues/issue_comments_response.json"))
-			},
-			get_issue_comments("test", "test")
-		)
+	test_that("can get issue comments", {
+		result <- get_issue_comments("metrumresearchgroup", "rbabylon")
 
-		expect_true(nrow(result) > 0)
-		expect_equal(names(result), c("issue", "comment", "author", "date"))
-		expect_true((is.data.frame(result)))
+		expect_true(is_nonempty_df(result))
+		expect_equal(names(result), c("issue", "n_comments", "author", "publishedAt", "lastEditedAt", "editor", "url", "bodyText"))
 	})
 
-	test_that("it can get issues by a specific milestone", {
-		result <- with_mock(
-			"ghpm::graphql_query" = function(file, ..., .api_url, .header) {
-				return(jsonlite::read_json("issues/issue_milestone_response.json"))
-			},
-			get_issues_from_milestone("test", "test", 5)
-		)
+	test_that("can get issues by a specific milestone", {
+		result <- ghpm::get_issues_from_milestone("metrumresearchgroup", "rbabylon", 9)
 
-		expect_true(nrow(result) > 0)
+		expect_true(is_nonempty_df(result))
 		expect_equal(names(result), c("issue", "title", "body", "creator", "state"))
-		expect_true((is.data.frame(result)))
 	})
 })

@@ -181,17 +181,17 @@ get_issue_events <- function(org, repo, .api_url = api_url(), pages = NULL){
 	return(timeline %>% arrange(project) %>% select("issue", everything()))
 }
 
-#' Gets a data frame of the first comment and the last 3 comments of each issue. Removes duplicate comments
+#' Gets a data frame of the last 30 comments of each issue
 #' @inheritParams ghpm
 #' @return A data frame containing the issue | n_comments | author | publishedAt | lastEditedAt | editor | url | bodyText | of each issue. Returns an empty dataframe if none are found.
 #' @importFrom purrr reduce map_df keep
 #' @importFrom tibble tibble add_row
-#' @importFrom dplyr mutate_at vars arrange distinct
+#' @importFrom dplyr mutate_at vars arrange
 #' @importFrom readr parse_datetime
 #' @export
-get_issue_bookend_comments <- function(org, repo, .api_url = api_url(), pages = NULL){
+get_issue_comments <- function(org, repo, .api_url = api_url(), pages = NULL){
 	data <- get_query_results(
-		gql_file="issues/issue_bookend_comments.graphql",
+		gql_file="issues/issue_comments.graphql",
 		param_list = c("repository", "issues"),
 		pages = pages,
 		org = org,
@@ -203,14 +203,19 @@ get_issue_bookend_comments <- function(org, repo, .api_url = api_url(), pages = 
 
 	if(!length(data)){
 		return(tibble("issue" = numeric(),
-					  "comment" = character(),
+					  "n_comments" = numeric(),
 					  "author" = character(),
-					  "date" = character(),
-					  .rows = 0))
+					  "publishedAt" = character(),
+					  "lastEditedAt" = character(),
+					  "editor" = character(),
+					  "url" = character(),
+					  "bodyText" = character(),
+					  .rows = 0
+		))
 	}
 
 	comments <- map_df(data, function(x){
-		comments <- reduce(c(x$first$nodes, x$last$nodes), function(.acc, .cv){
+		return(reduce(x$comments$nodes, function(.acc, .cv){
 			return(add_row(.acc,
 						   "issue" = x$number,
 						   "n_comments" = x$comments$n_comments,
@@ -230,10 +235,10 @@ get_issue_bookend_comments <- function(org, repo, .api_url = api_url(), pages = 
 						  "editor" = character(),
 						  "url" = character(),
 						  "bodyText" = character()
-		))
+		)))
 	})
 
-	return(distinct(arrange(mutate_at(comments, vars(publishedAt, lastEditedAt), parse_datetime), issue)), .keep_all = TRUE)
+	return(arrange(mutate_at(comments, vars(publishedAt, lastEditedAt), parse_datetime), issue))
 }
 
 #' Gets a data frame of the issues of a specific milestone

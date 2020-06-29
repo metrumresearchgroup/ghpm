@@ -1,22 +1,42 @@
 Version: 1
 
 Packages:
-  - gh
-  - dplyr
-  - tibble
-  - glue
-  - tidyverse
   - purrr
-  - readr
   - magrittr
-  - checkmate
+  - dplyr
+  - readr
+  - gh
+  - tibble
   - stringr
+  - glue
+  - checkmate
+  - jsonlite
+  - knitr
   - mockery
+  - rmarkdown
+  - sessioninfo
   - testthat
   - withr
 
 Repos:
   - MPN: https://mpn.metworx.com/snapshots/stable/2020-06-08/
+
+Customizations:
+  Packages:
+    - jsonlite:
+        Suggests: true
+    - knitr:
+        Suggests: true
+    - mockery:
+        Suggests: true
+    - rmarkdown:
+        Suggests: true
+    - sessioninfo:
+        Suggests: true
+    - testthat:
+        Suggests: true
+    - withr:
+        Suggests: true
 
 Lockfile:
     Type: renv
