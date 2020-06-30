@@ -42,7 +42,7 @@ create_pull_request <- function(org, repo, base, head, title, body = "", reviewe
 #' @return A data frame containing the pullrequest | title | author | body | milestone | created_at | merged_by | merged_at | merged_to | state of each issue
 #' @importFrom purrr reduce
 #' @importFrom tibble tibble add_row
-#' @importFrom dplyr mutate
+#' @importFrom dplyr mutate arrange
 #' @importFrom readr parse_datetime
 #' @export
 get_all_pull_requests <- function(org, repo, .api_url = api_url(), pages = NULL){
@@ -56,7 +56,7 @@ get_all_pull_requests <- function(org, repo, .api_url = api_url(), pages = NULL)
 	)
 
 	prs <- reduce(data, function(.acc, .cv){
-		.acc <- .acc %>% add_row("pullrequest" = .cv$number,
+		.acc <- add_row(.acc, "pullrequest" = .cv$number,
 								 "title" = .cv$title,
 								 "author" = ifelse(is.null(.cv$author), NA_character_, .cv$author$login),
 								 "body" = .cv$body,
@@ -70,11 +70,9 @@ get_all_pull_requests <- function(org, repo, .api_url = api_url(), pages = NULL)
 		return(.acc)
 	}, .init = tibble("pullrequest" = numeric(), "title" = character(), "author" = character(), "body" = character(),
 					  "milestone" = character(), "created_at" = character(), "merged_by" = character(),
-					  "merged_at" = character(), "merged_to" = character(), "state" = character(), .rows = 0)) %>%
-		mutate(created_at = parse_datetime(created_at),
-			   merged_at = parse_datetime(merged_at))
+					  "merged_at" = character(), "merged_to" = character(), "state" = character(), .rows = 0))
 
-	return(prs)
+	return(arrange(mutate(prs, created_at = parse_datetime(created_at), merged_at = parse_datetime(merged_at)), pullrequest))
 }
 
 #' Gets a data frame of the comments of all a pull request
@@ -83,7 +81,7 @@ get_all_pull_requests <- function(org, repo, .api_url = api_url(), pages = NULL)
 #' @return A data frame containing the pullrequest | author | body | created_at of each pull request comment. Returns an empty dataframe if none are found.
 #' @importFrom purrr reduce
 #' @importFrom tibble tibble add_row
-#' @importFrom dplyr mutate
+#' @importFrom dplyr mutate arrange
 #' @importFrom readr parse_datetime
 #' @export
 get_pull_request_comments <- function(org, repo, number, .api_url = api_url()){
@@ -101,14 +99,13 @@ get_pull_request_comments <- function(org, repo, number, .api_url = api_url()){
 	}
 
 	comments <- reduce(data, function(.acc, .cv){
-		return(.acc %>% add_row("pullrequest" = number,
+		return(add_row(.acc, "pullrequest" = number,
 								"author" = ifelse(is.null(.cv$author), NA_character_, .cv$author$login),
 								"body" = .cv$body,
 								"created_at" = .cv$createdAt))
-		}, .init = tibble("pullrequest" = numeric(), "author" = character(), "body" = character(), "created_at" = character(), .rows = 0)) %>%
-		mutate("created_at" = parse_datetime(created_at))
+		}, .init = tibble("pullrequest" = numeric(), "author" = character(), "body" = character(), "created_at" = character(), .rows = 0))
 
-	return(comments)
+	return(arrange(mutate(comments, "created_at" = parse_datetime(created_at)), pullrequest))
 }
 
 #' Sets review requests from a specified list of users to a pull request

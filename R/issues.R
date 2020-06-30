@@ -21,7 +21,7 @@ get_issues <- function(org, repo, .api_url = api_url(), pages = NULL){
 								 "title" = .cv$title,
 								 "body" = .cv$body,
 								 "closed" = .cv$closed,
-								 "closed_at" = .cv$closedAt  %||% NA_character_,
+								 "closed_at" = .cv$closedAt %||% NA_character_,
 								 "resource_path" = .cv$resourcePath,
 								 "url" = .cv$url,
 								 "last_edited_at" = .cv$lastEditedAt %||% NA_character_,

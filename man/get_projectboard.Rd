@@ -2,20 +2,22 @@
 % Please edit documentation in R/projectboard.R
 \name{get_projectboard}
 \alias{get_projectboard}
-\title{Gets a data frame of the issues and their columns on the project board}
+\title{Gets info about a specified projectboard}
 \usage{
-get_projectboard(org, repo, .api_url = api_url())
+get_projectboard(org, repo, number, .api_url = api_url())
 }
 \arguments{
 \item{org}{Name of organization to query}
 
 \item{repo}{Name of repository to query}
 
+\item{number}{The number of the projectboard to query}
+
 \item{.api_url}{Optional API url to query. Defaults to the value set by `api_url()`. Usually it's "https://api.github.com/graphql"}
 }
 \value{
-A data frame containing the issue | title | column | board of the project boards
+A list containing information about the projectboard
 }
 \description{
-Gets a data frame of the issues and their columns on the project board
+Gets info about a specified projectboard
 }

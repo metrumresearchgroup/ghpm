@@ -20,12 +20,12 @@ library(ghpm)
 GHPM offers several useful functions for creating and grabbing data from project boards on GitHub. We can grab data general data from any project board by specifying a repository and then the project board number:
 
 ```{r}
-str(get_projectboard_info("metrumresearchgroup", "pkgr", 1))
+str(get_projectboard("metrumresearchgroup", "pkgr", 1))
 ```
 
 We can also grab information about the issues that are in each column in a project board
 ```{r}
-get_projectboard("metrumresearchgroup", "pkgr")
+get_projectboard_issues("metrumresearchgroup", "pkgr")
 ```
 
 The library also has ability to create project boards on the fly using the following command:

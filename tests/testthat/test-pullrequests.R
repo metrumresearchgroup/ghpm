@@ -1,56 +1,37 @@
 context("test-pull-requests")
 
-describe("pull request functions", {
+describe("pullrequest functions", {
 
-	test_that("it can get pull request commits", {
-		result <- with_mock(
-			"ghpm::graphql_query" = function(file, ..., .api_url, .header) {
-				return(jsonlite::read_json("pullrequests/pull_request_commits_response.json"))
-			},
-			get_pull_request_commits("test", "test")
-		)
+	is_nonempty_sorted_df <- function(data){
+		return(is.data.frame(data) && nrow(data) > 0 && !is.unsorted(data$pullrequest))
+	}
 
-		expect_true(nrow(result) > 0)
-		expect_equal(names(result), c("oid", "message", "author", "date"))
-		expect_true(is.data.frame(result))
+	test_that("get_pull_request_commits()", {
+		result <- get_pull_request_commits("metrumresearchgroup", "rbabylon", 104)
+		result_cc <- get_pull_request_commits("metrumresearchgroup", "rbabylon", 104, .cc = TRUE)
+
+#		expect_true(is_nonempty_df(result))
+#		expect_equal(names(result), c("oid", "message", "author", "date"))
 	})
 
-	test_that("it can get all pull requests", {
-		result <- with_mock(
-			"ghpm::graphql_query" = function(file, ..., .api_url, .header) {
-				return(jsonlite::read_json("pullrequests/all_pull_requests_response.json"))
-			},
-			get_all_pull_requests("test", "test")
-		)
+	test_that("get_all_pull_requests()", {
+		result <- get_all_pull_requests("metrumresearchgroup", "rbabylon")
 
-		expect_true(nrow(result) > 0)
+		expect_true(is_nonempty_sorted_df(result))
 		expect_equal(names(result), c("pullrequest", "title", "author", "body", "milestone", "created_at", "merged_by", "merged_at", "merged_to", "state"))
-		expect_true(is.data.frame(result))
 	})
 
-	test_that("it can get all pull request reviewers", {
-		result <- with_mock(
-			"ghpm::graphql_query" = function(file, ..., .api_url, .header) {
-				return(jsonlite::read_json("pullrequests/pull_request_reviewers_response.json"))
-			},
-			get_pull_request_reviewers("test", "test")
-		)
+	test_that("get_pull_request_reviewers()", {
+		result <- get_pull_request_reviewers("metrumresearchgroup", "rbabylon")
 
-		expect_true(nrow(result) > 0)
+		expect_true(is_nonempty_sorted_df(result))
 		expect_equal(names(result), c("pullrequest", "reviewer"))
-		expect_true(is.data.frame(result))
 	})
 
-	test_that("it can get all pull request comments", {
-		result <- with_mock(
-			"ghpm::graphql_query" = function(file, ..., .api_url, .header) {
-				return(jsonlite::read_json("pullrequests/pull_request_comments_response.json"))
-			},
-			get_pull_request_comments("test", "test", 111)
-		)
+	test_that("get_pull_request_comments()", {
+		result <- get_pull_request_comments("metrumresearchgroup", "rbabylon", 95)
 
-		expect_true(nrow(result) > 0)
+		expect_true(is_nonempty_sorted_df(result))
 		expect_equal(names(result), c("pullrequest", "author", "body", "created_at"))
-		expect_true(is.data.frame(result))
 	})
 })
