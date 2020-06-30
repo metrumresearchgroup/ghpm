@@ -6,7 +6,7 @@
 #' @importFrom readr parse_datetime
 #' @importFrom tibble tibble add_row
 #' @export
-get_repo_issues <- function(org, repo, .api_url = api_url(), pages = NULL){
+get_issues <- function(org, repo, .api_url = api_url(), pages = NULL){
 	data <- get_query_results(
 		gql_file="issues/issues.graphql",
 		param_list = c("repository", "issues"),
@@ -59,7 +59,7 @@ get_repo_issues <- function(org, repo, .api_url = api_url(), pages = NULL){
 #' @importFrom tibble tibble add_row
 #' @importFrom dplyr mutate select everything
 #' @export
-get_repo_issue_labels <- function(org, repo, .api_url = api_url(), pages = NULL){
+get_issue_labels <- function(org, repo, .api_url = api_url(), pages = NULL){
 	data <- get_query_results(
 		gql_file="issues/issue_labels.graphql",
 		param_list = c("repository", "issues"),
