@@ -143,11 +143,11 @@ get_pull_request_reviewers <- function(org, repo, .api_url = api_url()){
 
 	reviewers <- map_df(data, function(x){
 		review_data <- reduce(x$reviewRequests$nodes, function(.acc, .cv){
-			return(.acc %>% add_row("reviewer" = ifelse(is.null(.cv$requestedReviewer), NA_character_, .cv$requestedReviewer$login)))
+			return(add_row(.acc, "reviewer" = ifelse(is.null(.cv$requestedReviewer), NA_character_, .cv$requestedReviewer$login)))
 		}, .init = tibble("reviewer" = character(), .rows = 0))
 
-		return(review_data %>% mutate("pullrequest" = x$number))
+		return(mutate(review_data, "pullrequest" = x$number))
 	})
 
-	return(reviewers %>% select("pullrequest", everything()))
+	return(select(reviewers, "pullrequest", everything()))
 }

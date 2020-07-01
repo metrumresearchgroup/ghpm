@@ -163,7 +163,7 @@ get_issue_events <- function(org, repo, .api_url = api_url(), pages = NULL){
 
 	timeline <- map_df(data, function(x){
 		event_data <- reduce(x$timelineItems$nodes, function(.acc, .cv){
-			return(.acc %>% add_row("project" = .cv$project$name,
+			return(add_row(.acc, "project" = .cv$project$name,
 									"type" = ifelse(.cv$`__typename` == "AddedToProjectEvent", "Added", "Moved"),
 									"column" = .cv$projectColumnName,
 									"author" = ifelse(is.null(.cv$actor), NA_character_, .cv$actor$login),
@@ -175,10 +175,10 @@ get_issue_events <- function(org, repo, .api_url = api_url(), pages = NULL){
 						  "author" = character(),
 						  "date" = character(),
 						  .rows = 0))
-		return(event_data %>% mutate("issue" = x$number))
-	}) %>% mutate("date" = parse_datetime(date))
+		return(mutate(event_data, "issue" = x$number))
+	})
 
-	return(timeline %>% arrange(project) %>% select("issue", everything()))
+	return(select(arrange(mutate(timeline, "date" = parse_datetime(date)), project), "issue", everything()))
 }
 
 #' Gets a data frame of the last 30 comments of each issue

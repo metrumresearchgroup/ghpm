@@ -58,7 +58,7 @@ get_projectboard_columns <- function(.acc, .cv){
 		}, .init = tibble("issue" = numeric(), "title" = character(), .rows = 0))
 
 		if (nrow(rows)) {
-			.acc <- bind_rows(.acc, rows %>% mutate("column" = .cv$name))
+			.acc <- bind_rows(.acc, mutate(rows, "column" = .cv$name))
 		}
 	}
 	return(.acc)
