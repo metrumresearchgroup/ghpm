@@ -8,10 +8,13 @@ describe("pullrequest functions", {
 
 	test_that("get_pull_request_commits()", {
 		result <- get_pull_request_commits("metrumresearchgroup", "rbabylon", 104)
-		result_cc <- get_pull_request_commits("metrumresearchgroup", "rbabylon", 104, .cc = TRUE)
+		result_cc <- get_pull_request_commits("metrumresearchgroup", "pkgr", 149, .cc = TRUE)
 
-#		expect_true(is_nonempty_df(result))
-#		expect_equal(names(result), c("oid", "message", "author", "date"))
+		expect_true(is.data.frame(result) && nrow(result) > 0)
+		expect_equal(names(result), c("oid", "message", "author", "date"))
+
+		expect_true(is.data.frame(result_cc) && nrow(result_cc) > 0)
+		expect_equal(names(result_cc), c("oid", "type", "description", "body", "footer", "author", "date"))
 	})
 
 	test_that("get_all_pull_requests()", {

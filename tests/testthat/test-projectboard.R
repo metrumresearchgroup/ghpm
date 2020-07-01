@@ -11,7 +11,7 @@ describe("projectboard functions", {
 	})
 
 	test_that("get_projectboard_issues()", {
-		result <- get_projectboard_issues("metrumresearchgroup", "rbabylon")
+		result <- get_projectboard_issues("metrumresearchgroup", "pkgr")
 
 		expect_true(nrow(result) > 0)
 		expect_equal(names(result), c("board", "column", "title", "issue"))

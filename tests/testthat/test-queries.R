@@ -2,7 +2,10 @@ context("test-query-functions")
 
 describe("query functions", {
 
-	test_that("errors are properly captured",{
+
+
+	test_that("improper names ",{
+		get
 		mockery::stub(
 			get_query_results,
 			"graphql_query",

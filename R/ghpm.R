@@ -18,12 +18,13 @@ NULL
 #' @param .api_url Optional API url to query. Defaults to "https://api.github.com/graphql"
 #' @param .header Optional vector of headers to send to query
 #' @return The list containing the query result
+#' @importFrom checkmate assert_string
 #' @importFrom gh gh
 #' @importFrom purrr compact
 #' @importFrom glue glue
 #' @export
 graphql_query <- function(file, ..., .api_url = api_url(), .header = NULL) {
-	assert_url(.api_url)
+	assert_string(.api_url, fixed = "http")
 	file <- system.file(file, package = "ghpm")
 	query <- readChar(file, file.info(file)$size)
 
