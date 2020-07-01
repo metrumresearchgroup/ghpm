@@ -53,12 +53,11 @@ process_commit <- function(.x){
 #' @param commit_summary The commit summary
 #' @param commit_message commit message
 #' @return A list according to spec: type | description | body | footer
-#' @importFrom stringr str_replace_all
 parse_commit <- function(commit_summary = NULL, commit_message = NULL){
 	if (is.null(commit_message) || commit_message == "") {
 		return(list("type" = NA_character_, "description" = NA_character_, "body" = NA_character_, "footer" = NA_character_))
 	}
-	return(append(parse_summary(commit_summary), parse_body(str_replace_all(commit_message, commit_summary, ""))))
+	return(append(parse_summary(commit_summary), parse_body(gsub(commit_summary, "", commit_message, fixed = TRUE))))
 }
 
 #' Parses the commit summary which just contains type and description
@@ -92,6 +91,7 @@ parse_body <- function(commit_message = NULL){
 	if(is.null(commit_message) || commit_message == ""){
 		return(message)
 	}
+
 
 	msg <- str_trim(str_split(commit_message, "\n\n")[[1]], side = "both")
 	msg <- msg[msg != ""]
