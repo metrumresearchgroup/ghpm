@@ -25,7 +25,9 @@ NULL
 #' @export
 graphql_query <- function(file, ..., .api_url = api_url(), .header = NULL) {
 	assert_string(.api_url, fixed = "http")
-	file <- system.file(file, package = "ghpm")
+	if(!file.exists(file)){
+		file <- system.file(file, package = "ghpm", mustWork = TRUE)
+	}
 	query <- readChar(file, file.info(file)$size)
 
 	return(gh("POST ", query = query, variables = compact(list(...)), .send_headers = .header, .api_url = .api_url, .token = get_token(.api_url)))
