@@ -19,34 +19,34 @@ test_that("graphql_query()", {
 test_that("sanitize_response()", {
 	skip_if_any()
 
-	expect_error(sanitize_response(graphql_query(file = "milestones.graphql", org = "metrumresearchgroup", repo = "rbabylon")))
 	expect_error(sanitize_response(graphql_query(file = "issues/issues.graphql", org = "metrumresearchgroup", repo = "rbabylon", cursor = "asdasdas")))
 	expect_true(is.list(sanitize_response(graphql_query(file = "milestones.graphql", org = "metrumresearchgroup", repo = "rbabylon"))))
-
 })
 
-# test_that("improper names ",{
-# 	get
-# 	mockery::stub(
-# 		get_query_results,
-# 		"graphql_query",
-# 		jsonlite::read_json("queries/query_error.json")
-# 	)
-# 	expect_error(get_query_results("test", list("test", "test"), pages = NULL))
-# })
-#
-# test_that("list selection errors are properly triggered",{
-# 	mockery::stub(
-# 		get_query_results,
-# 		"graphql_query",
-# 		jsonlite::read_json("issues/issues_response.json")
-# 	)
-# 	expect_error(get_query_results(
-# 		gql_file="issues/issues.graphql",
-# 		param_list = c("something", "else"),
-# 		org = "testorg",
-# 		repo = "testrepo",
-# 		.api_url = "test",
-# 		pages = NULL
-# 	))
-# })
+test_that("get_query_results()", {
+	skip_if_any()
+
+	expect_true(is.list(get_query_results(gql_file = "milestones.graphql", param_list = c("repository", "milestones"), org = "metrumresearchgroup", repo = "rbabylon")))
+	expect_error(get_query_results(gql_file = "milestones.graphql", param_list = c("random", "param"), org = "metrumresearchgroup", repo = "rbabylon"))
+
+	# Testing Pagination
+	no_paginate <- get_query_results(
+		gql_file="issues/issues.graphql",
+		param_list = c("repository", "issues"),
+		pages = 1,
+		org = "metrumresearchgroup",
+		repo = "pkgr",
+		.api_url = .api_url
+	)
+
+	paginate <- get_query_results(
+		gql_file="issues/issues.graphql",
+		param_list = c("repository", "issues"),
+		pages = NULL,
+		org = "metrumresearchgroup",
+		repo = "pkgr",
+		.api_url = .api_url
+	)
+
+	expect_true(length(paginate) > length(no_paginate))
+})
