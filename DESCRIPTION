@@ -28,6 +28,7 @@ Suggests:
     rmarkdown,
     sessioninfo,
     testthat (>= 2.1.0),
-    withr
+    withr,
+    pingr
 RoxygenNote: 7.1.0
 VignetteBuilder: knitr

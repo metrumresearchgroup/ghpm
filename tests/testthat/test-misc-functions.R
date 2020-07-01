@@ -1,6 +1,8 @@
 context("test-misc-functions")
 
 test_that("get_milestones()", {
+	skip_if_any()
+
 	result <- get_milestones("metrumresearchgroup", "rbabylon")
 
 	expect_true(is.data.frame(result) && nrow(result) > 0)
@@ -8,6 +10,8 @@ test_that("get_milestones()", {
 })
 
 test_that("get_user_info()", {
+	skip_if_any()
+
 	result <- get_user_info("dpastoor")
 
 	expect_true(is.list(result) && result$id == "MDQ6VXNlcjMxOTYzMTM=")

@@ -17,6 +17,7 @@ Packages:
   - sessioninfo
   - testthat
   - withr
+  - pingr
 
 Repos:
   - MPN: https://mpn.metworx.com/snapshots/stable/2020-06-08/
@@ -36,6 +37,8 @@ Customizations:
     - testthat:
         Suggests: true
     - withr:
+        Suggests: true
+    - pingr:
         Suggests: true
 
 Lockfile:

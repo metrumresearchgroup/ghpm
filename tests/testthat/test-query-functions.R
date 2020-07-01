@@ -1,32 +1,26 @@
 context("test-query-functions")
 
-describe("graphql_query()", {
+test_that("graphql_query()", {
+	skip_if_any()
 
-	test_that("test file name", {
-		expect_error(graphql_query(file = "test.graphql", org = "metrumresearchgroup", repo = "rbabylon"))
-		expect_true(is.list(graphql_query(file = "milestones.graphql", org = "metrumresearchgroup", repo = "rbabylon")))
-	})
+	# Testing File Name
+	expect_error(graphql_query(file = "test.graphql", org = "metrumresearchgroup", repo = "rbabylon"))
+	expect_true(is.list(graphql_query(file = "milestones.graphql", org = "metrumresearchgroup", repo = "rbabylon")))
 
-	test_that("test passed paramters", {
-		expect_true(length(graphql_query(file = "milestones.graphql", val1 = "metrumresearchgroup", val2 = "rbabylon")$errors) > 0)
-		expect_true(length(graphql_query(file = "milestones.graphql", org = "rbabylon", repo = "metrrumresearchgroup")$errors) > 0)
-	})
+	# Testing Passed Parameters
+	expect_true(length(graphql_query(file = "milestones.graphql", val1 = "metrumresearchgroup", val2 = "rbabylon")$errors) > 0)
+	expect_true(length(graphql_query(file = "milestones.graphql", org = "rbabylon", repo = "metrrumresearchgroup")$errors) > 0)
 
-	test_that("test api_url", {
-		expect_error(graphql_query(file = "milestones.graphql", org = "metrumresearchgroup", repo = "rbabylon", .api_url = "example.com"))
-		expect_error(graphql_query(file = "milestones.graphql", org = "metrumresearchgroup", repo = "rbabylon", .api_url = "http://githuuuub.com"))
-		expect_true(is.list(graphql_query(file = "milestones.graphql", org = "metrumresearchgroup", repo = "rbabylon", .api_url = "https://api.github.com/graphql")))
-	})
+	# Test api_url
+	expect_error(graphql_query(file = "milestones.graphql", org = "metrumresearchgroup", repo = "rbabylon", .api_url = "example.com"))
+	expect_error(graphql_query(file = "milestones.graphql", org = "metrumresearchgroup", repo = "rbabylon", .api_url = "http://githuuuub.com"))
 })
 
-describe("sanitize_response()", {
+test_that("sanitize_response()", {
+	skip_if_any()
 
-	test_that("properly capturing errors", {
-		expect_error(santize_response(graphql_query(file = "test.graphql", org = "metrumresearchgroup", repo = "rbabylon")))
-	})
+	expect_error(santize_response(graphql_query(file = "test.graphql", org = "metrumresearchgroup", repo = "rbabylon")))
 })
-
-
 
 # test_that("improper names ",{
 # 	get
