@@ -1,6 +1,13 @@
 context("test-query-functions")
 
-describe("query functions", {
+describe("graphql_query()", {
+
+	test_that("file name", {
+		#graphql_query <- function(file, ..., .api_url = api_url(), .header = NULL) {
+
+		expect_error(graphql_query(file = "test.graphql", org = "metrumresearchgroup", repo = "rbabylon"))
+		expect_true(is.list(graphql_query(file = "milestones.graphql", org = "metrumresearchgroup", repo = "rbabylon")))
+	})
 
 
 
