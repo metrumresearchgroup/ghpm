@@ -19,7 +19,10 @@ test_that("graphql_query()", {
 test_that("sanitize_response()", {
 	skip_if_any()
 
-	expect_error(santize_response(graphql_query(file = "test.graphql", org = "metrumresearchgroup", repo = "rbabylon")))
+	expect_error(sanitize_response(graphql_query(file = "milestones.graphql", org = "metrumresearchgroup", repo = "rbabylon")))
+	expect_error(sanitize_response(graphql_query(file = "issues/issues.graphql", org = "metrumresearchgroup", repo = "rbabylon", cursor = "asdasdas")))
+	expect_true(is.list(sanitize_response(graphql_query(file = "milestones.graphql", org = "metrumresearchgroup", repo = "rbabylon"))))
+
 })
 
 # test_that("improper names ",{
