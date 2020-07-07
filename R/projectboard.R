@@ -92,7 +92,7 @@ create_projectboard <- function(org, repo, name, body = "", columns = NULL, .api
 #' @return The ID of the projectboard that was cloned
 #' @export
 clone_projectboard <- function(org, repo_from, number, repo_to, .api_url = api_url()){
-	project_from <- get_projectboard_info(org, repo = repo_from, number, .api_url)$repository$project
+	project_from <- get_projectboard(org, repo = repo_from, number, .api_url)$repository$project
 	repo_id <- sanitize_response(graphql_query("repo_info.graphql", org = org, repo = repo_to, .api_url = .api_url))$repository$id
 
 	return(sanitize_response(graphql_query("projects/clone_project.graphql", owner = repo_id, source = project_from$id, name = project_from$name, body = project_from$body, .api_url = .api_url))$project$id)

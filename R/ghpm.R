@@ -1,4 +1,5 @@
-globalVariables(c("board", "column", "created_at", "issue", "merged_at", "project", "title", "user"))
+globalVariables(c("board", "column", "created_at", "issue", "merged_at", "project", "title", "user", "closed_at",
+				  "last_edited_at", "lastEditedAt", "published_at", "publishedAt", "pullrequest"))
 
 #' @name ghpm
 #' @title GitHub Project Management
