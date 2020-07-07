@@ -61,5 +61,5 @@ get_user_info <- function(username, .api_url = api_url()){
 #' @param users A list of user IDs
 #' @param .api_url Optional API url to query. Defaults to the value set by `api_url()`. Usually it's "https://api.github.com/graphql"
 assign_to_object <- function(id, users, .api_url = api_url()){
-	return(sanitize_response(graphql_query("user_info.graphql", id = id, userIDs = users , .api_url = .api_url)))
+	return(sanitize_response(graphql_query("assign_to_object.graphql", id = id, userIDs = users , .api_url = .api_url)))
 }
