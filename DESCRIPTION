@@ -1,8 +1,8 @@
 Package: ghpm
 Type: Package
 Title: GHPM
-Description: Grabs data about a repository from the Github API via GraphQL. 
-Version: 0.3.1
+Description: Github Project Manager
+Version: 0.5.0
 Authors@R: 
 	person( given = "Harsh",
 			family = "Baid",

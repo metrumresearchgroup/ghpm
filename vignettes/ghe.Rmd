@@ -1,5 +1,5 @@
 ---
-title: "Using github enterprise"
+title: "Using Github Enterprise"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Using github enterprise}

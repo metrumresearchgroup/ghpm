@@ -41,20 +41,13 @@ or say I wanted to only get issues that a certain user created for a specific mi
 get_issues("metrumresearchgroup", "pkgr") %>% filter(creator == "dpastoor", milestone == "v0.5.0")
 ```
 
-I can get even more information by combining this query with other issue based queries. Like if I wanted to get the comments of all the issues created by `user: HarlanH` that were assigned in the 0.9.0 milestone, I could do:
+I can get even more information by combining this query with other issue based queries. Like if I wanted to get the comments of all the issues created by `user: dpastoor` that were assigned in the `v0.5.0` milestone, I could do:
 ```{r}
 dpastoor_issues <- get_issues("metrumresearchgroup", "pkgr") %>% filter(creator == "dpastoor", milestone == "v0.5.0")
 
 get_issue_comments("metrumresearchgroup", "pkgr") %>% filter(issue %in% dpastoor_issues$issue)
 ```
 
-The following functions are provided to grab issue data
-
-* `get_issues()` - Grabs general data about each issue
-* `get_issue_labels()` - Grabs the labels attached to each issue
-* `get_issue_assignees()` - Grabs assignees assigned to each issue
-* `get_issue_events()` - Queries event data specific to issues being added and moved across project boards for each issue
-* `get_issue_comments()` - Grabs the comment data for each issue.
 
 ## Pull Requests
 
