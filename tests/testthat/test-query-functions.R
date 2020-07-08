@@ -36,7 +36,7 @@ test_that("get_query_results()", {
 		pages = 1,
 		org = "metrumresearchgroup",
 		repo = "pkgr",
-		.api_url = .api_url
+		.api_url = api_url()
 	)
 
 	paginate <- get_query_results(
@@ -45,7 +45,7 @@ test_that("get_query_results()", {
 		pages = NULL,
 		org = "metrumresearchgroup",
 		repo = "pkgr",
-		.api_url = .api_url
+		.api_url = api_url()
 	)
 
 	expect_true(length(paginate) > length(no_paginate))
