@@ -113,7 +113,7 @@ get_issues_assignees_participants <- function(org, repo, .api_url = api_url(), p
 				return(.acc)
 			}
 			# names are not required and may be null
-			return(add_row(.acc, "type" = "assignee", "name" = .cv$name %||% NA_character_, "login" = .cv$login))
+			return(add_row(.acc, "type" = "assignee", "name" = .cv$name %||% NA_character_, "login" = .cv$login %||% NA_character_))
 		}, .init = tibble("type" = character(), "name" = character(),"login" = character(), .rows = 0))
 		assigndat$total_count <- x$assignees$total_count
 
@@ -121,7 +121,7 @@ get_issues_assignees_participants <- function(org, repo, .api_url = api_url(), p
 			if (is.null(.cv)) {
 				return(.acc)
 			}
-			return(add_row(.acc, "type" = "participant", "name" = .cv$name %||% NA_character_, "login" = .cv$login))
+			return(add_row(.acc, "type" = "participant", "name" = .cv$name %||% NA_character_, "login" = .cv$login %||% NA_character_))
 		}, .init = tibble("type" = character(), "name" = character(),"login" = character(), .rows = 0))
 		pardat$total_count <- x$participants$total_count
 		return(mutate(bind_rows(assigndat, pardat), issue = x$number))
@@ -219,7 +219,7 @@ get_issue_comments <- function(org, repo, .api_url = api_url(), pages = NULL){
 			return(add_row(.acc,
 						   "issue" = x$number,
 						   "n_comments" = x$comments$n_comments,
-						   "author" = .cv$author$login,
+						   "author" = .cv$author$login %||% NA_character_,
 						   "publishedAt" = .cv$publishedAt %||% NA_character_,
 						   "lastEditedAt" = .cv$lastEditedAt %||% NA_character_,
 						   "editor" = .cv$editor$login %||% NA_character_,
