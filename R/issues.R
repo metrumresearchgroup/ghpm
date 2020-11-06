@@ -82,7 +82,7 @@ get_issue_labels <- function(org, repo, .api_url = api_url(), pages = NULL){
 
 		return(mutate(label_data, "issue" = x$number))
 	})
-	return(select(labels, issue, everything()))
+	return(select(arrange(labels, issue), issue, everything()))
 }
 
 #' Gets a data frame of the assignees and participants for issues
@@ -126,7 +126,7 @@ get_issues_assignees_participants <- function(org, repo, .api_url = api_url(), p
 		pardat$total_count <- x$participants$total_count
 		return(mutate(bind_rows(assigndat, pardat), issue = x$number))
 	})
-	return(select(assignees, issue, everything()))
+	return(select(arrange(assignees, issue), issue, everything()))
 }
 
 
