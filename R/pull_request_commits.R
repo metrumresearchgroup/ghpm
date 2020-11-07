@@ -21,20 +21,20 @@ get_pull_request_commits <- function(org, repo, number, pages = NULL, .cc = FALS
 	)
 
 	commits <- reduce(data, function(.acc, .cv){
-		return(.acc %>% add_row("oid" = .cv$commit$oid,
+		return(add_row(.acc, "oid" = .cv$commit$oid,
 								"summary" = .cv$commit$messageHeadline,
 								"message" = .cv$commit$message,
 								"author" = ifelse(is.null(.cv$commit$author$user$login), NA_character_, .cv$commit$author$user$login),
 								"date" = .cv$commit$authoredDate))
 	}, .init = tibble("oid" = character(), "summary" = character(), "message" = character(), "author" = character(), "date" = character(), .rows = 0)) %>% mutate("date" = parse_datetime(date))
 
-	if(!.cc) return(commits %>% select("oid", "message", "author", "date"))
+	if(!.cc) return(select(commits, "oid", "message", "author", "date"))
 
 	cc_commits <- map_df(lapply(1:nrow(commits), function(i) {
-		commits %>% select("summary", "message") %>% slice(i) %>% as.list()
+		as.list(slice(select(commits, "summary", "message"), i))
 	}), process_commit)
 
-	return(commits %>% bind_cols(cc_commits) %>% select("oid", "type", "description", "body", "footer", "author", "date"))
+	return(select(bind_cols(commits, cc_commits), "oid", "type", "description", "body", "footer", "author", "date"))
 }
 
 #' Parses each commit list object and returns a single row data.frame
@@ -53,12 +53,11 @@ process_commit <- function(.x){
 #' @param commit_summary The commit summary
 #' @param commit_message commit message
 #' @return A list according to spec: type | description | body | footer
-#' @importFrom stringr str_replace_all
 parse_commit <- function(commit_summary = NULL, commit_message = NULL){
 	if (is.null(commit_message) || commit_message == "") {
 		return(list("type" = NA_character_, "description" = NA_character_, "body" = NA_character_, "footer" = NA_character_))
 	}
-	return(append(parse_summary(commit_summary), parse_body(str_replace_all(commit_message, commit_summary, ""))))
+	return(append(parse_summary(commit_summary), parse_body(gsub(commit_summary, "", commit_message, fixed = TRUE))))
 }
 
 #' Parses the commit summary which just contains type and description
@@ -92,6 +91,7 @@ parse_body <- function(commit_message = NULL){
 	if(is.null(commit_message) || commit_message == ""){
 		return(message)
 	}
+
 
 	msg <- str_trim(str_split(commit_message, "\n\n")[[1]], side = "both")
 	msg <- msg[msg != ""]

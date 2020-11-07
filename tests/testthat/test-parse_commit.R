@@ -44,3 +44,12 @@ test_that("Successfully parsed commit with no body and just footer", {
 	expect_equal(cc$body, NA_character_)
 	expect_equal(cc$footer, "fixes: #15\nreferences: #7")
 })
+
+test_that("Successfully parsed commit with incomplete and unescaped regex charac", {
+	cc <- parse_commit("refactor: swi[tch to vanilla, a s)up++ers(et of iso}lati\\on", "refactor: swi[tch to vanilla, a s)up++ers(et of iso}lati\\on\nsom)(e... oth+]er miscellanious text\n\nfixes: #15\nreferences: #7\n")
+	expect_equal(names(cc), c("type", "description", "body", "footer"))
+	expect_equal(cc$type, "refactor")
+	expect_equal(cc$description, "swi[tch to vanilla, a s)up++ers(et of iso}lati\\on")
+	expect_equal(cc$body, "som)(e... oth+]er miscellanious text")
+	expect_equal(cc$footer, "fixes: #15\nreferences: #7")
+})

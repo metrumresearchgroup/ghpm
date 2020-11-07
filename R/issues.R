@@ -2,9 +2,11 @@
 #' @inheritParams ghpm
 #' @return A data frame containing the issue | title | body | creator | milestone | state of each issue
 #' @importFrom purrr reduce
+#' @importFrom dplyr mutate_at vars arrange
+#' @importFrom readr parse_datetime
 #' @importFrom tibble tibble add_row
 #' @export
-get_repo_issues <- function(org, repo, .api_url = api_url(), pages = NULL){
+get_issues <- function(org, repo, .api_url = api_url(), pages = NULL){
 	data <- get_query_results(
 		gql_file="issues/issues.graphql",
 		param_list = c("repository", "issues"),
@@ -19,7 +21,7 @@ get_repo_issues <- function(org, repo, .api_url = api_url(), pages = NULL){
 								 "title" = .cv$title,
 								 "body" = .cv$body,
 								 "closed" = .cv$closed,
-								 "closed_at" = .cv$closedAt  %||% NA_character_,
+								 "closed_at" = .cv$closedAt %||% NA_character_,
 								 "resource_path" = .cv$resourcePath,
 								 "url" = .cv$url,
 								 "last_edited_at" = .cv$lastEditedAt %||% NA_character_,
@@ -47,7 +49,7 @@ get_repo_issues <- function(org, repo, .api_url = api_url(), pages = NULL){
 					  "state" = character(),
 					  .rows = 0))
 
-	return(dplyr::mutate_at(issues, dplyr::vars(closed_at, last_edited_at, published_at), readr::parse_datetime))
+	return(arrange(mutate_at(issues, vars(closed_at, last_edited_at, published_at), parse_datetime), issue))
 }
 
 #' Gets a data frame of the labels of each issue
@@ -57,7 +59,7 @@ get_repo_issues <- function(org, repo, .api_url = api_url(), pages = NULL){
 #' @importFrom tibble tibble add_row
 #' @importFrom dplyr mutate select everything
 #' @export
-get_repo_issue_labels <- function(org, repo, .api_url = api_url(), pages = NULL){
+get_issue_labels <- function(org, repo, .api_url = api_url(), pages = NULL){
 	data <- get_query_results(
 		gql_file="issues/issue_labels.graphql",
 		param_list = c("repository", "issues"),
@@ -83,42 +85,9 @@ get_repo_issue_labels <- function(org, repo, .api_url = api_url(), pages = NULL)
 	return(select(labels, issue, everything()))
 }
 
-#' Gets a data frame of the assignees of each issue
-#' @inheritParams ghpm
-#' @return A data frame containing issue | assignedTo of each issue. Returns an empty dataframe if none are found.
-#' @importFrom purrr reduce map_df keep
-#' @importFrom tibble tibble add_row
-#' @importFrom dplyr mutate select everything
-#' @export
-get_issues_assignees <- function(org, repo, .api_url = api_url(), pages = NULL){
-	data <- get_query_results(
-		gql_file="issues/issue_assignees.graphql",
-		param_list = c("repository", "issues"),
-		pages = pages,
-		org = org,
-		repo = repo,
-		.api_url = .api_url
-	)
-
-	data <- keep(data, ~length(.x$assignees$nodes) > 0)
-
-	if(!length(data)){
-		return(tibble("issue" = numeric(), "assigned_to" = character(), .rows = 0))
-	}
-
-	assignees <- map_df(data, function(x){
-		assignee_data <- reduce(x$assignees$nodes, function(.acc, .cv){
-			return(.acc %>% add_row("assigned_to" = .cv$login))
-		}, .init = tibble("assigned_to" = character(), .rows = 0))
-
-		return(assignee_data %>% mutate(issue = x$number))
-	})
-	return(assignees %>% select(issue, everything()))
-}
-
 #' Gets a data frame of the assignees and participants for issues
 #' @inheritParams ghpm
-#' @return A data frame containing issue | assignedTo of each issue. Returns an empty dataframe if none are found.
+#' @return A data frame containing issue number | type (particpant or assignee) | name | login | total count of users of each issue. Returns an empty dataframe if none are found.
 #' @importFrom purrr reduce map_df keep
 #' @importFrom tibble tibble add_row
 #' @importFrom dplyr mutate select everything bind_rows
@@ -144,7 +113,7 @@ get_issues_assignees_participants <- function(org, repo, .api_url = api_url(), p
 				return(.acc)
 			}
 			# names are not required and may be null
-			return(add_row(.acc, "type" = "assignee", "name" = .cv$name %||% NA_character_, "login" = .cv$login))
+			return(add_row(.acc, "type" = "assignee", "name" = .cv$name %||% NA_character_, "login" = .cv$login %||% NA_character_))
 		}, .init = tibble("type" = character(), "name" = character(),"login" = character(), .rows = 0))
 		assigndat$total_count <- x$assignees$total_count
 
@@ -152,7 +121,7 @@ get_issues_assignees_participants <- function(org, repo, .api_url = api_url(), p
 			if (is.null(.cv)) {
 				return(.acc)
 			}
-			return(add_row(.acc, "type" = "participant", "name" = .cv$name %||% NA_character_, "login" = .cv$login))
+			return(add_row(.acc, "type" = "participant", "name" = .cv$name %||% NA_character_, "login" = .cv$login %||% NA_character_))
 		}, .init = tibble("type" = character(), "name" = character(),"login" = character(), .rows = 0))
 		pardat$total_count <- x$participants$total_count
 		return(mutate(bind_rows(assigndat, pardat), issue = x$number))
@@ -194,7 +163,7 @@ get_issue_events <- function(org, repo, .api_url = api_url(), pages = NULL){
 
 	timeline <- map_df(data, function(x){
 		event_data <- reduce(x$timelineItems$nodes, function(.acc, .cv){
-			return(.acc %>% add_row("project" = .cv$project$name,
+			return(add_row(.acc, "project" = .cv$project$name,
 									"type" = ifelse(.cv$`__typename` == "AddedToProjectEvent", "Added", "Moved"),
 									"column" = .cv$projectColumnName,
 									"author" = ifelse(is.null(.cv$actor), NA_character_, .cv$actor$login),
@@ -206,18 +175,18 @@ get_issue_events <- function(org, repo, .api_url = api_url(), pages = NULL){
 						  "author" = character(),
 						  "date" = character(),
 						  .rows = 0))
-		return(event_data %>% mutate("issue" = x$number))
-	}) %>% mutate("date" = parse_datetime(date))
+		return(mutate(event_data, "issue" = x$number))
+	})
 
-	return(timeline %>% arrange(project) %>% select("issue", everything()))
+	return(select(arrange(mutate(timeline, "date" = parse_datetime(date)), project), "issue", everything()))
 }
 
-#' Gets a data frame of the comments of each issue
+#' Gets a data frame of the last 30 comments of each issue
 #' @inheritParams ghpm
-#' @return A data frame containing the issue | date | author | comment of each issue. Returns an empty dataframe if none are found.
+#' @return A data frame containing the issue | n_comments | author | publishedAt | lastEditedAt | editor | url | bodyText | of each issue. Returns an empty dataframe if none are found.
 #' @importFrom purrr reduce map_df keep
 #' @importFrom tibble tibble add_row
-#' @importFrom dplyr mutate select everything
+#' @importFrom dplyr mutate_at vars arrange
 #' @importFrom readr parse_datetime
 #' @export
 get_issue_comments <- function(org, repo, .api_url = api_url(), pages = NULL){
@@ -230,33 +199,46 @@ get_issue_comments <- function(org, repo, .api_url = api_url(), pages = NULL){
 		.api_url = .api_url
 	)
 
-	data <- keep(data, ~length(.x$comments$nodes) > 0)
+	data <- keep(data, ~.x$comments$n_comments > 0)
 
 	if(!length(data)){
 		return(tibble("issue" = numeric(),
-					  "comment" = character(),
+					  "n_comments" = numeric(),
 					  "author" = character(),
-					  "date" = character(),
-					  .rows = 0))
+					  "publishedAt" = character(),
+					  "lastEditedAt" = character(),
+					  "editor" = character(),
+					  "url" = character(),
+					  "bodyText" = character(),
+					  .rows = 0
+		))
 	}
 
 	comments <- map_df(data, function(x){
-		comment_data <- reduce(x$comments$nodes, function(.acc, .cv){
-			return(add_row(.acc, "comment" = .cv$body,
-									"author" = ifelse(is.null(.cv$author), NA_character_, .cv$author$login),
-									"date" = .cv$createdAt))
-		}, .init = tibble("issue" = numeric(),
-						  "comment" = character(),
-						  "author" = character(),
-						  "date" = character(),
-						  .rows = 0))
+		return(reduce(x$comments$nodes, function(.acc, .cv){
+			return(add_row(.acc,
+						   "issue" = x$number,
+						   "n_comments" = x$comments$n_comments,
+						   "author" = .cv$author$login %||% NA_character_,
+						   "publishedAt" = .cv$publishedAt %||% NA_character_,
+						   "lastEditedAt" = .cv$lastEditedAt %||% NA_character_,
+						   "editor" = .cv$editor$login %||% NA_character_,
+						   "url" = .cv$url,
+						   "bodyText" = .cv$bodyText
+			))
 
-		return(mutate(comment_data, "issue" = x$number))
+		}, .init = tibble("issue" = numeric(),
+						  "n_comments" = numeric(),
+						  "author" = character(),
+						  "publishedAt" = character(),
+						  "lastEditedAt" = character(),
+						  "editor" = character(),
+						  "url" = character(),
+						  "bodyText" = character()
+		)))
 	})
 
-	comments <- mutate(comments, "date" = parse_datetime(date))
-
-	return(select(comments, "issue", everything()))
+	return(arrange(mutate_at(comments, vars(publishedAt, lastEditedAt), parse_datetime), issue))
 }
 
 #' Gets a data frame of the issues of a specific milestone

@@ -21,7 +21,7 @@ get_issues_assignees_participants(
 \item{pages}{Number of pages to paginate and pull data from. Each page will contain upto 100 issues/pullrequests. Defaults to NULL for all pages.}
 }
 \value{
-A data frame containing issue | assignedTo of each issue. Returns an empty dataframe if none are found.
+A data frame containing issue number | type (particpant or assignee) | name | login | total count of users of each issue. Returns an empty dataframe if none are found.
 }
 \description{
 Gets a data frame of the assignees and participants for issues

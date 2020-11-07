@@ -1,4 +1,5 @@
-globalVariables(c("board", "column", "created_at", "issue", "merged_at", "project", "title", "user"))
+globalVariables(c("board", "column", "created_at", "issue", "merged_at", "project", "title", "user", "closed_at",
+				  "last_edited_at", "lastEditedAt", "published_at", "publishedAt", "pullrequest"))
 
 #' @name ghpm
 #' @title GitHub Project Management
@@ -18,13 +19,16 @@ NULL
 #' @param .api_url Optional API url to query. Defaults to "https://api.github.com/graphql"
 #' @param .header Optional vector of headers to send to query
 #' @return The list containing the query result
+#' @importFrom checkmate assert_string
 #' @importFrom gh gh
 #' @importFrom purrr compact
 #' @importFrom glue glue
 #' @export
 graphql_query <- function(file, ..., .api_url = api_url(), .header = NULL) {
-	assert_url(.api_url)
-	file <- system.file(file, package = "ghpm")
+	assert_string(.api_url, fixed = "http")
+	if(!file.exists(file)){
+		file <- system.file(file, package = "ghpm", mustWork = TRUE)
+	}
 	query <- readChar(file, file.info(file)$size)
 
 	return(gh("POST ", query = query, variables = compact(list(...)), .send_headers = .header, .api_url = .api_url, .token = get_token(.api_url)))

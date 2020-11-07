@@ -28,33 +28,26 @@ This document is designed to introduce you to some of these functions and the an
 
 Lets start with grabbing issues from the pkgr repo using the following command.
 ```{r}
-get_repo_issues("metrumresearchgroup", "pkgr")
+get_issues("metrumresearchgroup", "pkgr")
 ```
 
 However, depending on the information I am looking for, I can further refine my request. If I only wanted issues from a particular milestone that were closed, I could do the following:
 ```{r}
-get_repo_issues("metrumresearchgroup", "pkgr") %>% filter(milestone == "v0.5.0", state == "CLOSED")
+get_issues("metrumresearchgroup", "pkgr") %>% filter(milestone == "v0.5.0", state == "CLOSED")
 ```
 
 or say I wanted to only get issues that a certain user created for a specific milestone
 ```{r}
-get_repo_issues("metrumresearchgroup", "pkgr") %>% filter(creator == "dpastoor", milestone == "v0.5.0")
+get_issues("metrumresearchgroup", "pkgr") %>% filter(creator == "dpastoor", milestone == "v0.5.0")
 ```
 
-I can get even more information by combining this query with other issue based queries. Like if I wanted to get the comments of all the issues created by `user: HarlanH` that were assigned in the 0.9.0 milestone, I could do:
+I can get even more information by combining this query with other issue based queries. Like if I wanted to get the comments of all the issues created by `user: dpastoor` that were assigned in the `v0.5.0` milestone, I could do:
 ```{r}
-dpastoor_issues <- get_repo_issues("metrumresearchgroup", "pkgr") %>% filter(creator == "dpastoor", milestone == "v0.5.0")
+dpastoor_issues <- get_issues("metrumresearchgroup", "pkgr") %>% filter(creator == "dpastoor", milestone == "v0.5.0")
 
 get_issue_comments("metrumresearchgroup", "pkgr") %>% filter(issue %in% dpastoor_issues$issue)
 ```
 
-The following functions are provided to grab issue data
-
-* `get_repo_issues()` - Grabs general data about each issue
-* `get_repo_issue_labels()` - Grabs the labels attached to each issue
-* `get_issue_assignees()` - Grabs assignees assigned to each issue
-* `get_issue_events()` - Queries event data specific to issues being added and moved across project boards for each issue
-* `get_issue_comments()` - Grabs the comment data for each issue.
 
 ## Pull Requests
 

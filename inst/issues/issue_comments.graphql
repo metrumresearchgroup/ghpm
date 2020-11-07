@@ -1,46 +1,22 @@
-query issues_bookend_comments($org: String!, $repo: String!, $cursor: String) {
+query issues_comments($org: String!, $repo: String!, $cursor: String) {
   repository(owner: $org, name: $repo) {
     issues(last: 100, before: $cursor) {
       nodes {
         number
-        comments {
+        comments(last: 30){
+          nodes {
+            author {
+              login
+            }
+            publishedAt
+            lastEditedAt
+            editor {
+              login
+            }
+            url
+            bodyText
+          }
           n_comments: totalCount
-        }
-        last: comments(last: 3) {
-          nodes {
-            author {
-              login
-            }
-            publishedAt
-            author {
-              login
-            }
-            lastEditedAt
-            editor {
-              login
-            }
-            url
-            body
-            bodyText
-          }
-        }
-        first: comments(first: 1) {
-          nodes {
-            author {
-              login
-            }
-            publishedAt
-            author {
-              login
-            }
-            lastEditedAt
-            editor {
-              login
-            }
-            url
-            body
-            bodyText
-          }
         }
       }
       pageInfo {

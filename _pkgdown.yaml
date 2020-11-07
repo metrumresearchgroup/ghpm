@@ -1,4 +1,4 @@
-url: https://ghe.metrumrg.com/pages/tech-solutions/ghpm
+url: https://metrumresearchgroup.github.io/ghpm/
 title: Github Project Manager
 template:
   params:
@@ -7,22 +7,22 @@ navbar:
   type: inverse
   right:
     - icon: fa-github fa-lg
-      href: https://ghe.metrumrg.com/tech-experiments/ghpm
+      href: https://github.com/metrumresearchgroup/ghpm
 reference:
 - title: Issue Queries
   contents:
-  - get_repo_issues
-  - get_repo_issue_labels
-  - get_issue_assignees
+  - get_issues
+  - get_issue_labels
+  - get_issues_assignees_participants
   - get_issue_events
   - get_issue_comments
   - get_issues_from_milestone
 - title: Pull Request Queries
   contents:
   - create_pull_request
-  - add_pull_request_reviewers
   - get_all_pull_requests
   - get_pull_request_comments
+  - add_pull_request_reviewers
   - get_pull_request_reviewers
   - get_pull_request_commits
 - title: Label Queries
@@ -31,8 +31,8 @@ reference:
   - delete_all_labels
 - title: Project Board Queries
   contents:
-  - get_projectboard_info
   - get_projectboard
+  - get_projectboard_issues
   - create_projectboard
   - clone_projectboard
 - title: Other Queries
@@ -46,4 +46,12 @@ articles:
 - title: "Intro to GHPM"
   desc: ~
   contents: '`ghpm`'
-
+- title: "Using Github Enterprise"
+  desc: ~
+  contents: '`ghe`'
+- title: "Starting a Github Project"
+  desc: ~
+  contents: '`new-project`'
+- title: "Using GitHub Project Boards"
+  desc: ~
+  contents: '`projectboard`'
