@@ -57,7 +57,7 @@ get_issues <- function(org, repo, .api_url = api_url(), pages = NULL){
 #' @return A data frame containing issue | label of each issue. Returns an empty dataframe if none are found.
 #' @importFrom purrr reduce map_df keep
 #' @importFrom tibble tibble add_row
-#' @importFrom dplyr mutate select everything
+#' @importFrom dplyr mutate select everything arrange
 #' @export
 get_issue_labels <- function(org, repo, .api_url = api_url(), pages = NULL){
 	data <- get_query_results(
@@ -90,7 +90,7 @@ get_issue_labels <- function(org, repo, .api_url = api_url(), pages = NULL){
 #' @return A data frame containing issue number | type (particpant or assignee) | name | login | total count of users of each issue. Returns an empty dataframe if none are found.
 #' @importFrom purrr reduce map_df keep
 #' @importFrom tibble tibble add_row
-#' @importFrom dplyr mutate select everything bind_rows
+#' @importFrom dplyr mutate select everything bind_rows arrange
 #' @export
 get_issues_assignees_participants <- function(org, repo, .api_url = api_url(), pages = NULL){
 	data <- get_query_results(
