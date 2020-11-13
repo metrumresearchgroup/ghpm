@@ -24,7 +24,7 @@ get_users_by_org <- function(org, .api_url = api_url()){
 #' @export
 add_users_to_org <- function(users, org, .api_url = api_url(graphql = FALSE)){
 	added_users <- walk(users, function(user){
-		gh(glue("PUT /orgs/{org}/membership/{user}"),
+		gh(glue("PUT /orgs/{org}/memberships/{user}"),
 		   .token = get_token(.api_url),
 		   .api_url = .api_url)
 
