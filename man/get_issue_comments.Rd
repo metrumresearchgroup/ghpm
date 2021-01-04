@@ -2,7 +2,7 @@
 % Please edit documentation in R/issues.R
 \name{get_issue_comments}
 \alias{get_issue_comments}
-\title{Gets a data frame of the comments of each issue}
+\title{Gets a data frame of the last 30 comments of each issue}
 \usage{
 get_issue_comments(org, repo, .api_url = api_url(), pages = NULL)
 }
@@ -16,8 +16,8 @@ get_issue_comments(org, repo, .api_url = api_url(), pages = NULL)
 \item{pages}{Number of pages to paginate and pull data from. Each page will contain upto 100 issues/pullrequests. Defaults to NULL for all pages.}
 }
 \value{
-A data frame containing the issue | date | author | comment of each issue. Returns an empty dataframe if none are found.
+A data frame containing the issue | n_comments | author | publishedAt | lastEditedAt | editor | url | bodyText | of each issue. Returns an empty dataframe if none are found.
 }
 \description{
-Gets a data frame of the comments of each issue
+Gets a data frame of the last 30 comments of each issue
 }

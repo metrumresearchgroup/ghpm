@@ -1,0 +1,27 @@
+query issues_assignees_participants($org: String!, $repo: String!, $cursor: String) {
+  repository(owner: $org, name: $repo) {
+    issues(last: 100, before: $cursor){
+      nodes{
+        number
+        participants(first: 10) {
+          total_count: totalCount
+          nodes {
+            name
+            login
+          }
+        }
+        assignees(first: 5) {
+          total_count: totalCount
+          nodes {
+            name
+            login
+          }
+        }
+      }
+      pageInfo {
+        hasPreviousPage
+        startCursor
+      }
+    }
+  }
+}

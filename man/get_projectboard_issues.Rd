@@ -2,18 +2,20 @@
 % Please edit documentation in R/projectboard.R
 \name{get_projectboard_issues}
 \alias{get_projectboard_issues}
-\title{Helper function for get_projectboard that returns a data frame of numbers and issues}
+\title{Gets a data frame of the issues and their columns on the project board}
 \usage{
-get_projectboard_issues(.acc, .cv)
+get_projectboard_issues(org, repo, .api_url = api_url())
 }
 \arguments{
-\item{.acc}{Accumlator Value}
+\item{org}{Name of organization to query}
 
-\item{.cv}{Current Value}
+\item{repo}{Name of repository to query}
+
+\item{.api_url}{Optional API url to query. Defaults to the value set by `api_url()`. Usually it's "https://api.github.com/graphql"}
 }
 \value{
-A data frame containing issue | title of an issue
+A data frame containing the board | column | title | issue of the projectboards
 }
 \description{
-Helper function for get_projectboard that returns a data frame of numbers and issues
+Gets a data frame of the issues and their columns on the project board
 }

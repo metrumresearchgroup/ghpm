@@ -2,6 +2,7 @@
 #' @inheritParams ghpm
 #' @return A data frame containing the title | description | state | author | url of each milestone
 #' @importFrom purrr reduce
+#' @importFrom dplyr mutate_at
 #' @importFrom tibble tibble add_row
 #' @export
 get_milestones <- function(org, repo, .api_url = api_url()){
@@ -22,10 +23,10 @@ get_milestones <- function(org, repo, .api_url = api_url()){
 						"creator" = ifelse(is.null(.cv$creator), NA_character_, .cv$creator$login),
 						"state" = .cv$state,
 						"url" = .cv$url,
-						"createdAt" = .cv$createdAt,
+						"created_at" = .cv$createdAt,
 						"closed" = .cv$closed,
-						"closedAt" = .cv$closedAt,
-						"dueOn" = .cv$dueOn
+						"closed_at" = .cv$closedAt %||% NA_character_,
+						"due_on" = .cv$dueOn%||% NA_character_
 				)
 			   )
 	}, .init = tibble(
@@ -35,14 +36,14 @@ get_milestones <- function(org, repo, .api_url = api_url()){
 		"creator" = character(),
 		"state" = character(),
 		"url" = character(),
-		"createdAt" = character(),
+		"created_at" = character(),
 		"closed" = logical(),
-		"closedAt" = character(),
-		"dueOn" = character(),
+		"closed_at" = character(),
+		"due_on" = character(),
 		.rows = 0)
 	)
 	if (nrow(milestones)) {
-		milestones <- mutate_at(milestones, c("createdAt", "closedAt", "dueOn"), readr::parse_datetime)
+		milestones <- mutate_at(milestones, c("created_at", "closed_at", "due_on"), readr::parse_datetime)
 	}
 	return(milestones)
 }
@@ -60,5 +61,5 @@ get_user_info <- function(username, .api_url = api_url()){
 #' @param users A list of user IDs
 #' @param .api_url Optional API url to query. Defaults to the value set by `api_url()`. Usually it's "https://api.github.com/graphql"
 assign_to_object <- function(id, users, .api_url = api_url()){
-	return(sanitize_response(graphql_query("user_info.graphql", id = id, userIDs = users , .api_url = .api_url)))
+	return(sanitize_response(graphql_query("assign_to_object.graphql", id = id, userIDs = users , .api_url = .api_url)))
 }

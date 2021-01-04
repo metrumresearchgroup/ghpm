@@ -1,0 +1,13 @@
+query OrganizationMembers($org: String!, $cursor: String){
+  organization(login: $org){
+    membersWithRole(last: 100, before: $cursor){
+      nodes {
+        login
+      }
+      pageInfo {
+        hasPreviousPage
+        startCursor
+      }
+    }
+  }
+}

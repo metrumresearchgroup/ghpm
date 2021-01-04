@@ -1,4 +1,4 @@
-query projects($org: String!, $repo: String!) {
+query projectboard_issues($org: String!, $repo: String!) {
   repository(owner: $org, name: $repo) {
     projects(first: 5) {
       nodes {

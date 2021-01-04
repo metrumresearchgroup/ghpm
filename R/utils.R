@@ -1,7 +1,3 @@
-assert_url <- function(.url) {
-	checkmate::assert_string(.url, fixed = "http")
-}
-
 #' Sanitizes the response from the `graphql_query()` function.
 #' @param response The result of `graphql_query()`
 #' @param stop If true, will stop the execution when an error is returned otherwise returns the response.
@@ -23,7 +19,6 @@ sanitize_response <- function(response, stop = TRUE){
 	# if no errors, return data
 	return(response$data)
 }
-
 
 #' Wrapper around the get_ functions to page through results and extract the data from the response
 #' @param gql_file The .graphql (with path) for the query
@@ -55,7 +50,7 @@ get_query_results <- function(gql_file, param_list, pages = NULL, ...) {
 	data <- response$nodes
 
 	# page through if necessary
-	while((is.null(pages) || pages > 1) && ("pageInfo" %in% names(response) && response$pageInfo$hasPreviousPage)) {
+	while((is.null(pages) || pages > 1) && ("pageInfo" %in% names(response) && response$pageInfo$hasPreviousPage)){
 		response <- sanitize_response(
 			graphql_query(
 				gql_file,

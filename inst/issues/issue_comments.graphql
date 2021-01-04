@@ -1,16 +1,22 @@
-query issue_comments($org: String!, $repo: String!, $cursor: String) {
+query issues_comments($org: String!, $repo: String!, $cursor: String) {
   repository(owner: $org, name: $repo) {
-    issues(last: 100, before: $cursor){
-      nodes{
+    issues(last: 100, before: $cursor) {
+      nodes {
         number
-        comments(first: 50){
-          nodes{
+        comments(last: 30){
+          nodes {
             author {
               login
             }
-            createdAt
-            body
+            publishedAt
+            lastEditedAt
+            editor {
+              login
+            }
+            url
+            bodyText
           }
+          n_comments: totalCount
         }
       }
       pageInfo {
@@ -20,3 +26,4 @@ query issue_comments($org: String!, $repo: String!, $cursor: String) {
     }
   }
 }
+
