@@ -20,7 +20,7 @@ Packages:
   - pingr
 
 Repos:
-  - MPN: https://mpn.metworx.com/snapshots/stable/2020-11-21
+  - MPN: https://mpn.metworx.com/snapshots/stable/2020-12-21
 
 Customizations:
   Packages:
