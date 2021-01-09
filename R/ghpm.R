@@ -31,7 +31,7 @@ graphql_query <- function(file, ..., .api_url = api_url(), .header = NULL) {
 	}
 	query <- readChar(file, file.info(file)$size)
 
-	return(gh("POST ", query = query, variables = compact(list(...)), .send_headers = .header, .api_url = .api_url, .token = get_token(.api_url)))
+	return(gh("POST {url}", url = .api_url, query = query, variables = compact(list(...)), .send_headers = .header, .token = get_token(.api_url)))
 }
 
 #' Helper function for validating tokens
