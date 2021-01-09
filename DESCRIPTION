@@ -2,7 +2,7 @@ Package: ghpm
 Type: Package
 Title: GHPM
 Description: Github Project Manager
-Version: 0.5.0
+Version: 0.5.1
 Authors@R: 
 	person( given = "Harsh",
 			family = "Baid",
@@ -16,7 +16,7 @@ Imports:
     magrittr,
     dplyr,
     readr,
-    gh,
+    gh (>= 1.2.0),
     tibble,
     stringr,
     glue,
