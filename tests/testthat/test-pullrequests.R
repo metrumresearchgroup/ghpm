@@ -7,7 +7,7 @@ is_nonempty_sorted_df <- function(data){
 test_that("get_pull_request_commits()", {
 	skip_if_any()
 
-	result <- get_pull_request_commits("metrumresearchgroup", "rbabylon", 104)
+	result <- get_pull_request_commits("metrumresearchgroup", "bbr", 104)
 	result_cc <- get_pull_request_commits("metrumresearchgroup", "pkgr", 149, .cc = TRUE)
 
 	expect_true(is.data.frame(result) && nrow(result) > 0)
@@ -20,7 +20,7 @@ test_that("get_pull_request_commits()", {
 test_that("get_all_pull_requests()", {
 	skip_if_any()
 
-	result <- get_all_pull_requests("metrumresearchgroup", "rbabylon")
+	result <- get_all_pull_requests("metrumresearchgroup", "bbr")
 
 	expect_true(is_nonempty_sorted_df(result))
 	expect_equal(names(result), c("pullrequest", "title", "author", "body", "milestone", "created_at", "merged_by", "merged_at", "merged_to", "state"))
@@ -29,7 +29,7 @@ test_that("get_all_pull_requests()", {
 test_that("get_pull_request_reviewers()", {
 	skip_if_any()
 
-	result <- get_pull_request_reviewers("metrumresearchgroup", "rbabylon")
+	result <- get_pull_request_reviewers("metrumresearchgroup", "bbr")
 
 	expect_true(is_nonempty_sorted_df(result))
 	expect_equal(names(result), c("pullrequest", "reviewer"))
@@ -38,7 +38,7 @@ test_that("get_pull_request_reviewers()", {
 test_that("get_pull_request_comments()", {
 	skip_if_any()
 
-	result <- get_pull_request_comments("metrumresearchgroup", "rbabylon", 95)
+	result <- get_pull_request_comments("metrumresearchgroup", "bbr", 95)
 
 	expect_true(is_nonempty_sorted_df(result))
 	expect_equal(names(result), c("pullrequest", "author", "body", "created_at"))

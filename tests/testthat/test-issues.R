@@ -7,7 +7,7 @@ is_nonempty_sorted_df <- function(data){
 test_that("get_issues()", {
 	skip_if_any()
 
-	result <- get_issues("metrumresearchgroup", "rbabylon")
+	result <- get_issues("metrumresearchgroup", "bbr")
 
 	expect_true(is_nonempty_sorted_df(result))
 	expect_equal(names(result), c("issue", "title", "body", "closed", "closed_at", "resource_path",
@@ -18,7 +18,7 @@ test_that("get_issues()", {
 test_that("get_issue_labels()", {
 	skip_if_any()
 
-	result <- get_issue_labels("metrumresearchgroup", "rbabylon")
+	result <- get_issue_labels("metrumresearchgroup", "bbr")
 
 	expect_true(is_nonempty_sorted_df(result))
 	expect_equal(names(result), c("issue", "label"))
@@ -27,7 +27,7 @@ test_that("get_issue_labels()", {
 test_that("get_issues_assignees_participants()", {
 	skip_if_any()
 
-	result <- get_issues_assignees_participants("metrumresearchgroup", "rbabylon")
+	result <- get_issues_assignees_participants("metrumresearchgroup", "bbr")
 
 	expect_true(is_nonempty_sorted_df(result))
 	expect_equal(names(result), c("issue", "type", "name", "login", "total_count"))
@@ -36,7 +36,7 @@ test_that("get_issues_assignees_participants()", {
 test_that("get_issue_events()", {
 	skip_if_any()
 
-	result <- get_issue_events("metrumresearchgroup", "rbabylon")
+	result <- get_issue_events("metrumresearchgroup", "bbr")
 
 	expect_true(is_nonempty_sorted_df(result))
 	expect_equal(names(result), c("issue", "project", "type", "column", "author", "date"))
@@ -45,7 +45,7 @@ test_that("get_issue_events()", {
 test_that("get_issue_comments()", {
 	skip_if_any()
 
-	result <- get_issue_comments("metrumresearchgroup", "rbabylon")
+	result <- get_issue_comments("metrumresearchgroup", "bbr")
 
 	expect_true(is_nonempty_sorted_df(result))
 	expect_equal(names(result), c("issue", "n_comments", "author", "publishedAt", "lastEditedAt", "editor", "url", "bodyText"))
@@ -54,7 +54,7 @@ test_that("get_issue_comments()", {
 test_that("get_issues_from_milestone()", {
 	skip_if_any()
 
-	result <- get_issues_from_milestone("metrumresearchgroup", "rbabylon", 9)
+	result <- get_issues_from_milestone("metrumresearchgroup", "bbr", 9)
 
 	expect_true(is_nonempty_sorted_df(result))
 	expect_equal(names(result), c("issue", "title", "body", "creator", "state"))
